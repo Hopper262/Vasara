@@ -170,6 +170,9 @@ function SMode.init()
     p._saved_surface.dragstart = 0
     p._saved_surface.align_table = nil
     p._saved_surface.offset_table = nil
+    p._saved_surface.opposite_surface = nil
+    p._saved_surface.opposite_offsets = nil
+    p._saved_surface.opposite_rem = 0
     
     p._annotation = Annotations.new(Polygons[0], "")
     
@@ -325,7 +328,7 @@ function SMode.handle_apply(p)
       clear_surface = false
       local surface = p._saved_surface.surface
       if p._keys.primary.pressed then
-        surface, polygon = SCollections.find_surface(p)
+        surface, polygon = SCollections.find_surface(p, false)
         local coll = p._collections.current_collection
         local landscape = false
         if coll == 0 then
@@ -335,8 +338,9 @@ function SMode.handle_apply(p)
         local tex = p._collections.current_textures[coll]
         
         p._saved_surface.surface = surface
+        p._saved_surface.opposite_surface = nil
         p._saved_surface.polygon = polygon
-        if (not p._apply.texture) or ((coll == surface.collection.index) and (tex == surface.texture_index)) then
+        if (not p._apply.texture) or (surface.collection and (coll == surface.collection.index) and (tex == surface.texture_index)) then
           p._saved_surface.x = surface.texture_x
           p._saved_surface.y = surface.texture_y
         else
@@ -353,22 +357,36 @@ function SMode.handle_apply(p)
         p._saved_surface.dragstart = Game.ticks
         
         SUndo.add_undo(p, surface)
-        
-        if p._apply.texture then
-          surface.collection = coll
-          surface.texture_index = tex
-          surface.texture_x = p._saved_surface.x
-          surface.texture_y = p._saved_surface.y
-          if landscape then
-            surface.transfer_mode = "landscape"
+        UApply.apply_texture(p, surface, coll, tex, landscape)
+        if is_transparent_side(surface) then
+          -- put the same texture on the opposite side of the line
+          local dsurface = nil
+          local side = Sides[surface.index]
+          local line = side.line
+          if line.clockwise_side == side then
+            if line.counterclockwise_side then
+              dsurface = line.counterclockwise_side.transparent
+            elseif line.counterclockwise_polygon then
+              dsurface = Sides.new(line.counterclockwise_polygon, line).transparent
+            end
           else
-            surface.transfer_mode = transfer_modes[p._transfer_mode + 1]
+            if line.clockwise_side then
+              dsurface = line.clockwise_side.transparent
+            elseif line.clockwise_polygon then
+              dsurface = Sides.new(line.clockwise_polygon, line).transparent
+            end
+          end
+
+          if dsurface then
+            SUndo.add_undo(p, dsurface)
+            UApply.apply_texture(p, dsurface, coll, tex, landscape)
+            local rem = line.length - math.floor(line.length)
+            dsurface.texture_x = 0 - dsurface.texture_x - rem
+            p._saved_surface.opposite_surface = dsurface
+            p._saved_surface.opposite_rem = rem
           end
         end
-        if p._apply.light then
-          surface.light = Lights[p._light]
-        end
-        
+                
         if p._apply.align then
           if is_polygon_floor(surface) or is_polygon_ceiling(surface) then
             p._saved_surface.align_table = VML.build_polygon_align_table(polygon, surface)
@@ -387,6 +405,16 @@ function SMode.handle_apply(p)
               SUndo.add_undo(p, s)
             end
             VML.align_sides(surface, p._saved_surface.offset_table)
+            
+            local dsurface = p._saved_surface.opposite_surface
+            if dsurface then
+              local doffsets = VML.build_side_offsets_table(dsurface)
+              p._saved_surface.opposite_offsets = doffsets
+              for s in pairs(doffsets) do
+                SUndo.add_undo(p, s)
+              end
+              VML.align_sides(dsurface, doffsets)
+            end
           end
         end
       
@@ -415,6 +443,15 @@ function SMode.handle_apply(p)
           if p._apply.align then
             VML.align_sides(surface, p._saved_surface.offset_table)
           end
+          
+          local dsurface = p._saved_surface.opposite_surface
+          if dsurface then
+            dsurface.texture_x = 0 - surface.texture_x - p._saved_surface.opposite_rem
+            dsurface.texture_y = surface.texture_y
+            if p._apply.align then
+              VML.align_sides(dsurface, p._saved_surface.opposite_offsets)
+            end
+          end            
         end
       end
     elseif p._keys.prev_weapon.pressed then
@@ -1115,7 +1152,7 @@ function SCollections.update()
     end
     if p._mode == SMode.apply then
       if (not p._keys.mic.down) and p._keys.secondary.released then
-        local surface = SCollections.find_surface(p)
+        local surface = SCollections.find_surface(p, true)
         if surface and (not (is_transparent_side(surface) and surface.empty)) then
           SCollections.set(p, surface.collection.index, surface.texture_index)
           if p._collections.current_collection ~= 0 then
@@ -1153,9 +1190,15 @@ function SCollections.set(p, coll, tex)
   end
   p._collections.current_textures[coll] = tex
 end
-function SCollections.find_surface(p)
+function SCollections.find_surface(p, copy_mode)
   local surface = nil
-  local o, x, y, z, polygon = VML.find_target(p, false, false)
+  local find_first_line = p._apply.transparent
+  local find_first_side = false
+  if copy_mode then
+    find_first_line = false
+    find_first_side = p._apply.transparent
+  end
+  local o, x, y, z, polygon = VML.find_target(p, find_first_line, find_first_side)
   if is_side(o) then
     o:recalculate_type()
     surface = VML.side_surface(o, z)
@@ -1309,6 +1352,24 @@ function UTeleport.end_highlight(p)
     -- restore last selected poly
     p._teleport.last_target.floor.transfer_mode = p._teleport.last_target_mode
     p._teleport.last_target = nil
+  end
+end
+
+UApply = {}
+function UApply.apply_texture(p, surface, coll, tex, landscape)
+  if p._apply.texture then
+    surface.collection = coll
+    surface.texture_index = tex
+    surface.texture_x = p._saved_surface.x
+    surface.texture_y = p._saved_surface.y
+    if landscape then
+      surface.transfer_mode = "landscape"
+    else
+      surface.transfer_mode = transfer_modes[p._transfer_mode + 1]
+    end
+  end
+  if p._apply.light then
+    surface.light = Lights[p._light]
   end
 end
 
