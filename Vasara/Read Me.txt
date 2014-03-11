@@ -1,0 +1,36 @@
+Vasara 1.0 ALPHA
+----------
+by Hopper and Ares Ex Machina
+from work by Irons and Smith
+
+----------------------------------------------------------------
+DESCRIPTION:
+Vasara is a Lua script and dedicated HUD for use in texturing Aleph One maps. The new HUD provides more explanation for new users, and features a new GUI-style interface for choosing textures and options.
+
+To get the most out of Vasara, be sure to turn on "Use Mouse" and "Overlay Map" in your preferences.
+
+----------------------------------------------------------------
+INSTALLATION:
+- Drag the downloaded .zip file, or the unzipped "Vasara" folder, into the "Plugins" folder inside your Marathon Infinity or custom scenario folder. (Create a "Plugins" folder if you don't already have one.)
+- Launch Aleph One, and go to "Preferences", then "Environment", then "Plugins" to enable or disable Vasara.
+
+IMPORTANT 1: turn off any other HUD or solo Lua plugins while using Vasara.
+
+IMPORTANT 2: both "Vasara Lua" and "Vasara HUD" must be enabled at the same time. If you turn on only one, you WILL have serious problems.
+
+----------------------------------------------------------------
+CHANGELOG:
+
+v1.0:
+* First release
+
+----------------------------------------------------------------
+SPECIAL THANKS:
+TychoVII, Kurinn - For pushing the boundaries of the Lua HUD
+Bitstream, Tavmjong Bah - For fonts used in the HUD
+Treellama, Irons - For Visual Mode.lua
+
+----------------------------------------------------------------
+CONTACT:
+If you have any questions, comments, or bugs to report, you can email me:
+- hopper@whpress.com
