@@ -1,6 +1,19 @@
 -- Vasara 1.0 ALPHA (HUD script)
 -- by Hopper and Ares Ex Machina
 
+-- testing stuff here
+-- change these in Lua script too, else bad stuff will happen
+
+vert_range = 30   -- max: 30
+horiz_range = 70  -- max: 160
+
+vert_size = 400   -- max: 430
+horiz_size = 600  -- max: 640
+
+vert_offset = 50 + (430 - vert_size)/2
+horiz_offset = 0 + (640 - horiz_size)/2
+
+
 -- PREFERENCES
 
 -- no preferences currently!
@@ -79,25 +92,24 @@ function Triggers.draw()
   
   -- teleport notices
   if HMode.is(HMode.teleport) then
-    local txt = "Current polygon:"
-    local ifont = HGlobals.fonti
-    ifont:draw_text(txt, xspots[2] - lback - ifont:measure_text(txt), yspots[2], { 0.6, 0.6, 0.6, 1})
-    ifont:draw_text(HTeleport.poly, xspots[2], yspots[2], { 0.6, 0.6, 0.6, 1})
+--     local txt = "Current polygon:"
+--     local ifont = HGlobals.fonti
+--     ifont:draw_text(txt, xspots[2] - lback - ifont:measure_text(txt), yspots[2], { 0.6, 0.6, 0.6, 1})
+--     ifont:draw_text(HTeleport.poly, xspots[2], yspots[2], { 0.6, 0.6, 0.6, 1})
 
     local yp = HGlobals.cpos[2]
     local xp = HGlobals.cpos[1]
-    local xw = imgs["cursor_teleport"].width
     
     local fw, fh = HGlobals.fontn:measure_text(HTeleport.poly)
-    local xf = xp + (xw - fw)/2
-    local yf = yp - fh
+    local xf = xp - fw/2
+    local yf = yp - fh - 15*HGlobals.scale
     Screen.fill_rect(xf - 5*HGlobals.scale, yf, fw + 10*HGlobals.scale, fh, { 0, 0, 0, 0.6 })
     HGlobals.fontn:draw_text(HTeleport.poly, xf, yf, { 0, 1, 0, 1 })
     
     if not Screen.map_overlay_active then
       HGlobals.fonti:draw_text("Please turn on Overlay Map mode in Graphics preferences",
         Screen.world_rect.x + 10*HGlobals.scale,
-        Screen.world_rect.y + Screen.world_rect.height,
+        Screen.world_rect.y + Screen.world_rect.height - 2*HGlobals.fheight,
         { 0, 1, 0, 1 })
     end
   end
@@ -110,6 +122,18 @@ function Triggers.draw()
     if HMenu.menus[HMode.current] then
       HMenu.draw_menu(HMode.current)
       cxoff, cyoff = HMenu.cursorpos(HMode.current)
+
+  -- debug
+--   local r = {
+--     horiz_offset*HGlobals.scale + HGlobals.xoff,
+--     vert_offset*HGlobals.scale + HGlobals.yoff,
+--     horiz_size*HGlobals.scale,
+--     vert_size*HGlobals.scale }
+--     
+--     
+--   Screen.frame_rect(r[1], r[2], r[3], r[4], { 1, 0.5, 0.5, 1 }, 2*HGlobals.scale)
+  -- end debug
+  
     end
   end
   
@@ -126,7 +150,7 @@ function Triggers.draw()
                  Screen.world_rect.x + Screen.world_rect.width/2,
                  Screen.world_rect.y + Screen.world_rect.height/2,
                  Screen.world_rect.width, Screen.world_rect.height,
-                 "center", "middle")
+                 "center", "middle", true)
     cxoff = -xa
     cyoff = -ya
     
@@ -147,18 +171,10 @@ function Triggers.draw()
     local maxh = 90*HGlobals.scale
     yp = yp + maxh/2
     
-    local sel = false
-    local clr = { 0.5, 0.5, 0.5, 1 }
-    if HCollections.current_collection == 0 then
-      sel = true
-      clr = { 0, 1, 0, 1 }
-    end
-    draw_palette(0, xp, yp, maxw, maxh, "left", "middle")
-    HGlobals.fontm:draw_text(HCollections.names[1], xp, yf, clr)
-
+    local sel
+    local clr
+    
     for _, coll in pairs(HCollections.wall_collections) do
-      xp = xp + maxw + 5*HGlobals.scale
-
       if HCollections.current_collection == coll then
         sel = true
         clr = { 0, 1, 0, 1 }
@@ -169,7 +185,19 @@ function Triggers.draw()
       
       draw_palette(coll, xp, yp, maxw, maxh, "left", "middle")
       HGlobals.fontm:draw_text(HCollections.names[coll + 1], xp, yf, clr)
+      xp = xp + maxw + 5*HGlobals.scale
     end
+    
+    if HCollections.current_collection == 0 then
+      sel = true
+      clr = { 0, 1, 0, 1 }
+    else
+      sel = false
+      clr = { 0.5, 0.5, 0.5, 1 }
+    end
+    draw_palette(0, xp, yp, maxw, maxh, "left", "middle")
+    HGlobals.fontm:draw_text(HCollections.names[1], xp, yf, clr)
+
   end
   if HMode.is(HMode.apply) then
     local xp = HGlobals.xoff + 10*HGlobals.scale
@@ -179,18 +207,16 @@ function Triggers.draw()
     local coll = HCollections.current_coll()
     local tex = Player.texture_palette.slots[coll].texture_index
     local bct = Collections[coll].bitmap_count
-    local nm = HCollections.names[coll + 1]
-    if bct > 1 then
-      nm = nm .. " #" .. tex
-    end
+--     local nm = HCollections.names[coll + 1]
+--     if bct > 1 then
+--       nm = nm .. " #" .. tex
+--     end
     
     -- lower left: current texture
-    HCollections.draw(coll, tex, xp, yp, 85*HGlobals.scale)
     if HApply.down(HApply.use_texture) then
-      HGlobals.fontm:draw_text(nm, xp, yf, { 1, 1, 1, 1 })
-    else
-      Screen.fill_rect(xp, yp, 85*HGlobals.scale, 85*HGlobals.scale, { 0, 0, 0, 0.5 })
-      HGlobals.fontm:draw_text(nm, xp, yf, { 0.5, 0.5, 0.5, 1 })
+      HCollections.draw(coll, tex, xp, yp, 85*HGlobals.scale)
+    elseif HApply.down(HApply.use_light) then 
+      Screen.fill_rect(xp, yp, 85*HGlobals.scale, 85*HGlobals.scale, { 1, 1, 1, 1 })
     end
     
     -- lower middle: attributes
@@ -199,74 +225,34 @@ function Triggers.draw()
     local yplus = HGlobals.fheight + 2*HGlobals.scale
     local att
     
-    if not (HApply.down(HApply.use_texture) and HCollections.current_collection == 0) then
-      if HApply.down(HApply.use_light) then
-        att = "Light: " .. HApply.current_light
-        HGlobals.fontn:draw_text(att, xm, ym, { 1, 1, 1, 1 })
-      end
-    end
-    ym = ym + yplus
-    
-    if HApply.down(HApply.use_texture) then
-      if HCollections.current_collection == 0 then
-        att = "Landscape: " .. nm
-      else
-        att = "Texture: " .. nm
-        if HApply.current_transfer > 0 then
-          mode = HApply.transfer_modes[HApply.current_transfer + 1]
-          if mode ~= nil then
-            att = att .. " (" .. mode .. ")"
-          end
-        end
-      end
-      HGlobals.fontn:draw_text(att, xm, ym, { 1, 1, 1, 1 })
-    end
-    ym = ym + yplus
-    
---     if HApply.down(HApply.use_texture) then
---       if HCollections.current_collection == 0 then
---         att = "Mode: Landscape"
---         HGlobals.fonti:draw_text(att, xm, ym, { 0.5, 0.5, 0.5, 1 })
---       else
---         att = "Mode: " .. HApply.transfer_modes[HApply.current_transfer + 1]
---         HGlobals.fontn:draw_text(att, xm, ym, { 1, 1, 1, 1 })
---       end
---     end
-    ym = ym + yplus
-    
-    if not (HApply.down(HApply.use_texture) and HCollections.current_collection == 0) then
-      if HApply.down(HApply.align) then
-        HGlobals.fonti:draw_text("Align adjacent", xm, ym, { 1, 1, 0, 1 })
-      else
-        HGlobals.fonti:draw_text("Do not align", xm, ym, { 0.5, 0.5, 0.5, 1 })
-      end
-    end
-    ym = ym + yplus
-    
-    if not (HApply.down(HApply.use_texture) and HCollections.current_collection == 0) then
-      if HApply.current_snap ~= 0 then
-        att = "Snap to grid: " .. HApply.snap_modes[HApply.current_snap]
-        HGlobals.fonti:draw_text(att, xm, ym, { 1, 1, 0, 1 })
-      else
-        HGlobals.fonti:draw_text("Do not snap to grid", xm, ym, { 0.5, 0.5, 0.5, 1 })
-      end
-    end
-    ym = ym + yplus
-    
-    if HApply.down(HApply.edit_panels) then
-      att = "Edit switches and panels"
-      HGlobals.fonti:draw_text(att, xm, ym, { 1, 1, 0, 1 })
+    att = "Apply Texture"
+    local tmode = HApply.transfer_modes[HApply.current_transfer + 1]
+    if HCollections.current_collection == 0 then
+      if HApply.current_transfer == 5 then tmode = nil end
     else
-      HGlobals.fonti:draw_text("Ignore switches and panels", xm, ym, { 0.5, 0.5, 0.5, 1 })
+      if HApply.current_transfer == 0 then tmode = nil end
     end
+    if tmode ~= nil then
+      att = att .. ": " .. tmode
+    end
+    draw_mode(att, xm, ym, HApply.down(HApply.use_texture))
     ym = ym + yplus
     
-    if HApply.down(HApply.transparent) then
-      att = "Edit transparent sides"
-      HGlobals.fonti:draw_text(att, xm, ym, { 1, 1, 0, 1 })
-    else
-      HGlobals.fonti:draw_text("Ignore transparent sides", xm, ym, { 0.5, 0.5, 0.5, 1 })
-    end
+    att = "Apply Light: " .. HApply.current_light
+    draw_mode(att, xm, ym, (HApply.down(HApply.use_light) and HApply.current_transfer ~= 5))
+    ym = ym + yplus
+
+    draw_mode("Align adjacent", xm, ym, HApply.down(HApply.align))
+    ym = ym + yplus
+    
+    draw_mode("Edit switches and panels", xm, ym, HApply.down(HApply.edit_panels))
+    ym = ym + yplus
+    
+    draw_mode("Edit transparent sides", xm, ym, HApply.down(HApply.transparent))
+    ym = ym + yplus
+    
+    att = "Snap to grid: " .. HApply.snap_modes[HApply.current_snap + 1]
+    draw_mode(att, xm, ym, HApply.current_snap ~= 0)
     ym = ym + yplus
     
     -- lower right: full collection
@@ -275,7 +261,7 @@ function Triggers.draw()
                  200*HGlobals.scale, 90*HGlobals.scale,
                  "right", "middle")
   end
-    
+  
   -- cursor
   draw_cursor(HMode.apply, "apply")
   draw_cursor(HMode.teleport, "teleport")
@@ -287,7 +273,15 @@ function Triggers.draw()
   
 end
 
-function draw_palette(coll, x, y, w, h, halign, valign)
+function draw_mode(label, x, y, active)
+  local clr = { 0.5, 0.5, 0.5, 1 }
+  if active then
+    clr = { 1, 1, 1, 1 }
+  end
+  HGlobals.fontn:draw_text(label, x, y, clr)
+end
+
+function draw_palette(coll, x, y, w, h, halign, valign, show_cur)
 
   local tex = Player.texture_palette.slots[coll].texture_index
   local bct = Collections[coll].bitmap_count
@@ -322,9 +316,12 @@ function draw_palette(coll, x, y, w, h, halign, valign)
     local xoff = t % cols
     local yoff = math.floor(t / cols)
     
-    local cur = (t == tex)
-    if coll == 0 then
-      cur = (ccoll == HCollections.current_landscape_collection)
+    local cur = false
+    if show_cur then
+      cur = (t == tex)
+      if coll == 0 then
+        cur = (ccoll == HCollections.current_landscape_collection)
+      end
     end
     if cur then
       Screen.frame_rect(xp + (xoff*tsize) - off, yp + (yoff*tsize) - off, tsize + (2 * off), tsize + (2 * off), { 0, 1, 0, 1 }, 2*off)
@@ -335,13 +332,17 @@ function draw_palette(coll, x, y, w, h, halign, valign)
   return xa, ya
 end
 
-function draw_cursor(mode, name, xoff, yoff)
+function draw_cursor(mode, name, xoff, yoff, abs)
   if not HMode.is(mode) then return end
   if xoff == nil then xoff = 0 end
   if yoff == nil then yoff = 0 end
   local n = "cursor_" .. name
   if HKeys.down(HKeys.primary) and (not HKeys.down(HKeys.mic)) then n = n .. "_down" end
-  imgs[n]:draw(HGlobals.cpos[1] + xoff, HGlobals.cpos[2] + yoff)
+  if not abs then
+    xoff = xoff + HGlobals.cpos[1]
+    yoff = yoff + HGlobals.cpos[2]
+  end
+  imgs[n]:draw(xoff - HGlobals.coff[1], yoff - HGlobals.coff[2])
 end
 
 imgs = {}
@@ -362,11 +363,13 @@ function Triggers.resize()
   HGlobals.xoff = math.floor((Screen.width - (640 * HGlobals.scale)) / 2)
   HGlobals.yoff = math.floor((Screen.height - (480 * HGlobals.scale)) / 2)
   
+  HGlobals.fontb = Fonts.new{file = "dejavu/DejaVuLGCSansCondensed-Bold.ttf", size = 12 * HGlobals.scale}
   HGlobals.fontn = Fonts.new{file = "dejavu/DejaVuLGCSansCondensed-Bold.ttf", size = 9 * HGlobals.scale}
   HGlobals.fonti = Fonts.new{file = "dejavu/DejaVuLGCSansCondensed-BoldOblique.ttf", size = 9 * HGlobals.scale}
   HGlobals.fontm = Fonts.new{file = "dejavu/DejaVuLGCSansCondensed-Bold.ttf", size = 7 * HGlobals.scale}
   
   HGlobals.fwidth, HGlobals.fheight = HGlobals.fontn:measure_text("  ")
+  HGlobals.bwidth, HGlobals.bheight = HGlobals.fontb:measure_text("  ")
   
   for _, i in pairs(imgs) do
     rescale(i, HGlobals.scale / 3)
@@ -438,8 +441,11 @@ function layout()
 --  end
   
   HGlobals.cpos = {
-    Screen.world_rect.x + Screen.world_rect.width/2 - imgs["cursor_menu"].width/2,
-    Screen.world_rect.y + Screen.world_rect.height/2 - imgs["cursor_menu"].height/2 }
+    Screen.world_rect.x + Screen.world_rect.width/2,
+    Screen.world_rect.y + Screen.world_rect.height/2 }
+
+  HGlobals.coff = { imgs["cursor_menu"].width/2,
+                    imgs["cursor_menu"].height/2 }
   
 end
 
@@ -448,6 +454,11 @@ function hasbit(field, which)
   return field % (test + test) >= test
 end
 
+function PIN(v, min, max)
+  if v < min then return min end
+  if v > max then return max end
+  return v
+end
 
 HKeys = {}
 HKeys.bitfield = 0
@@ -478,7 +489,7 @@ HApply.current_light = 0
 HApply.current_transfer = 0
 HApply.current_snap = 0
 HApply.transfer_modes = { "Normal", "Pulsate", "Wobble", "Fast wobble", "Static", "Landscape", "Horizontal slide", "Fast horizontal slide", "Vertical slide", "Fast vertical slide", "Wander", "Fast wander" }
-HApply.snap_modes = { "1/4 WU", "1/5 WU", "1/8 WU" }
+HApply.snap_modes = { "Off", "1/4 WU", "1/5 WU", "1/8 WU" }
 function HApply.update()
   HApply.bitfield = Player.texture_palette.slots[46].texture_index
   HApply.current_light = Player.texture_palette.slots[43].texture_index
@@ -486,10 +497,10 @@ function HApply.update()
   HApply.current_snap = Player.texture_palette.slots[45].texture_index
 
   local lbls = HMode.labels[HMode.apply]
-  if HCounts.num_lights > 0 then
-    lbls[7][5] = "Previous Light (" .. tostring((HApply.current_light - 1) % HCounts.num_lights) .. ")"
-    lbls[8][5] = "Next Light (" .. tostring((HApply.current_light + 1) % HCounts.num_lights) .. ")"
-  end
+--   if HCounts.num_lights > 0 then
+--     lbls[7][5] = "Previous Light (" .. tostring((HApply.current_light - 1) % HCounts.num_lights) .. ")"
+--     lbls[8][5] = "Next Light (" .. tostring((HApply.current_light + 1) % HCounts.num_lights) .. ")"
+--   end
   
   if HApply.down(HApply.use_texture) then
     if HApply.down(HApply.use_light) then
@@ -586,32 +597,32 @@ HMode.labels[HMode.choose] = {
     { HKeys.primary,     1, 1, true,  "Cycle Textures" },
     { HKeys.secondary,   1, 2, true,  "Cycle Collections" },
     { HKeys.primary,     1, 3, false, "Select Texture" },
-    { HKeys.secondary,   1, 4, false, "Apply Textures" },
+    { HKeys.secondary,   1, 4, false, "Return" },
     { HKeys.prev_weapon, 2, 1, true,  "Previous Texture" },
     { HKeys.next_weapon, 2, 2, true,  "Next Texture" },
     { HKeys.prev_weapon, 2, 3, false, "Previous Collection" },
     { HKeys.next_weapon, 2, 4, false, "Next Collection" },
-    { HKeys.action,      3, 2, false, "Apply Textures" },
+    { HKeys.action,      3, 2, false, "Return" },
     { HKeys.mic,         3, 3, false, "Options" },
     { HKeys.map,         3, 4, false, "Teleport" } }
 HMode.labels[HMode.attribute] = {
     { HKeys.primary,     1, 3, false, "Select Option" },
-    { HKeys.secondary,   1, 4, false, "Apply Textures" },
+    { HKeys.secondary,   1, 4, false, "Return" },
     { HKeys.prev_weapon, 2, 3, false, "Previous Option" },
     { HKeys.next_weapon, 2, 4, false, "Next Option" },
     { HKeys.action,      3, 2, false, "Choose Texture" },
-    { HKeys.mic,         3, 3, false, "Apply Textures" },
+    { HKeys.mic,         3, 3, false, "Return" },
     { HKeys.map,         3, 4, false, "Teleport" } }
 HMode.labels[HMode.teleport] = {
     { HKeys.primary,     1, 1, true,  "Rewind Polygon" },
     { HKeys.secondary,   1, 2, true,  "Fast Forward Polygon" },
     { HKeys.primary,     1, 3, false, "Teleport" },
-    { HKeys.secondary,   1, 4, false, "Apply Textures" },
+    { HKeys.secondary,   1, 4, false, "Return" },
     { HKeys.prev_weapon, 2, 3, false, "Previous Polygon" },
     { HKeys.next_weapon, 2, 4, false, "Next Polygon" },
     { HKeys.action,      3, 2, false, "Choose Texture / Action" },
     { HKeys.mic,         3, 3, false, "Options" },
-    { HKeys.map,         3, 4, false, "Apply Textures" } }
+    { HKeys.map,         3, 4, false, "Return" } }
 HMode.labels[HMode.switch]    = HMode.labels[HMode.attribute]
 HMode.labels[HMode.recharger] = HMode.labels[HMode.attribute]
 HMode.labels[HMode.terminal]  = HMode.labels[HMode.attribute]
@@ -632,38 +643,39 @@ end
 HMenu = {}
 HMenu.menus = {}
 HMenu.menus[HMode.attribute] = {
-  { nil, nil, 60, 30, 500, 240 },
-  { "label", nil, 0, 0, 150, 20, "Apply options" },
-  { "button", "apply_light", 0, 20, 150, 18, "Apply light" },
-  { "button", "apply_tex", 0, 40, 150, 18, "Apply texture" },
-  { "button", "apply_align", 0, 60, 150, 18, "Align adjacent" },
-  { "button", "apply_edit", 0, 80, 150, 18, "Edit switches and panels" },
-  { "button", "apply_xparent", 0, 100, 150, 18, "Edit transparent sides" },
-  { "label", "nil", 0, 140, 150, 20, "Snap to grid" },
-  { "button", "snap_0", 0, 160, 150, 18, "Off" },
-  { "button", "snap_1", 0, 180, 150, 18, "1/4 WU" },
-  { "button", "snap_2", 0, 200, 150, 18, "1/5 WU" },
-  { "button", "snap_3", 0, 220, 150, 18, "1/8 WU" },
-  { "label", nil, 160, 0, 150, 20, "Texture mode" },
-  { "button", "transfer_0", 160, 20, 150, 18, "Normal" },
-  { "button", "transfer_1", 160, 40, 150, 18, "Pulsate" },
-  { "button", "transfer_2", 160, 60, 150, 18, "Wobble" },
-  { "button", "transfer_3", 160, 80, 150, 18, "Fast wobble" },
-  { "button", "transfer_6", 160, 100, 150, 18, "Horizontal slide" },
-  { "button", "transfer_7", 160, 120, 150, 18, "Fast horizontal slide" },
-  { "button", "transfer_8", 160, 140, 150, 18, "Vertical slide" },
-  { "button", "transfer_9", 160, 160, 150, 18, "Fast vertical slide" },
-  { "button", "transfer_10", 160, 180, 150, 18, "Wander" },
-  { "button", "transfer_11", 160, 200, 150, 18, "Fast wander" },
-  { "button", "transfer_4", 160, 220, 150, 18, "Static" } }
+  { "label", nil, 250, 67, 200, 23, "Attributes" },
+  { "checkbox", "apply_tex", 250, 90, 200, 26, "Apply texture" },
+  { "checkbox", "apply_light", 250, 120, 200, 26, "Apply light" },
+  { "checkbox", "apply_align", 250, 150, 200, 26, "Align adjacent" },
+  { "checkbox", "apply_edit", 250, 180, 200, 26, "Edit switches and panels" },
+  { "checkbox", "apply_xparent", 250, 210, 200, 26, "Edit transparent sides" },
+  { "label", "nil", 250, 247, 150, 23, "Snap to grid" },
+  { "radio", "snap_0", 250, 270, 200, 26, "Off" },
+  { "radio", "snap_1", 250, 300, 200, 26, "1/4 WU" },
+  { "radio", "snap_2", 250, 330, 200, 26, "1/5 WU" },
+  { "radio", "snap_3", 250, 360, 200, 26, "1/8 WU" },
+  { "label", nil, 30, 67, 200, 23, "Texture mode" },
+  { "radio", "transfer_0", 30, 90, 200, 26, "Normal" },
+  { "radio", "transfer_1", 30, 120, 200, 26, "Pulsate" },
+  { "radio", "transfer_2", 30, 150, 200, 26, "Wobble" },
+  { "radio", "transfer_3", 30, 180, 200, 26, "Fast wobble" },
+  { "radio", "transfer_6", 30, 210, 200, 26, "Horizontal slide" },
+  { "radio", "transfer_7", 30, 240, 200, 26, "Fast horizontal slide" },
+  { "radio", "transfer_8", 30, 270, 200, 26, "Vertical slide" },
+  { "radio", "transfer_9", 30, 300, 200, 26, "Fast vertical slide" },
+  { "radio", "transfer_10", 30, 330, 200, 26, "Wander" },
+  { "radio", "transfer_11", 30, 360, 200, 26, "Fast wander" },
+  { "radio", "transfer_4", 30, 390, 200, 26, "Static" },
+  { "radio", "transfer_5", 30, 420, 200, 26, "Landscape" },
+  { "label", nil, 470, 67, 200, 23, "Light" } }
 HMenu.inited = {}
 HMenu.inited[HMode.attribute] = false
 function HMenu.draw_menu(mode)
   if not HMenu.inited[mode] then HMenu.init_menu(mode) end
   local u = HGlobals.scale
   local m = HMenu.menus[mode]
-  local xp = Screen.world_rect.x + m[1][3]*u
-  local yp = Screen.world_rect.y + m[1][4]*u
+  local xp = HGlobals.xoff
+  local yp = HGlobals.yoff
   
   Screen.fill_rect(Screen.world_rect.x, Screen.world_rect.y,
                    Screen.world_rect.width, Screen.world_rect.height,
@@ -677,10 +689,10 @@ function HMenu.draw_menu(mode)
     local h = item[6]*u
     
     if item[1] == "label" then
-      HGlobals.fontn:draw_text(item[7],
+      HGlobals.fontb:draw_text(item[7],
                                math.floor(x + 5*u), math.floor(y + 5*u),
                                { 1, 1, 1, 1 })
-    elseif item[1] == "button" then
+    elseif HMenu.clickable(item[1]) then
       if HStatus.current_menu_item == idx then
         Screen.frame_rect(x - 2*u, y - 2*u, w + 4*u, h + 4*u, { 0, 1, 0, 1 }, 2*u)
       end
@@ -695,13 +707,13 @@ function HMenu.draw_menu(mode)
         Screen.fill_rect(x + w - 2*u, y + 2*u,
                          2*u, h - 2*u,
                          { 0.6, 0.6, 0.6, 1 })
-        HGlobals.fontn:draw_text(item[7],
-                                 math.floor(x + 7*u), math.floor(y + 3*u),
+        HGlobals.fontb:draw_text(item[7],
+                                 math.floor(x + 7*u), math.floor(y + 6*u),
                                  { 0, 0, 0, 1 })
       elseif state == "disabled" then
         Screen.fill_rect(x, y, w, h, { 0.7, 0.7, 0.7, 1 })
-        HGlobals.fontn:draw_text(item[7],
-                                 math.floor(x + 7*u), math.floor(y + 3*u),
+        HGlobals.fontb:draw_text(item[7],
+                                 math.floor(x + 7*u), math.floor(y + 6*u),
                                  { 0.5, 0.5, 0.5, 1 })
       
       elseif state == "active" then
@@ -714,37 +726,23 @@ function HMenu.draw_menu(mode)
         Screen.fill_rect(x + w - 2*u, y + 2*u,
                          2*u, h - 2*u,
                          { 0.6, 0.6, 0.6, 1 })
-        HGlobals.fontn:draw_text(item[7],
-                                 math.floor(x + 7*u), math.floor(y + 3*u),
+        HGlobals.fontb:draw_text(item[7],
+                                 math.floor(x + 7*u), math.floor(y + 6*u),
                                  { 0, 0, 0.3, 1 })
       end
     end
   end
 end
-function HMenu.cursorpos(mode)
-  local m = HMenu.menus[mode]
-  local xa, ya = HMenu.gridpos(m[1][6], m[1][5])
+function HMenu.coord()
+  local y = vert_offset + vert_size/(vert_range*2) * PIN(vert_range - Player.pitch, 0, vert_range*2)
+  local x = horiz_offset + horiz_size/(horiz_range*2) * PIN(horiz_range + Player.direction - 180, 0, horiz_range*2)
   
-  local xadj = m[1][3] - (640-m[1][5])/2
-  local yadj = m[1][4] - (320-m[1][6])/2
-  -- return xa, ya
-  xa = (-xa + xadj) * HGlobals.scale
-  ya = (-ya + yadj) * HGlobals.scale
-  return xa, ya
+  return x, y
 end
-function HMenu.gridpos(rows, cols)
-  local ya = (rows - 0.5) * Player.pitch / 60
-
-  local xa = 0
-  local fov = 60
-  local dir = Player.direction - 180
-  if dir > fov then
-    xa = -(cols-0.5) / 2
-  elseif dir < -fov then
-    xa = (cols-0.5) / 2
-  else
-    xa = (-(cols-0.5) / 2) * (dir / fov)
-  end
+function HMenu.cursorpos(mode)
+  local x, y = HMenu.coord()
+  local xa = (x*HGlobals.scale) + HGlobals.xoff - HGlobals.cpos[1]
+  local ya = (y*HGlobals.scale) + HGlobals.yoff - HGlobals.cpos[2]
   return xa, ya
 end
 function HMenu.button_state(name)
@@ -763,7 +761,6 @@ function HMenu.button_state(name)
   elseif string.sub(name, 1, 5) == "snap_" then
     local mode = tonumber(string.sub(name, 6))
     if HApply.current_snap == mode then state = "active" end
-    if HCollections.current_collection == 0 then state = "disabled" end
   elseif string.sub(name, 1, 9) == "transfer_" then
     local mode = tonumber(string.sub(name, 10))
     if HApply.current_transfer == mode then state = "active" end
@@ -779,18 +776,19 @@ function HMenu.init_menu(mode)
   local menu = HMenu.menus[mode]
   if mode == HMode.attribute then
     if HCounts.num_lights > 0 then
-      table.insert(menu,
-        { "label", nil, 320, 0, 150, 20, "Light" })
       for i = 1,HCounts.num_lights do
         local l = i - 1
-        local yoff = (l % 10) * 20
-        local xoff = math.floor(l / 10) * 32
-        table.insert(menu,
-          { "button", "light_" .. l, 320 + xoff, 20 + yoff, 30, 18, tostring(l) })
+      local yoff = (l % 10) * 20
+      local xoff = math.floor(l / 10) * 32
+      table.insert(menu,
+        { "radio", "light_" .. l, 470 + xoff, 90 + yoff, 28, 18, tostring(l) })
       end
       HMenu.inited[mode] = true
     end
   end
+end
+function HMenu.clickable(item_type)
+  return item_type == "button" or item_type == "checkbox" or item_type == "radio" or item_type == "texture" end
 end
 
 HChoose = {}
@@ -960,9 +958,9 @@ HTeleport.poly = 0
 function HTeleport.update()
   HTeleport.poly = Player.texture_palette.slots[37].texture_index + 128*Player.texture_palette.slots[38].texture_index
   
-  if HMode.is(HMode.teleport) then
-    local lbls = HMode.labels[HMode.teleport]
-    lbls[5][5] = "Previous Polygon (" .. ((HTeleport.poly - 1) % HCounts.num_polys) .. ")"
-    lbls[6][5] = "Next Polygon (" .. ((HTeleport.poly + 1) % HCounts.num_polys) .. ")"
-  end
+--   if HMode.is(HMode.teleport) then
+--     local lbls = HMode.labels[HMode.teleport]
+--     lbls[5][5] = "Previous Polygon (" .. ((HTeleport.poly - 1) % HCounts.num_polys) .. ")"
+--     lbls[6][5] = "Next Polygon (" .. ((HTeleport.poly + 1) % HCounts.num_polys) .. ")"
+--   end
 end

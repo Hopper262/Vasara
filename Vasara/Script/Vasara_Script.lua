@@ -2,6 +2,18 @@
 -- by Hopper and Ares Ex Machina
 -- from work by Irons and Smith, released under the JUICE LICENSE!
 
+-- testing stuff here
+-- change these in HUD script too, else bad stuff will happen
+
+vert_range = 30   -- max: 30
+horiz_range = 70  -- max: 160
+
+vert_size = 400   -- max: 430
+horiz_size = 600  -- max: 640
+
+vert_offset = 50 + (430 - vert_size)/2
+horiz_offset = 0 + (640 - horiz_size)/2
+
 -- user configurable stuff here
 
 walls = { 17, 18, 19, 20, 21 } 
@@ -95,7 +107,7 @@ function Triggers.idle()
   for p in Players() do
     p.life = 409
     p.oxygen = 10800
-    if p.local_ then p.crosshairs.active = false end
+    if p.local_ then p.crosshairs.active = true end
   end
 end
 
@@ -111,6 +123,11 @@ function Triggers.player_damaged(p, ap, am, dt, da, pr)
   p.life = 409
 end
 
+function PIN(v, min, max)
+  if v < min then return min end
+  if v > max then return max end
+  return v
+end
 
 SMode = {}
 SMode.apply = 0
@@ -755,43 +772,42 @@ end
 SMenu = {}
 SMenu.menus = {}
 SMenu.menus[SMode.attribute] = {
-  { nil, nil, 60, 30, 500, 240 },
-  { "label", nil, 0, 0, 150, 20, "Apply options" },
-  { "button", "apply_light", 0, 20, 150, 18, "Apply light" },
-  { "button", "apply_tex", 0, 40, 150, 18, "Apply texture" },
-  { "button", "apply_align", 0, 60, 150, 18, "Align adjacent" },
-  { "button", "apply_edit", 0, 80, 150, 18, "Edit switches and panels" },
-  { "button", "apply_xparent", 0, 100, 150, 18, "Edit transparent sides" },
-  { "label", "nil", 0, 140, 150, 20, "Snap to grid" },
-  { "button", "snap_0", 0, 160, 150, 18, "Off" },
-  { "button", "snap_1", 0, 180, 150, 18, "1/4 WU" },
-  { "button", "snap_2", 0, 200, 150, 18, "1/5 WU" },
-  { "button", "snap_3", 0, 220, 150, 18, "1/8 WU" },
-  { "label", nil, 160, 0, 150, 20, "Texture mode" },
-  { "button", "transfer_0", 160, 20, 150, 18, "Normal" },
-  { "button", "transfer_1", 160, 40, 150, 18, "Pulsate" },
-  { "button", "transfer_2", 160, 60, 150, 18, "Wobble" },
-  { "button", "transfer_3", 160, 80, 150, 18, "Fast wobble" },
-  { "button", "transfer_6", 160, 100, 150, 18, "Horizontal slide" },
-  { "button", "transfer_7", 160, 120, 150, 18, "Fast horizontal slide" },
-  { "button", "transfer_8", 160, 140, 150, 18, "Vertical slide" },
-  { "button", "transfer_9", 160, 160, 150, 18, "Fast vertical slide" },
-  { "button", "transfer_10", 160, 180, 150, 18, "Wander" },
-  { "button", "transfer_11", 160, 200, 150, 18, "Fast wander" },
-  { "button", "transfer_4", 160, 220, 150, 18, "Static" } }
+  { "label", nil, 250, 67, 200, 23, "Attributes" },
+  { "checkbox", "apply_tex", 250, 90, 200, 26, "Apply texture" },
+  { "checkbox", "apply_light", 250, 120, 200, 26, "Apply light" },
+  { "checkbox", "apply_align", 250, 150, 200, 26, "Align adjacent" },
+  { "checkbox", "apply_edit", 250, 180, 200, 26, "Edit switches and panels" },
+  { "checkbox", "apply_xparent", 250, 210, 200, 26, "Edit transparent sides" },
+  { "label", "nil", 250, 247, 150, 23, "Snap to grid" },
+  { "radio", "snap_0", 250, 270, 200, 26, "Off" },
+  { "radio", "snap_1", 250, 300, 200, 26, "1/4 WU" },
+  { "radio", "snap_2", 250, 330, 200, 26, "1/5 WU" },
+  { "radio", "snap_3", 250, 360, 200, 26, "1/8 WU" },
+  { "label", nil, 30, 67, 200, 23, "Texture mode" },
+  { "radio", "transfer_0", 30, 90, 200, 26, "Normal" },
+  { "radio", "transfer_1", 30, 120, 200, 26, "Pulsate" },
+  { "radio", "transfer_2", 30, 150, 200, 26, "Wobble" },
+  { "radio", "transfer_3", 30, 180, 200, 26, "Fast wobble" },
+  { "radio", "transfer_6", 30, 210, 200, 26, "Horizontal slide" },
+  { "radio", "transfer_7", 30, 240, 200, 26, "Fast horizontal slide" },
+  { "radio", "transfer_8", 30, 270, 200, 26, "Vertical slide" },
+  { "radio", "transfer_9", 30, 300, 200, 26, "Fast vertical slide" },
+  { "radio", "transfer_10", 30, 330, 200, 26, "Wander" },
+  { "radio", "transfer_11", 30, 360, 200, 26, "Fast wander" },
+  { "radio", "transfer_4", 30, 390, 200, 26, "Static" },
+  { "radio", "transfer_5", 30, 420, 200, 26, "Landscape" },
+  { "label", nil, 470, 67, 200, 23, "Light" } }
 SMenu.inited = {}
 SMenu.inited[SMode.attribute] = false
 SMenu.buttons = {}
 SMenu.buttons[SMode.attribute] = {}
 function SMenu.selection(p, mode)
   if not SMenu.inited[mode] then SMenu.init_menu(mode) end
-  local m = SMenu.menus[mode]
-  local xa, ya = SMenu.gridpos(p, m[1][6], m[1][5])
-  local y = math.floor(-ya + (m[1][6] * 0.5))
-  local x = math.floor(-xa + (m[1][5] * 0.5))
+  local m = SMenu.menus[mode]  
+  local x, y = SMenu.coord(p)
   
   for idx, item in ipairs(m) do
-    if item[1] == "button" then
+    if SMenu.clickable(item[1]) then
       if x >= item[3] and y >= item[4] and x <= (item[3] + item[5]) and y <= (item[4] + item[6]) then
         return item[2]
       end
@@ -799,30 +815,35 @@ function SMenu.selection(p, mode)
   end
   return nil
 end
-function SMenu.gridpos(p, rows, cols)
-  return SChoose.gridpos(p, rows, cols)
+function SMenu.coord(p)
+  local y = vert_offset + vert_size/(vert_range*2) * PIN(vert_range - p.pitch, 0, vert_range*2)
+  local x = horiz_offset + horiz_size/(horiz_range*2) * PIN(horiz_range + p.direction - 180, 0, horiz_range*2)
+  
+  return x, y
 end
 function SMenu.recenter(p)
-  SChoose.recenter(p)
+  if p.direction < (180 - horiz_range) then
+    p.direction = 180 - horiz_range
+  elseif p.direction > (180 + horiz_range) then
+    p.direction = 180 + horiz_range
+  end
 end
 function SMenu.init_menu(mode)
   local menu = SMenu.menus[mode]
   if mode == SMode.attribute then
-    table.insert(menu,
-        { "label", nil, 320, 0, 150, 20, "Light" })
     for i = 1,#Lights do
       local l = i - 1
       local yoff = (l % 10) * 20
       local xoff = math.floor(l / 10) * 32
       table.insert(menu,
-        { "button", "light_" .. l, 320 + xoff, 20 + yoff, 30, 18, tostring(l) })
+        { "radio", "light_" .. l, 470 + xoff, 90 + yoff, 28, 18, tostring(l) })
     end
     SMenu.inited[mode] = true
   end
   
   local blist = SMenu.buttons[mode]
   for idx, item in ipairs(menu) do
-    if item[1] == "button" then
+    if SMenu.clickable(item[1]) then
       table.insert(blist, idx)
     end
   end
@@ -850,7 +871,10 @@ function SMenu.point_at_item(p, mode, idx)
   local row = item[4] + math.floor(item[6]/2)
   
   SChoose.setcursor(p, m[1][6], m[1][5], row, col)
-end  
+end
+function SMenu.clickable(item_type)
+  return item_type == "button" or item_type == "checkbox" or item_type == "radio" or item_type == "texture" end
+end
 
 
 SChoose = {}
