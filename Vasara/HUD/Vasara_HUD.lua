@@ -955,7 +955,7 @@ function HCollections.update()
     local w = math.floor(600 / n)
     
     local x = 20
-    local y = 370
+    local y = 372
     for i = 1,n do
       local cnum = menu_colls[i]
       local cname = HCollections.names[cnum + 1]
