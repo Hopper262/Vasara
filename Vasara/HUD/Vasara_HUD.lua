@@ -7,7 +7,7 @@
 vert_range = 30   -- max: 30
 horiz_range = 70  -- max: 160
 
-vert_size = 320   -- max: 430
+vert_size = 325   -- max: 430
 horiz_size = 600  -- max: 640
 
 vert_offset = 65
@@ -16,7 +16,16 @@ horiz_offset = 20
 
 -- PREFERENCES
 
--- no preferences currently!
+-- Displayed names for texture collections
+collection_names = {
+[0] = "Landscapes",
+[17] = "Water",
+[18] = "Lava",
+[19] = "Sewage",
+[20] = "Jjaro",
+[21] = "Pfhor"
+}
+
 
 -- END PREFERENCES -- no user serviceable parts below ;)
 
@@ -119,114 +128,18 @@ function Triggers.draw()
   local cyoff = 0
   
   -- menus
-  if HMode.is(HMode.attribute) or HMode.is(HMode.recharger) or HMode.is(HMode.switch) or HMode.is(HMode.terminal) then
-    if HMenu.menus[HMode.current] then
-      HMenu.draw_menu(HMode.current)
-      cxoff, cyoff = HMenu.cursorpos(HMode.current)
-
-  -- debug
---   local r = {
---     horiz_offset*HGlobals.scale + HGlobals.xoff,
---     vert_offset*HGlobals.scale + HGlobals.yoff,
---     horiz_size*HGlobals.scale,
---     vert_size*HGlobals.scale }
---     
---     
---   Screen.frame_rect(r[1], r[2], r[3], r[4], { 1, 0.5, 0.5, 1 }, 2*HGlobals.scale)
-  -- end debug
-  
+  if HMode.is(HMode.attribute) or HMode.is(HMode.recharger) or HMode.is(HMode.switch) or HMode.is(HMode.terminal) or HMode.is(HMode.choose) then
+    local m = HMode.current
+    if HMode.is(HMode.choose) then
+      m = "choose_" .. HCollections.current_collection
     end
-  end
-  
-  -- texture options
-  if HMode.is(HMode.choose) then
-    Screen.fill_rect(Screen.world_rect.x, Screen.world_rect.y, Screen.world_rect.width, Screen.world_rect.height, {0, 0, 0, 1})
-    
-    HMenu.draw_menu(HMode.choose)
-
-    Screen.clip_rect.x = Screen.world_rect.x
-    Screen.clip_rect.y = Screen.world_rect.y
-    Screen.clip_rect.width = Screen.world_rect.width
-    Screen.clip_rect.height = Screen.world_rect.height
-    
-    local xa, ya = draw_palette(HCollections.current_collection,
-                 HGlobals.xoff + 320*HGlobals.scale,
-                 HGlobals.yoff + 65*HGlobals.scale,
-                 600*HGlobals.scale, 300*HGlobals.scale, 
---                  Screen.world_rect.x + Screen.world_rect.width/2,
---                  Screen.world_rect.y + Screen.world_rect.height/2,
---                  Screen.world_rect.width, Screen.world_rect.height,
-                 "center", "top", true)
-    cxoff = -xa
-    cyoff = -ya
-    
-    Screen.clip_rect.x = 0
-    Screen.clip_rect.y = 0
-    Screen.clip_rect.width = Screen.width
-    Screen.clip_rect.height = Screen.height
-    
+    if HMenu.menus[m] then
+      HMenu.draw_menu(m)
+      cxoff, cyoff = HMenu.cursorpos()
+    end
   end
   
   -- lower area
-  if HMode.is(HMode.choose) then
-    if true then
-      local xp = HGlobals.xoff + 20*HGlobals.scale
-      local yp = HGlobals.yoff + 380*HGlobals.scale
-      local yf = yp + 88*HGlobals.scale
-      
-      local coll = HCollections.current_coll()
-      local tex = Player.texture_palette.slots[coll].texture_index
-      local bct = Collections[coll].bitmap_count
-  --     local nm = HCollections.names[coll + 1]
-  --     if bct > 1 then
-  --       nm = nm .. " #" .. tex
-  --     end
-      
-      -- lower left: current texture
---       HCollections.draw(coll, tex, xp, yp, 85*HGlobals.scale)
---       if HApply.current_transfer ~= 5 and HApply.current_transfer ~= 4 then
---         local val = HLights.adj(HApply.current_light)
---         Screen.fill_rect(xp, yp, 85*HGlobals.scale, 85*HGlobals.scale, { 0, 0, 0, 1 - val })
---       end
-    end
-
-    local xp = HGlobals.xoff + 20*HGlobals.scale
-    local yp = HGlobals.yoff + 400*HGlobals.scale
-    local yf = yp + 88*HGlobals.scale
-    
-    local cct = #HCollections.wall_collections + 1
-    local maxw = math.floor(HGlobals.scale * (600 - (5*(cct - 1)))/cct)
-    local maxh = math.min(87*HGlobals.scale, maxw/2)
-    yp = yp + maxh/2
-    
-    local sel
-    local clr
-    
-    for _, coll in pairs(HCollections.wall_collections) do
-      if HCollections.current_collection == coll then
-        sel = true
-        clr = { 0, 1, 0, 1 }
-      else
-        sel = false
-        clr = { 0.5, 0.5, 0.5, 1 }
-      end
-      
-      draw_palette(coll, xp + maxw/2, yp - maxh/2, maxw, maxh, "center", "top")
-      --HGlobals.fontm:draw_text(HCollections.names[coll + 1], xp, yf, clr)
-      xp = xp + maxw + 5*HGlobals.scale
-    end
-    
-    if HCollections.current_collection == 0 then
-      sel = true
-      clr = { 0, 1, 0, 1 }
-    else
-      sel = false
-      clr = { 0.5, 0.5, 0.5, 1 }
-    end
-    draw_palette(0, xp + maxw/2, yp - maxh/2, maxw, maxh, "center", "top")
-    --HGlobals.fontm:draw_text(HCollections.names[1], xp, yf, clr)
-
-  end
   if HMode.is(HMode.attribute) then
     local xp = HGlobals.xoff + 460*HGlobals.scale
     local yp = HGlobals.yoff + 225*HGlobals.scale
@@ -343,7 +256,7 @@ function draw_mode(label, x, y, active)
   HGlobals.fontn:draw_text(label, x + 13*HGlobals.scale, y, clr)
 end
 
-function draw_palette(coll, x, y, w, h, halign, valign, show_cur)
+function draw_palette(coll, x, y, w, h, halign, valign)
 
   local tex = Player.texture_palette.slots[coll].texture_index
   local bct = Collections[coll].bitmap_count
@@ -352,10 +265,7 @@ function draw_palette(coll, x, y, w, h, halign, valign, show_cur)
   end
 
   local rows, cols = HChoose.gridsize(bct)
-  local xa, ya = HChoose.gridpos(rows, cols)
   local tsize = math.min(w / cols, h / rows)
-  xa = xa * tsize
-  ya = ya * tsize
   
   local xp = x
   if halign == "center" then xp = xp - (tsize*cols)/2 end
@@ -365,7 +275,8 @@ function draw_palette(coll, x, y, w, h, halign, valign, show_cur)
   if valign == "middle" then yp = yp - (tsize*rows)/2 end
   if valign == "bottom" then yp = yp - (tsize*rows)/1 end
   
-  local off = math.max(HGlobals.scale/2, math.min(w / 640, h / 320))
+--   local off = math.max(HGlobals.scale/2, math.min(w / 640, h / 320))
+  off = 0
   local ccoll = coll
   local t
   for t = 0,bct-1 do
@@ -378,20 +289,10 @@ function draw_palette(coll, x, y, w, h, halign, valign, show_cur)
     local xoff = t % cols
     local yoff = math.floor(t / cols)
     
-    local cur = false
-    if show_cur then
-      cur = (t == tex)
-      if coll == 0 then
-        cur = (ccoll == HCollections.current_landscape_collection)
-      end
-    end
-    if cur then
-      Screen.frame_rect(xp + (xoff*tsize) - off, yp + (yoff*tsize) - off, tsize + (2 * off), tsize + (2 * off), { 0, 1, 0, 1 }, 2*off)
-    end
     HCollections.draw(ccoll, ctex, xp + (xoff*tsize) + off, yp + (yoff*tsize) + off, tsize - (2 * off))
   end
   
-  return xa, ya
+--   return xa, ya
 end
 
 function draw_cursor(mode, name, xoff, yoff, abs)
@@ -736,13 +637,13 @@ HMenu.menus[HMode.attribute] = {
   { "radio", "transfer_9", 318, 305, 117, 18, "Fast vertical slide" },
   { "radio", "transfer_11", 318, 325, 117, 18, "Fast wander" },
   { "label", nil, 460, 205, 160, 18, "Preview" } }
-HMenu.menus[HMode.choose] = {
-  { "dbutton", "coll_17", 20, 380, 98, 18, "Water" },
-  { "dbutton", "coll_18", 120, 380, 98, 18, "Lava" },
-  { "dbutton", "coll_19", 220, 380, 98, 18, "Sewage" },
-  { "dbutton", "coll_20", 320, 380, 98, 18, "Jjaro" },
-  { "dbutton", "coll_21", 420, 380, 98, 18, "Pfhor" },
-  { "dbutton", "coll_0", 520, 380, 98, 18, "Landscapes" } }
+-- HMenu.menus[HMode.choose] = {
+--   { "dbutton", "coll_17", 20, 380, 98, 18, "Water" },
+--   { "dbutton", "coll_18", 120, 380, 98, 18, "Lava" },
+--   { "dbutton", "coll_19", 220, 380, 98, 18, "Sewage" },
+--   { "dbutton", "coll_20", 320, 380, 98, 18, "Jjaro" },
+--   { "dbutton", "coll_21", 420, 380, 98, 18, "Pfhor" },
+--   { "dbutton", "coll_0", 520, 380, 98, 18, "Landscapes" } }
   
 HMenu.inited = {}
 HMenu.inited[HMode.attribute] = false
@@ -768,6 +669,14 @@ function HMenu.draw_menu(mode)
       HGlobals.fontn:draw_text(item[7],
                                math.floor(x + 5*u), math.floor(y + 5*u),
                                { 1, 1, 1, 1 })
+    elseif item[1] == "texture" or item[1] == "dtexture" then
+      local cc, ct = string.match(item[2], "(%d+)_(%d+)")
+      local state = "enabled"
+      if item[1] == "texture" then state = HMenu.button_state(item[2]) end
+      if state == "active" then
+        Screen.frame_rect(x - 2*u, y - 2*u, w + 4*u, h + 4*u, { 0, 1, 0, 1 }, 2*u)
+      end
+     HCollections.draw(cc + 0, ct + 0, x, y, w)      
     elseif HMenu.clickable(item[1]) then
       if HStatus.current_menu_item == idx then
         Screen.frame_rect(x - 2*u, y - 2*u, w + 4*u, h + 4*u, { 0, 1, 0, 1 }, 2*u)
@@ -887,7 +796,7 @@ function HMenu.coord()
   
   return x, y
 end
-function HMenu.cursorpos(mode)
+function HMenu.cursorpos()
   local x, y = HMenu.coord()
   local xa = (x*HGlobals.scale) + HGlobals.xoff - HGlobals.cpos[1]
   local ya = (y*HGlobals.scale) + HGlobals.yoff - HGlobals.cpos[2]
@@ -919,6 +828,13 @@ function HMenu.button_state(name)
   elseif string.sub(name, 1, 5) == "coll_" then
     local mode = tonumber(string.sub(name, 6))
     if HCollections.current_collection == mode then state = "active" end
+  elseif string.sub(name, 1, 7) == "choose_" then
+    local cc, ct = string.match(name, "(%d+)_(%d+)")
+    cc = cc + 0
+    ct = ct + 0
+    if cc == HCollections.current_coll() and ct == Player.texture_palette.slots[cc].texture_index then
+      state = "active"
+    end
   end
   
   return state
@@ -951,37 +867,12 @@ end
 HChoose = {}
 function HChoose.gridsize(bct)
   local rows = 1
-  local cols = 2
+  local cols = 4
   while (rows * cols) < bct do
-    if (cols % 2) == 0 then
-      cols = cols + 1
-    else
-      rows = rows + 1
-      cols = math.floor(rows * 2)
-    end
+    rows = rows + 1
+    cols = 2 + (2*rows)
   end
-  if (rows * cols) >= (bct + rows) then
-    rows = rows - 1
-  end
-  return rows, cols
-end
-function HChoose.gridpos(rows, cols)
-  local ya = (rows - 0.5) * Player.pitch / 60
-
-  local xa = 0
-  local fov = 60
-  local dir = Player.direction - 180
---   if dir < 0 then dir = dir + 360 end    
---   if dir > 180 then dir = dir - 180 end
---   if dir > 90 then dir = dir - 180 end
-  if dir > fov then
-    xa = -(cols-0.5) / 2
-  elseif dir < -fov then
-    xa = (cols-0.5) / 2
-  else
-    xa = (-(cols-0.5) / 2) * (dir / fov)
-  end
-  return xa, ya
+  return rows, math.ceil(bct / rows)
 end
 
 
@@ -995,13 +886,13 @@ HCollections.wall_collections = {}
 HCollections.landscape_offsets = {}
 HCollections.landscape_textures = {}
 HCollections.all_shapes = {}
-HCollections.names = {"Landscapes", "Coll 1", "Coll 2", "Coll 3", "Coll 4",
+HCollections.names = {"Coll 0", "Coll 1", "Coll 2", "Coll 3", "Coll 4",
                      "Coll 5", "Coll 6", "Coll 7", "Coll 8", "Coll 9",
                      "Coll 10", "Coll 11", "Coll 12", "Coll 13", "Coll 14",
-                     "Coll 15", "Coll 16", "Water", "Lava", "Sewage",
-                     "Jjaro", "Pfhor", "Coll 22", "Coll 23", "Coll 24",
-                     "Coll 25", "Coll 26", "Dayscape", "Nightscape", "Moonscape",
-                     "Starscape", "Coll 31"}
+                     "Coll 15", "Coll 16", "Coll 17", "Coll 18", "Coll 19",
+                     "Coll 20", "Coll 21", "Coll 22", "Coll 23", "Coll 24",
+                     "Coll 25", "Coll 26", "Coll 27", "Coll 28", "Coll 29",
+                     "Coll 30", "Coll 31"}
 
 function HCollections.update()
   local slots = Player.texture_palette.slots
@@ -1011,6 +902,10 @@ function HCollections.update()
   HCollections.current_landscape_collection = slots[0].texture_index
   
   if HCollections.inited then return end
+
+  for k,v in pairs(collection_names) do
+    HCollections.names[k + 1] = v
+  end
   
   local landscape = false
   local landscape_offset = 0
@@ -1041,6 +936,106 @@ function HCollections.update()
         end
       end
     end
+  end
+  
+  
+  local num_walls = #HCollections.wall_collections
+  local num_land = #HCollections.landscape_textures
+
+  local menu_colls = {}
+  for _,v in pairs(HCollections.wall_collections) do
+    table.insert(menu_colls, v)
+  end
+  if num_land > 0 then table.insert(menu_colls, 0) end
+
+  -- set up collection buttons
+  local cbuttons = {}
+  if #menu_colls > 0 then
+    local n = #menu_colls
+    local w = math.floor(600 / n)
+    
+    local x = 20
+    local y = 370
+    for i = 1,n do
+      local cnum = menu_colls[i]
+      local cname = HCollections.names[cnum + 1]
+      table.insert(cbuttons,
+        { "dbutton", "coll_" .. cnum, x, y, w - 2, 18, cname })
+        
+      -- collection preview
+      if true then
+        local xx = x + 2
+        local yy = y + 20
+        local ww = w - 4
+        local hh = 75
+        
+        local bct
+        if cnum == 0 then
+          bct = #HCollections.landscape_textures
+        else
+          bct = Collections[cnum].bitmap_count
+        end
+ 
+        local rows, cols = HChoose.gridsize(bct)
+        local tsize = math.min(ww / cols, hh / rows)
+        xx = xx + (ww - (tsize * cols))/2
+        
+        for j = 1,bct do
+          local col = (j - 1) % cols
+          local row = math.floor((j - 1) / cols)
+          local xt = xx + (tsize * col)
+          local yt = yy + (tsize * row)
+          
+          local cc = cnum
+          local ct = j - 1
+          if cnum == 0 then
+            cc = HCollections.landscape_textures[j][1]
+            ct = HCollections.landscape_textures[j][2]
+          end
+          table.insert(cbuttons,
+            { "dtexture", "display_" .. cc .. "_" .. ct, 
+              xt, yt, tsize, tsize, cc .. ", " .. ct })
+        end
+      end
+      
+      x = x + w
+    end
+  end  
+  
+  -- set up grid
+  for _,cnum in ipairs(menu_colls) do
+    local bct
+    if cnum == 0 then
+      bct = #HCollections.landscape_textures
+    else
+      bct = Collections[cnum].bitmap_count
+    end
+    
+    local buttons = {}
+    local rows, cols = HChoose.gridsize(bct)
+    local tsize = math.min(600 / cols, 300 / rows)
+    
+    for i = 1,bct do
+      local col = (i - 1) % cols
+      local row = math.floor((i - 1) / cols)
+      local x = 20 + (tsize * col) + (600 - (tsize * cols))/2
+      local y = 65 + (tsize * row) + (300 - (tsize * rows))/2
+      
+      local cc = cnum
+      local ct = i - 1
+      if cnum == 0 then
+        cc = HCollections.landscape_textures[i][1]
+        ct = HCollections.landscape_textures[i][2]
+      end
+      table.insert(buttons,
+        { "texture", "choose_" .. cc .. "_" .. ct, 
+          x, y, tsize - 2, tsize - 2, cc .. ", " .. ct })
+    end
+    for _,v in ipairs(cbuttons) do
+      table.insert(buttons, v)
+    end
+    
+    HMenu.menus["choose_" .. cnum] = buttons
   end
     
   HCollections.inited = true

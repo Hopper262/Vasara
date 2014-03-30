@@ -8,7 +8,7 @@
 vert_range = 30   -- max: 30
 horiz_range = 70  -- max: 160
 
-vert_size = 320   -- max: 430
+vert_size = 325   -- max: 430
 horiz_size = 600  -- max: 640
 
 vert_offset = 65
@@ -471,6 +471,16 @@ function SMode.handle_apply(p)
           end            
         end
       end
+    elseif p._keys.secondary.released then
+      -- sample
+      local surface = SCollections.find_surface(p, true)
+      if surface and (not (is_transparent_side(surface) and surface.empty)) then
+        SCollections.set(p, surface.collection.index, surface.texture_index)
+        if p._collections.current_collection ~= 0 then
+          p._light = surface.light.index
+          p._transfer_mode = transfer_mode_lookup[surface.transfer_mode]
+        end
+      end
     elseif p._keys.prev_weapon.pressed then
       p._light = (p._light - 1) % #Lights
     elseif p._keys.next_weapon.pressed then
@@ -544,12 +554,86 @@ function SMode.annotate(p)
   p._annotation.y = poly.y
 end
 function SMode.handle_choose(p)
-  if p._keys.primary.released then
-    local tex = SChoose.gridtexture(p)
-    if tex > -1 then
-      --p._mode = SMode.apply
+  -- cycle textures
+  if p._keys.mic.down and (p._keys.prev_weapon.held or p._keys.next_weapon.held or p._keys.primary.held) then
+    local diff = 1
+    if p._keys.prev_weapon.held then diff = -1 end
+    local cur = p._collections.current_collection
+    if cur == 0 then
+      local bct = 0
+      local tex = 0
+      for _, collection in pairs(SCollections.landscape_collections) do
+        if collection == p._collections.current_landscape_collection then
+          local info = SCollections.collection_map[collection]
+          tex = info.offset + p._collections.current_textures[collection]
+        end
+        bct = bct + Collections[collection].bitmap_count
+      end
+      
+      tex = (tex + diff) % bct
+      for _, collection in pairs(SCollections.landscape_collections) do
+        local info = SCollections.collection_map[collection]
+        if tex >= info.offset and tex < (info.offset + info.count) then
+          local ct = tex - info.offset
+          SCollections.set(p, collection, ct)
+          SMenu.point_at_name(p, "choose_0", "choose_" .. collection .. "_" .. ct)
+          break
+        end
+      end
+    else
+      local tex = p._collections.current_textures[cur]
+      local bct = Collections[cur].bitmap_count
+      local ct = (tex + diff) % bct
+      SCollections.set(p, cur, ct)
+      SMenu.point_at_name(p, "choose_" .. cur, "choose_" .. cur .. "_" .. ct)
     end
   end
+  
+  if (p._keys.mic.down and p._keys.secondary.held) or ((not p._keys.mic.down) and (p._keys.next_weapon.held or p._keys.prev_weapon.held)) then
+    -- cycle collections
+    local diff = 1
+    if p._keys.prev_weapon.held then diff = -1 end
+    
+    local cur = p._collections.current_collection
+    local ci = 0
+    for i, c in ipairs(SCollections.wall_collections) do
+      if cur == c then
+        ci = i
+        break
+      end
+    end
+    ci = (ci + diff) % (#SCollections.wall_collections + 1)
+    if ci == 0 then
+      p._collections.current_collection = 0
+    else
+      p._collections.current_collection = SCollections.wall_collections[ci]
+    end
+  end
+    
+  -- handle menu
+  if (not p._keys.mic.down) and p._keys.primary.released then
+    local name = SMenu.selection(p, "choose_" .. p._collections.current_collection)
+    if name == nil then return end
+    
+    if string.sub(name, 1, 7) == "choose_" then
+      local cc, ct = string.match(name, "(%d+)_(%d+)")
+      cc = cc + 0
+      ct = ct + 0
+      p._collections.current_collection = cc
+      p._collections.current_textures[cc] = ct
+      for _, coll in pairs(SCollections.landscape_collections) do
+        if coll == cc then
+          p._collections.current_collection = 0
+          p._collections.current_landscape_collection = cc
+          break
+        end
+      end
+    elseif string.sub(name, 1, 5) == "coll_" then
+      local mode = tonumber(string.sub(name, 6))
+      p._collections.current_collection = mode
+    end
+  end
+
 end
 function SMode.handle_attribute(p)
   if p._keys.prev_weapon.pressed then
@@ -847,6 +931,10 @@ function SMenu.init_menu(mode)
   end
   
   local blist = SMenu.buttons[mode]
+  if blist == nil then
+    SMenu.buttons[mode] = {}
+    blist = SMenu.buttons[mode]
+  end
   for idx, item in ipairs(menu) do
     if SMenu.clickable(item[1]) then
       table.insert(blist, idx)
@@ -869,128 +957,42 @@ function SMenu.highlight_item(p, mode, inc)
   p._menu_item = bm[p._menu_button]
 end
 function SMenu.point_at_item(p, mode, idx)
+  if idx < 1 then return end
   if not SMenu.inited[mode] then SMenu.init_menu(mode) end
   local m = SMenu.menus[mode]
+  if idx > #m then return end
   local item = m[idx]
   local x = item[3] + math.floor(item[5]/2)
   local y = item[4] + math.floor(item[6]/2)
   
   p.pitch = -(vert_range * 2) * (y - vert_offset - vert_size/2) / vert_size
   p.direction = 180 - ((horiz_range * 2) * (x - horiz_offset - horiz_size/2)) / -horiz_size
-
---   local y = vert_offset + vert_size/(vert_range*2) * PIN(vert_range - p.pitch, 0, vert_range*2)
---   local x = horiz_offset + horiz_size/(horiz_range*2) * PIN(horiz_range + p.direction - 180, 0, horiz_range*2)
---   
---   SMenu.setcursor(p, horiz_size, vert_size, row, col)
 end
-function SMenu.setcursor(p, rows, cols, sel_row, sel_col)
-  p.pitch = -60 * (sel_row + 0.5 - rows/2) / (rows - 0.5)
-  p.direction = 180 - (120 * (sel_col + 0.5 - (cols * 0.5)) / (0.5 - cols))
+function SMenu.index_for_name(mode, name)
+  if not SMenu.inited[mode] then SMenu.init_menu(mode) end
+  local m = SMenu.menus[mode]
+  for i,v in ipairs(m) do
+    if v[2] == name then return i end
+  end
+  return -1
 end
+function SMenu.point_at_name(p, mode, name)
+  SMenu.point_at_item(p, mode, SMenu.index_for_name(mode, name))
+end  
 function SMenu.clickable(item_type)
-  return item_type == "button" or item_type == "checkbox" or item_type == "radio" or item_type == "texture" or item_type == "light"
+  return item_type == "button" or item_type == "checkbox" or item_type == "radio" or item_type == "texture" or item_type == "light" or item_type == "dradio" or item_type == "dbutton"
 end
 
 
 SChoose = {}
 function SChoose.gridsize(bct)
   local rows = 1
-  local cols = 2
+  local cols = 4
   while (rows * cols) < bct do
-    if (cols % 2) == 0 then
-      cols = cols + 1
-    else
-      rows = rows + 1
-      cols = math.floor(rows * 2)
-    end
+    rows = rows + 1
+    cols = 2 + (2*rows)
   end
-  if (rows * cols) >= (bct + rows) then
-    rows = rows - 1
-  end
-  return rows, cols
-end
-function SChoose.recenter(p)
-  local fov = 60
-  if p.direction < (180 - fov) then
-    p.direction = 180 - fov
-  elseif p.direction > (180 + fov) then
-    p.direction = 180 + fov
-  end
-end
-
-function SChoose.gridpos(p, rows, cols)
-  local ya = (rows - 0.5) * p.pitch / 60
-
-  local xa = 0
-  local fov = 60
-  local dir = p.direction - 180
-  if dir > fov then
-    xa = -(cols-0.5) / 2
-  elseif dir < -fov then
-    xa = (cols-0.5) / 2
-  else
-    xa = (-(cols-0.5) / 2) * (dir / fov)
-  end
-  return xa, ya
-end
-function SChoose.setcursor(p, rows, cols, sel_row, sel_col)
-  p.pitch = -60 * (sel_row + 0.5 - rows/2) / (rows - 0.5)
-  p.direction = 180 - (120 * (sel_col + 0.5 - (cols * 0.5)) / (0.5 - cols))
-end
-function SChoose.point_to_texture(p)
-  local coll = p._collections.current_collection
-  local bct = 0
-  local tex = 0
-  if coll == 0 then
-    for _, collection in pairs(SCollections.landscape_collections) do
-      bct = bct + Collections[collection].bitmap_count
-      if collection == p._collections.current_landscape_collection then
-        local ci = SCollections.collection_map[collection]        
-        tex = p._collections.current_textures[collection] + ci.offset
-      end
-    end
-  else
-    bct = Collections[coll].bitmap_count
-    tex = p._collections.current_textures[coll]
-  end
-  local rows, cols = SChoose.gridsize(bct)
-  local sel_row = math.floor(tex / cols)
-  local sel_col = tex % cols
-
-  SChoose.setcursor(p, rows, cols, sel_row, sel_col)
-end
-function SChoose.gridtexture(p)
-  local coll = p._collections.current_collection
-  local bct = 0
-  if coll == 0 then
-    for _, collection in pairs(SCollections.landscape_collections) do
-      bct = bct + Collections[collection].bitmap_count
-    end
-  else
-    bct = Collections[coll].bitmap_count
-  end
-  local rows, cols = SChoose.gridsize(bct)
-  local xa, ya = SChoose.gridpos(p, rows, cols)
-  local row = math.floor(-ya + (rows * 0.5))
-  local col = math.floor(-xa + (cols * 0.5))
-  local tex = col + (row * cols)
-  
-  if tex < bct then
-    p._collections.current_textures[coll] = tex
-    if coll == 0 then
-      for _, collection in pairs(SCollections.landscape_collections) do
-        local ci = SCollections.collection_map[collection]
-        if tex < (ci.offset + ci.count) then
-          p._collections.current_landscape_collection = collection
-          p._collections.current_textures[collection] = tex - ci.offset
-          break
-        end
-      end
-    end
-  else
-    tex = -1
-  end
-  return tex
+  return rows, math.ceil(bct / rows)
 end
 
 SCollections = {}
@@ -1007,12 +1009,16 @@ function SCollections.init()
   end
   table.sort(SCollections.wall_collections)
   
+  local landscape_textures = {}
   local off = 0
   for _, collection in pairs(landscapes) do
     if not SCollections.collection_map[collection] then
       table.insert(SCollections.landscape_collections, collection)
       SCollections.collection_map[collection] = {type = "landscape", offset = off, count = Collections[collection].bitmap_count}
       off = off + Collections[collection].bitmap_count
+      for i = 1,Collections[collection].bitmap_count do
+        table.insert(landscape_textures, { collection, i - 1 })
+      end
     end
   end
   table.sort(SCollections.landscape_collections)
@@ -1027,6 +1033,66 @@ function SCollections.init()
     end
   end
   local current_landscape_collection = SCollections.landscape_collections[1]
+  
+  if true then
+    local menu_colls = {}
+    for _,v in ipairs(SCollections.wall_collections) do
+      table.insert(menu_colls, v)
+    end
+    if #landscape_textures > 0 then table.insert(menu_colls, 0) end
+    
+    -- set up collection buttons
+    local cbuttons = {}
+    if #menu_colls > 0 then
+      local n = #menu_colls
+      local w = math.floor(600 / n)
+      
+      local x = 20
+      local y = 370
+      for i = 1,n do
+        local cnum = menu_colls[i]
+        table.insert(cbuttons,
+          { "dbutton", "coll_" .. cnum, x, y, w - 2, 18, "" })
+        x = x + w
+      end
+    end  
+    
+    -- set up grid
+    for _,cnum in ipairs(menu_colls) do
+      local bct
+      if cnum == 0 then
+        bct = #landscape_textures
+      else
+        bct = Collections[cnum].bitmap_count
+      end
+      
+      local buttons = {}
+      local rows, cols = SChoose.gridsize(bct)
+      local tsize = math.min(600 / cols, 300 / rows)
+      
+      for i = 1,bct do
+        local col = (i - 1) % cols
+        local row = math.floor((i - 1) / cols)
+        local x = 20 + (tsize * col) + (600 - (tsize * cols))/2
+        local y = 65 + (tsize * row) + (300 - (tsize * rows))/2
+        
+        local cc = cnum
+        local ct = i - 1
+        if cnum == 0 then
+          cc = landscape_textures[i][1]
+          ct = landscape_textures[i][2]
+        end
+        table.insert(buttons,
+          { "texture", "choose_" .. cc .. "_" .. ct, 
+            x, y, tsize - 2, tsize - 2, cc .. ", " .. ct })
+      end
+      for _,v in ipairs(cbuttons) do
+        table.insert(buttons, v)
+      end
+      
+      SMenu.menus["choose_" .. cnum] = buttons
+    end
+  end
     
   for p in Players() do
   
@@ -1076,132 +1142,6 @@ end
 function SCollections.update()
   for p in Players() do
 
-    if p._mode == SMode.choose then
-      if p._keys.mic.down then
-        -- cycle textures
-        if p._keys.prev_weapon.held then
-          local cur = p._collections.current_collection
-          if cur == 0 then
-            local bct = 0
-            local tex = 0
-            for _, collection in pairs(SCollections.landscape_collections) do
-              if collection == p._collections.current_landscape_collection then
-                local info = SCollections.collection_map[collection]
-                tex = info.offset + p._collections.current_textures[collection]
-              end
-              bct = bct + Collections[collection].bitmap_count
-            end
-            
-            tex = (tex - 1) % bct
-            for _, collection in pairs(SCollections.landscape_collections) do
-              local info = SCollections.collection_map[collection]
-              if tex >= info.offset and tex < (info.offset + info.count) then
-                SCollections.set(p, collection, tex - info.offset)
-                SChoose.point_to_texture(p)
-                break
-              end
-            end
-          else
-            local tex = p._collections.current_textures[cur]
-            local bct = Collections[cur].bitmap_count
-            SCollections.set(p, cur, (tex - 1) % bct)
-            SChoose.point_to_texture(p)
-          end
-        end
-        if p._keys.next_weapon.held or p._keys.primary.held then
-          local cur = p._collections.current_collection
-          if cur == 0 then
-            local bct = 0
-            local tex = 0
-            for _, collection in pairs(SCollections.landscape_collections) do
-              if collection == p._collections.current_landscape_collection then
-                local info = SCollections.collection_map[collection]
-                tex = info.offset + p._collections.current_textures[collection]
-              end
-              bct = bct + Collections[collection].bitmap_count
-            end
-            
-            tex = (tex + 1) % bct
-            for _, collection in pairs(SCollections.landscape_collections) do
-              local info = SCollections.collection_map[collection]
-              if tex >= info.offset and tex < (info.offset + info.count) then
-                SCollections.set(p, collection, tex - info.offset)
-                SChoose.point_to_texture(p)
-                break
-              end
-            end
-          else
-            local tex = p._collections.current_textures[cur]
-            local bct = Collections[cur].bitmap_count
-            SCollections.set(p, cur, (tex + 1) % bct)
-            SChoose.point_to_texture(p)
-          end
-        end
-        if p._keys.secondary.held then
-          -- ffwd collections
-          local cur = p._collections.current_collection
-          if cur == 0 then
-            p._collections.current_collection = SCollections.wall_collections[1]
-          else
-            local nxt = 0
-            local found = false
-            for _, c in pairs(SCollections.wall_collections) do
-              if found then
-                nxt = c
-                break
-              end
-              if c == cur then found = true end
-            end
-            p._collections.current_collection = nxt
-          end
-        end
-      else
-        -- cycle collections
-        if p._keys.prev_weapon.held then
-          local cur = p._collections.current_collection
-          if cur == 0 then
-            p._collections.current_collection = SCollections.wall_collections[#SCollections.wall_collections]
-          else
-            local prev = 0
-            for _, c in pairs(SCollections.wall_collections) do
-              if c == cur then break end
-              prev = c
-            end
-            p._collections.current_collection = prev
-          end
-        end
-        if p._keys.next_weapon.held then
-          local cur = p._collections.current_collection
-          if cur == 0 then
-            p._collections.current_collection = SCollections.wall_collections[1]
-          else
-            local nxt = 0
-            local found = false
-            for _, c in pairs(SCollections.wall_collections) do
-              if found then
-                nxt = c
-                break
-              end
-              if c == cur then found = true end
-            end
-            p._collections.current_collection = nxt
-          end
-        end
-      end
-    end
-    if p._mode == SMode.apply then
-      if (not p._keys.mic.down) and p._keys.secondary.released then
-        local surface = SCollections.find_surface(p, true)
-        if surface and (not (is_transparent_side(surface) and surface.empty)) then
-          SCollections.set(p, surface.collection.index, surface.texture_index)
-          if p._collections.current_collection ~= 0 then
-            p._light = surface.light.index
-            p._transfer_mode = transfer_mode_lookup[surface.transfer_mode]
-          end
-        end
-      end
-    end
-    
     if p.local_ then
       local pal = p.texture_palette.slots
       pal[0].texture_index = p._collections.current_landscape_collection
