@@ -894,15 +894,7 @@ HCollections.names = {"Coll 0", "Coll 1", "Coll 2", "Coll 3", "Coll 4",
                      "Coll 25", "Coll 26", "Coll 27", "Coll 28", "Coll 29",
                      "Coll 30", "Coll 31"}
 
-function HCollections.update()
-  local slots = Player.texture_palette.slots
-  HCollections.current_collection = slots[32].collection
-  HCollections.current_texture = slots[32].texture_index
-  HCollections.current_type = slots[HCollections.current_collection].type
-  HCollections.current_landscape_collection = slots[0].texture_index
-  
-  if HCollections.inited then return end
-
+function HCollections.init()
   for k,v in pairs(collection_names) do
     HCollections.names[k + 1] = v
   end
@@ -910,7 +902,7 @@ function HCollections.update()
   local landscape = false
   local landscape_offset = 0
   for i = 0,31 do
-    local collection = slots[i].collection
+    local collection = Player.texture_palette.slots[i].collection
     if collection == 0 then
       if landscape then break end
       landscape = true
@@ -943,10 +935,15 @@ function HCollections.update()
   local num_land = #HCollections.landscape_textures
 
   local menu_colls = {}
-  for _,v in pairs(HCollections.wall_collections) do
-    table.insert(menu_colls, v)
+  for _,cnum in pairs(HCollections.wall_collections) do
+    local bct = Collections[cnum].bitmap_count
+    local rows, cols = HChoose.gridsize(bct)
+    table.insert(menu_colls, { cnum = cnum, bct = bct, rows = rows, cols = cols })
   end
-  if num_land > 0 then table.insert(menu_colls, 0) end
+  if num_land > 0 then
+    local rows, cols = HChoose.gridsize(num_land)
+    table.insert(menu_colls, { cnum = 0, bct = num_land, rows = rows, cols = cols })
+  end
 
   -- set up collection buttons
   local cbuttons = {}
@@ -957,7 +954,8 @@ function HCollections.update()
     local x = 20
     local y = 372
     for i = 1,n do
-      local cnum = menu_colls[i]
+      local cinfo = menu_colls[i]
+      local cnum = cinfo.cnum
       local cname = HCollections.names[cnum + 1]
       table.insert(cbuttons,
         { "dbutton", "coll_" .. cnum, x, y, w - 2, 18, cname })
@@ -969,14 +967,7 @@ function HCollections.update()
         local ww = w - 4
         local hh = 75
         
-        local bct
-        if cnum == 0 then
-          bct = #HCollections.landscape_textures
-        else
-          bct = Collections[cnum].bitmap_count
-        end
- 
-        local rows, cols = HChoose.gridsize(bct)
+        local bct, rows, cols = cinfo.bct, cinfo.rows, cinfo.cols
         local tsize = math.min(ww / cols, hh / rows)
         xx = xx + (ww - (tsize * cols))/2
         
@@ -1003,16 +994,10 @@ function HCollections.update()
   end  
   
   -- set up grid
-  for _,cnum in ipairs(menu_colls) do
-    local bct
-    if cnum == 0 then
-      bct = #HCollections.landscape_textures
-    else
-      bct = Collections[cnum].bitmap_count
-    end
+  for _,cinfo in ipairs(menu_colls) do
+    local cnum, bct, rows, cols = cinfo.cnum, cinfo.bct, cinfo.rows, cinfo.cols
     
     local buttons = {}
-    local rows, cols = HChoose.gridsize(bct)
     local tsize = math.min(600 / cols, 300 / rows)
     
     for i = 1,bct do
@@ -1039,6 +1024,15 @@ function HCollections.update()
   end
     
   HCollections.inited = true
+end
+function HCollections.update()
+  local slots = Player.texture_palette.slots
+  HCollections.current_collection = slots[32].collection
+  HCollections.current_texture = slots[32].texture_index
+  HCollections.current_type = slots[HCollections.current_collection].type
+  HCollections.current_landscape_collection = slots[0].texture_index
+  
+  if not HCollections.inited then HCollections.init() end
 end
 function HCollections.current_coll()
   local coll = HCollections.current_collection
