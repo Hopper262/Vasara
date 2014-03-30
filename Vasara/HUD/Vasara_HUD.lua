@@ -32,6 +32,7 @@ collection_names = {
 Triggers = {}
 
 g_scriptChecked = false
+g_initMode = 0
 
 function Triggers.draw()
   if Player.life ~= 409 then
@@ -39,6 +40,21 @@ function Triggers.draw()
       g_scriptChecked = true
       error "Vasara HUD requires Vasara Script"
     end
+    return
+  end
+  
+  if g_initMode < 2 then
+    if g_initMode == 1 then
+      HCollections.update()
+      HMenu.draw_menu("choose_" .. HCollections.current_collection)
+    end
+    Screen.fill_rect(0, 0, Screen.width, Screen.height, { 0, 0, 0, 1 })
+    local txt = "Loading textures..."
+    local fw, fh = HGlobals.fontn:measure_text(txt)
+    HGlobals.fontn:draw_text(txt,
+      Screen.width/2 - fw/2, Screen.height/2 - fh/2,
+      { 1, 1, 1, 1 })
+    g_initMode = g_initMode + 1
     return
   end
   
@@ -268,6 +284,7 @@ end
 imgs = {}
 function Triggers.init()
   Screen.crosshairs.lua_hud = true
+  g_initMode = 0
   
   for _, nm in pairs({ "cursor_menu", "cursor_menu_down",
                        "cursor_apply", "cursor_apply_down",
