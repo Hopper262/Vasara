@@ -227,11 +227,7 @@ function Triggers.draw()
     ym = ym + yplus
     
     -- lower right: full collection
-    draw_palette(HCollections.current_collection,
-                 HGlobals.xoff + 620*HGlobals.scale,
-                 HGlobals.yoff + 380*HGlobals.scale,
-                 180*HGlobals.scale, 90*HGlobals.scale,
-                 "right", "top")
+    HMenu.draw_menu("preview_" .. HCollections.current_collection, true)
   end
   
   -- cursor
@@ -254,45 +250,6 @@ function draw_mode(label, x, y, active)
   end
   img:draw(x - 2*HGlobals.scale, y)
   HGlobals.fontn:draw_text(label, x + 13*HGlobals.scale, y, clr)
-end
-
-function draw_palette(coll, x, y, w, h, halign, valign)
-
-  local tex = Player.texture_palette.slots[coll].texture_index
-  local bct = Collections[coll].bitmap_count
-  if coll == 0 then
-    bct = #HCollections.landscape_textures
-  end
-
-  local rows, cols = HChoose.gridsize(bct)
-  local tsize = math.min(w / cols, h / rows)
-  
-  local xp = x
-  if halign == "center" then xp = xp - (tsize*cols)/2 end
-  if halign == "right"  then xp = xp - (tsize*cols)/1 end
-
-  local yp = y
-  if valign == "middle" then yp = yp - (tsize*rows)/2 end
-  if valign == "bottom" then yp = yp - (tsize*rows)/1 end
-  
---   local off = math.max(HGlobals.scale/2, math.min(w / 640, h / 320))
-  off = 0
-  local ccoll = coll
-  local t
-  for t = 0,bct-1 do
-    local ctex = t
-    if coll == 0 then
-      local tbl = HCollections.landscape_textures[t+1]
-      ccoll = tbl[1]
-      ctex = tbl[2]
-    end
-    local xoff = t % cols
-    local yoff = math.floor(t / cols)
-    
-    HCollections.draw(ccoll, ctex, xp + (xoff*tsize) + off, yp + (yoff*tsize) + off, tsize - (2 * off))
-  end
-  
---   return xa, ya
 end
 
 function draw_cursor(mode, name, xoff, yoff, abs)
@@ -647,17 +604,18 @@ HMenu.menus[HMode.attribute] = {
   
 HMenu.inited = {}
 HMenu.inited[HMode.attribute] = false
-function HMenu.draw_menu(mode)
+function HMenu.draw_menu(mode, transparent)
   if not HMenu.inited[mode] then HMenu.init_menu(mode) end
   local u = HGlobals.scale
   local m = HMenu.menus[mode]
   local xp = HGlobals.xoff
   local yp = HGlobals.yoff
   
-  Screen.fill_rect(Screen.world_rect.x, Screen.world_rect.y,
-                   Screen.world_rect.width, Screen.world_rect.height,
-                   { 0, 0, 0, 1 })
-  --Screen.frame_rect(xp, yp, m[1][5]*u, m[1][6]*u, { 0, 1, 0, 1 }, 2*u)
+  if not transparent then
+    Screen.fill_rect(Screen.world_rect.x, Screen.world_rect.y,
+                     Screen.world_rect.width, Screen.world_rect.height,
+                     { 0, 0, 0, 1 })
+  end
   
   for idx, item in ipairs(m) do
     local x = xp + item[3]*u
@@ -944,6 +902,36 @@ function HCollections.init()
     local rows, cols = HChoose.gridsize(num_land)
     table.insert(menu_colls, { cnum = 0, bct = num_land, rows = rows, cols = cols })
   end
+  
+  -- set up apply-mode previews
+  for i = 1,#menu_colls do
+    local preview = {}
+    local cinfo = menu_colls[i]
+    local cnum, bct, rows, cols = cinfo.cnum, cinfo.bct, cinfo.rows, cinfo.cols
+    
+    local w = 180
+    local h = 90
+    local tsize = math.min(w / cols, h / rows)
+    local x = 620 - (tsize * cols)
+    local y = 380
+    for j = 1,bct do
+      local col = (j - 1) % cols
+      local row = math.floor((j - 1) / cols)
+      local xt = x + (tsize * col)
+      local yt = y + (tsize * row)
+      
+      local cc = cnum
+      local ct = j - 1
+      if cnum == 0 then
+        cc = HCollections.landscape_textures[j][1]
+        ct = HCollections.landscape_textures[j][2]
+      end
+      table.insert(preview,
+        { "dtexture", "display_" .. cc .. "_" .. ct, 
+          xt, yt, tsize, tsize, cc .. ", " .. ct })
+    end
+    HMenu.menus["preview_" .. cnum] = preview
+  end  
 
   -- set up collection buttons
   local cbuttons = {}
