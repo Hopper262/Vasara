@@ -154,10 +154,10 @@ function Triggers.draw()
 --     end
     
     if HApply.down(HApply.use_texture) then
-      HCollections.draw(coll, tex, xp, yp, 160*HGlobals.scale)
+      HCollections.draw(coll, tex, xp, yp, 120*HGlobals.scale)
       if HApply.current_transfer ~= 5 and HApply.current_transfer ~= 4 then
         local val = HLights.adj(HApply.current_light)
-        Screen.fill_rect(xp, yp, 160*HGlobals.scale, 160*HGlobals.scale, { 0, 0, 0, 1 - val })
+        Screen.fill_rect(xp, yp, 120*HGlobals.scale, 120*HGlobals.scale, { 0, 0, 0, 1 - val })
       end
     elseif HApply.down(HApply.use_light) then 
       local val = HLights.val(HApply.current_light)
