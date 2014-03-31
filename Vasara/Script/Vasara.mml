@@ -1,11 +1,3 @@
 <marathon>
   <overhead_map mode="2"/>
-<!-- 
-  <view fold_effect="false"
-        static_effect="false"
-        interlevel_in_effects="false"
-        interlevel_out_effects="false"/>
-  <sounds teleport_in="-1"
-          teleport_out="-1"/>
- -->
 </marathon>

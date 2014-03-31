@@ -514,7 +514,8 @@ function SMode.handle_teleport(p)
   end
   
   if (not p._keys.mic.down) and p._keys.primary.released then
-    p:teleport(p._target_poly)
+    local poly = Polygons[p._target_poly]
+    p:position(poly.x, poly.y, poly.z, poly)
     UTeleport.end_highlight(p)
     p._frozen = false
     return
