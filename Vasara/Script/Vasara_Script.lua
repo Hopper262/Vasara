@@ -516,6 +516,7 @@ function SMode.handle_teleport(p)
   if (not p._keys.mic.down) and p._keys.primary.released then
     local poly = Polygons[p._target_poly]
     p:position(poly.x, poly.y, poly.z, poly)
+    p.monster:play_sound("teleport in")
     UTeleport.end_highlight(p)
     p._frozen = false
     return
