@@ -26,6 +26,56 @@ collection_names = {
 [21] = "Pfhor"
 }
 
+-- colors (RGBA, 0 to 1)
+colors = {}
+colors.menu_label = { 0.8, 0.8, 0.8, 1 }
+colors.current_texture = { 0, 1, 0, 1 }
+colors.current_light = { 0, 1, 0, 1 }
+colors.noncurrent_light = { 0.5, 0.5, 0.5, 1 }
+
+colors.commands = {}
+colors.commands.enabled = {}
+colors.commands.enabled.label = { 0, 1, 0, 1 }
+colors.commands.enabled.key = { 1, 1, 1, 1 }
+colors.commands.disabled = {}
+colors.commands.disabled.label = { 0, 0.5, 0, 1 }
+colors.commands.disabled.key = { 0.5, 0.5, 0.5, 1 }
+colors.commands.active = {}
+colors.commands.active.label = { 1, 0, 0, 1 }
+colors.commands.active.key = { 1, 1, 0, 1 }
+
+colors.button = {}
+colors.button.enabled = {}
+colors.button.enabled.background = { 0.1, 0.1, 0.1, 1 }
+colors.button.enabled.highlight = { 0.1, 0.1, 0.1, 1 }
+colors.button.enabled.shadow = { 0.1, 0.1, 0.1, 1 }
+colors.button.enabled.text = { 0.8, 0.8, 0.8, 1 }
+colors.button.disabled = {}
+colors.button.disabled.background = { 0.0, 0.0, 0.0, 1 }
+colors.button.disabled.highlight = { 0.0, 0.0, 0.0, 1 }
+colors.button.disabled.shadow = { 0.0, 0.0, 0.0, 1 }
+colors.button.disabled.text = { 0.5, 0.5, 0.5, 1 }
+colors.button.active = {}
+colors.button.active.background = { 0.2, 0.2, 0.2, 1 }
+colors.button.active.highlight = { 0.25, 0.25, 0.25, 1 }
+colors.button.active.shadow = { 0.15, 0.15, 0.15, 1 }
+colors.button.active.text = { 0.0, 1.0, 0.0, 1 }
+
+colors.apply = {}
+colors.apply.enabled = {}
+colors.apply.enabled.text = { 0.5, 0.5, 0.5, 1 }
+colors.apply.active = {}
+colors.apply.active.text = { 1, 1, 1, 1 }
+
+-- other menu UI prefs
+menu_prefs = {}
+menu_prefs.button_indent = 1
+menu_prefs.button_highlight_thickness = 2
+menu_prefs.button_shadow_thickness = 2
+menu_prefs.texture_choose_indent = 1
+menu_prefs.texture_preview_indent = 0
+menu_prefs.light_thickness = 2
+
 
 -- END PREFERENCES -- no user serviceable parts below ;)
 
@@ -82,27 +132,17 @@ function Triggers.draw()
   local labels = HMode.labels[HMode.current]
     
   for _, info in pairs(labels) do
-    local lcolor = { 0, 1, 0, 1}
-    local acolor = { 1, 1, 1, 1}
-    local down
+    local state = "enabled"
+    if HKeys.down(info[1]) then state = "active" end
     if info[4] then
       if not HKeys.down(HKeys.mic) then
-        lcolor = { 0.0, 0.5, 0.0, 1 }
-        acolor = { 0.5, 0.5, 0.5, 1 }
-      else
-        down = HKeys.down(info[1])
+        state = "disabled"
       end
     elseif (info[1] ~= HKeys.mic) and HKeys.down(HKeys.mic) then
-      down = false
-      lcolor = { 0.0, 0.5, 0.0, 1 }
-      acolor = { 0.5, 0.5, 0.5, 1 }
-    else
-      down = HKeys.down(info[1])
+      state = "disabled"
     end
-    if down then
-      lcolor = { 1, 0, 0, 1}
-      acolor = { 1, 1, 0, 1}
-    end
+    local lcolor = colors.commands[state].label
+    local acolor = colors.commands[state].key
     
     local ltxt
     if info[4] then
@@ -157,42 +197,34 @@ function Triggers.draw()
   
   -- lower area
   if HMode.is(HMode.attribute) then
-    local xp = HGlobals.xoff + 460*HGlobals.scale
-    local yp = HGlobals.yoff + 225*HGlobals.scale
-    local yf = yp + 88*HGlobals.scale
+    local u = HGlobals.scale
+    local xp = HGlobals.xoff + 460*u
+    local yp = HGlobals.yoff + 270*u
+    local sz = 120*u
     
     local coll = HCollections.current_coll()
     local tex = Player.texture_palette.slots[coll].texture_index
     local bct = Collections[coll].bitmap_count
---     local nm = HCollections.names[coll + 1]
---     if bct > 1 then
---       nm = nm .. " #" .. tex
---     end
     
     if HApply.down(HApply.use_texture) then
       HCollections.draw(coll, tex, xp, yp, 120*HGlobals.scale)
       if HApply.current_transfer ~= 5 and HApply.current_transfer ~= 4 then
         local val = HLights.adj(HApply.current_light)
-        Screen.fill_rect(xp, yp, 120*HGlobals.scale, 120*HGlobals.scale, { 0, 0, 0, 1 - val })
+        Screen.fill_rect(xp, yp, sz, sz, { 0, 0, 0, 1 - val })
       end
     elseif HApply.down(HApply.use_light) then 
       local val = HLights.val(HApply.current_light)
-      Screen.fill_rect(xp, yp, 160*HGlobals.scale, 160*HGlobals.scale, { val, val, val, 1 })
+      Screen.fill_rect(xp, yp, sz, sz { val, val, val, 1 })
     end
 
   end
   if HMode.is(HMode.apply) then
     local xp = HGlobals.xoff + 20*HGlobals.scale
     local yp = HGlobals.yoff + 380*HGlobals.scale
-    local yf = yp + 88*HGlobals.scale
     
     local coll = HCollections.current_coll()
     local tex = Player.texture_palette.slots[coll].texture_index
     local bct = Collections[coll].bitmap_count
---     local nm = HCollections.names[coll + 1]
---     if bct > 1 then
---       nm = nm .. " #" .. tex
---     end
     
     -- lower left: current texture
     if HApply.down(HApply.use_texture) then
@@ -258,10 +290,10 @@ function Triggers.draw()
 end
 
 function draw_mode(label, x, y, active)
-  local clr = { 0.5, 0.5, 0.5, 1 }
+  local clr = colors.apply.enabled.text
   local img = imgs["fcheck_off"]
   if active then
-    clr = { 1, 1, 1, 1 }
+    clr = colors.apply.active.text
     img = imgs["fcheck_on"]
   end
   img:draw(x - 2*HGlobals.scale, y)
@@ -289,8 +321,7 @@ function Triggers.init()
   for _, nm in pairs({ "cursor_menu", "cursor_menu_down",
                        "cursor_apply", "cursor_apply_down",
                        "cursor_teleport", "cursor_teleport_down",
-                       "bcheck_on", "bcheck_off", "bcheck_dis",
-                       "bradio_on", "bradio_off", "bradio_dis",
+                       "dcheck_on", "dcheck_off", "dcheck_dis",
                        "dradio_on", "dradio_off", "dradio_dis",
                        "fcheck_on", "fcheck_off" }) do
     imgs[nm] = Images.new{path = "resources/" .. nm .. ".png"}
@@ -585,39 +616,32 @@ end
 HMenu = {}
 HMenu.menus = {}
 HMenu.menus[HMode.attribute] = {
-  { "label", nil, 20, 65, 155, 18, "Attributes" },
-  { "checkbox", "apply_light", 20, 85, 155, 18, "Apply light" },
-  { "checkbox", "apply_tex", 20, 105, 155, 18, "Apply texture" },
-  { "checkbox", "apply_align", 20, 125, 155, 18, "Align adjacent" },
-  { "checkbox", "apply_edit", 20, 145, 155, 18, "Edit switches and panels" },
-  { "checkbox", "apply_xparent", 20, 165, 155, 18, "Edit transparent sides" },
-  { "label", "nil", 20, 205, 155, 18, "Snap to grid" },
-  { "radio", "snap_0", 20, 225, 155, 18, "Off" },
-  { "radio", "snap_1", 20, 245, 155, 18, "1/4 WU" },
-  { "radio", "snap_2", 20, 265, 155, 18, "1/5 WU" },
-  { "radio", "snap_3", 20, 285, 155, 18, "1/8 WU" },
-  { "label", nil, 200, 65, 150, 18, "Light" },
-  { "label", nil, 200, 205, 235, 18, "Texture mode" },
-  { "radio", "transfer_0", 200, 225, 116, 18, "Normal" },
-  { "radio", "transfer_1", 200, 245, 116, 18, "Pulsate" },
-  { "radio", "transfer_2", 200, 265, 116, 18, "Wobble" },
-  { "radio", "transfer_6", 200, 285, 116, 18, "Horizontal slide" },
-  { "radio", "transfer_8", 200, 305, 116, 18, "Vertical slide" },
-  { "radio", "transfer_10", 200, 325, 116, 18, "Wander" },
-  { "radio", "transfer_5", 318, 225, 117, 18, "Landscape" },
-  { "radio", "transfer_4", 318, 245, 117, 18, "Static" },
-  { "radio", "transfer_3", 318, 265, 117, 18, "Fast wobble" },
-  { "radio", "transfer_7", 318, 285, 117, 18, "Fast horizontal slide" },
-  { "radio", "transfer_9", 318, 305, 117, 18, "Fast vertical slide" },
-  { "radio", "transfer_11", 318, 325, 117, 18, "Fast wander" },
-  { "label", nil, 460, 205, 160, 18, "Preview" } }
--- HMenu.menus[HMode.choose] = {
---   { "dbutton", "coll_17", 20, 380, 98, 18, "Water" },
---   { "dbutton", "coll_18", 120, 380, 98, 18, "Lava" },
---   { "dbutton", "coll_19", 220, 380, 98, 18, "Sewage" },
---   { "dbutton", "coll_20", 320, 380, 98, 18, "Jjaro" },
---   { "dbutton", "coll_21", 420, 380, 98, 18, "Pfhor" },
---   { "dbutton", "coll_0", 520, 380, 98, 18, "Landscapes" } }
+  { "label", nil, 20+18, 65, 155-18, 20, "Attributes" },
+  { "checkbox", "apply_light", 20, 85, 155, 20, "Apply light" },
+  { "checkbox", "apply_tex", 20, 105, 155, 20, "Apply texture" },
+  { "checkbox", "apply_align", 20, 125, 155, 20, "Align adjacent" },
+  { "checkbox", "apply_edit", 20, 145, 155, 20, "Edit switches and panels" },
+  { "checkbox", "apply_xparent", 20, 165, 155, 20, "Edit transparent sides" },
+  { "label", "nil", 20+18, 250, 155-18, 20, "Snap to grid" },
+  { "radio", "snap_0", 20, 270, 155, 20, "Off" },
+  { "radio", "snap_1", 20, 290, 155, 20, "1/4 WU" },
+  { "radio", "snap_2", 20, 310, 155, 20, "1/5 WU" },
+  { "radio", "snap_3", 20, 330, 155, 20, "1/8 WU" },
+  { "label", nil, 200+18, 65, 240-18, 20, "Light" },
+  { "label", nil, 200+18, 250, 240-18, 20, "Texture mode" },
+  { "radio", "transfer_0", 200, 270, 120, 20, "Normal" },
+  { "radio", "transfer_1", 200, 290, 120, 20, "Pulsate" },
+  { "radio", "transfer_2", 200, 310, 120, 20, "Wobble" },
+  { "radio", "transfer_6", 200, 330, 120, 20, "Horizontal slide" },
+  { "radio", "transfer_8", 200, 350, 120, 20, "Vertical slide" },
+  { "radio", "transfer_10", 200, 370, 120, 20, "Wander" },
+  { "radio", "transfer_5", 320, 270, 120, 20, "Landscape" },
+  { "radio", "transfer_4", 320, 290, 120, 20, "Static" },
+  { "radio", "transfer_3", 320, 310, 120, 20, "Fast wobble" },
+  { "radio", "transfer_7", 320, 330, 120, 20, "Fast horizontal slide" },
+  { "radio", "transfer_9", 320, 350, 120, 20, "Fast vertical slide" },
+  { "radio", "transfer_11", 320, 370, 120, 20, "Fast wander" },
+  { "label", nil, 460, 250, 160, 20, "Preview" } }
   
 HMenu.inited = {}
 HMenu.inited[HMode.attribute] = false
@@ -642,125 +666,104 @@ function HMenu.draw_menu(mode, transparent)
     
     if item[1] == "label" then
       HGlobals.fontn:draw_text(item[7],
-                               math.floor(x + 5*u), math.floor(y + 5*u),
-                               { 1, 1, 1, 1 })
+                               math.floor(x), math.floor(y + h/2 - HGlobals.fheight/2),
+                               colors.menu_label)
     elseif item[1] == "texture" or item[1] == "dtexture" then
       local cc, ct = string.match(item[2], "(%d+)_(%d+)")
       local state = "enabled"
       if item[1] == "texture" then state = HMenu.button_state(item[2]) end
       if state == "active" then
-        Screen.frame_rect(x - 2*u, y - 2*u, w + 4*u, h + 4*u, { 0, 1, 0, 1 }, 2*u)
+        Screen.frame_rect(x - menu_prefs.button_indent*u,
+                          y - menu_prefs.button_indent*u,
+                          w + 2*menu_prefs.button_indent*u,
+                          h + 2*menu_prefs.button_indent*u,
+                          colors.current_texture,
+                          2*menu_prefs.button_indent*u)
       end
-     HCollections.draw(cc + 0, ct + 0, x, y, w)      
-    elseif HMenu.clickable(item[1]) then
-      if HStatus.current_menu_item == idx then
-        Screen.frame_rect(x - 2*u, y - 2*u, w + 4*u, h + 4*u, { 0, 1, 0, 1 }, 2*u)
+      local xt = x
+      local yt = y
+      local wt = w
+      if item[1] == "texture" then
+        xt = xt + menu_prefs.texture_choose_indent*u
+        yt = yt + menu_prefs.texture_choose_indent*u
+        wt = wt - 2*menu_prefs.texture_choose_indent*u
+      else
+        xt = xt + menu_prefs.texture_preview_indent*u
+        yt = yt + menu_prefs.texture_preview_indent*u
+        wt = wt - 2*menu_prefs.texture_preview_indent*u
       end
+      HCollections.draw(cc + 0, ct + 0, xt, yt, wt)
+    elseif item[1] == "light" then
       local state = HMenu.button_state(item[2])
-      if state == "enabled" then
-        local lt, md, dk, tx = 0.9, 0.7, 0.6
-        local tr, tg, tb = 0, 0, 0
-        if item[1] == "dradio" or item[1] == "dbutton" then
-          lt, md, dk = 0.1, 0.1, 0.1
-          tr, tg, tb = 0.5, 0.5, 0.5
-        end
-        Screen.fill_rect(x, y, w, h, { md, md, md, 1 })
-        Screen.fill_rect(x, y, w, 2*u, { lt, lt, lt, 1 })
-        Screen.fill_rect(x, y + 2*u, 2*u, h - 2*u, { lt, lt, lt, 1 })
-        Screen.fill_rect(x + 2*u, y + h - 2*u,
-                         w - 2*u, 2*u,
-                         { dk, dk, dk, 1 })
-        Screen.fill_rect(x + w - 2*u, y + 2*u,
-                         2*u, h - 2*u,
-                         { dk, dk, dk, 1 })
-        local xo = 7
-        if item[1] == "checkbox" then
-          xo = 17
-          imgs["bcheck_off"]:draw(x + 4*u, y + h/2 - imgs["bcheck_off"].width/2)
-        elseif item[1] == "radio" then
-          xo = 17
-          imgs["bradio_off"]:draw(x + 4*u, y + h/2 - imgs["bradio_off"].width/2)
-        elseif item[1] == "dradio" then
-          xo = 17
-          imgs["dradio_dis"]:draw(x + 4*u, y + h/2 - imgs["dradio_dis"].width/2)
-        elseif item[1] == "light" then
-          local fw, fh = HGlobals.fontn:measure_text(item[7])
-          xo = item[5] - 7 - fw/u
-          local val = HLights.val(tonumber(string.sub(item[2], 7)))
-          Screen.fill_rect(x + 2*u, y + 2*u, h - 4*u, h - 4*u, { val, val, val, 1 })
-        elseif item[1] == "dbutton" then
-          local fw, fh = HGlobals.fontn:measure_text(item[7])
-          xo = (w/u - fw/u)/2         
-        end
-        HGlobals.fontn:draw_text(item[7],
-                                 math.floor(x + xo*u), math.floor(y + h/2 - HGlobals.fheight/2),
-                                 { tr, tg, tb, 1 })
-      elseif state == "disabled" then
-        local md = 0.7
-        local tr, tg, tb = 0.5, 0.5, 0.5
-        if item[1] == "dradio" or item[1] == "dbutton" then
-          md = 0.0
-        end
-        Screen.fill_rect(x, y, w, h, { md, md, md, 1 })
-        local xo = 7
-        if item[1] == "checkbox" then
-          xo = 17
-          imgs["bcheck_dis"]:draw(x + 4*u, y + h/2 - imgs["bcheck_dis"].width/2)
-        elseif item[1] == "radio" then
-          xo = 17
-          imgs["bradio_dis"]:draw(x + 4*u, y + h/2 - imgs["bradio_dis"].width/2)
-        elseif item[1] == "dradio" then
-          xo = 17
-          imgs["dradio_dis"]:draw(x + 4*u, y + h/2 - imgs["dradio_dis"].width/2)
-        elseif item[1] == "light" then
-          local fw, fh = HGlobals.fontn:measure_text(item[7])
-          xo = item[5] - 7 - fw/u
-        elseif item[1] == "dbutton" then
-          local fw, fh = HGlobals.fontn:measure_text(item[7])
-          xo = (w/u - fw/u)/2         
-        end
-        HGlobals.fontn:draw_text(item[7],
-                                 math.floor(x + xo*u), math.floor(y + h/2 - HGlobals.fheight/2),
-                                 { tr, tg, tb, 1 })
+    
+      local xt = x + menu_prefs.button_indent*u
+      local yt = y + menu_prefs.button_indent*u
+      local wt = w - 2*menu_prefs.button_indent*u
+      local ht = h - 2*menu_prefs.button_indent*u
       
-      elseif state == "active" then
-        local lt, md, dk = 0.9, 1.0, 0.6
-        local tr, tg, tb = 0.0, 0.0, 0.3
-        if item[1] == "dradio" or item[1] == "dbutton" then
-          lt, md, dk = 0.15, 0.2, 0.25
-          tr, tg, tb = 0.0, 1.0, 0.0
+      local clr = colors.noncurrent_light
+      if state == "active" then clr = colors.current_light end
+      Screen.frame_rect(xt + wt - ht, yt, ht, ht, clr, menu_prefs.light_thickness*u)
+      
+      local val = HLights.val(tonumber(string.sub(item[2], 7)))
+      local sz = ht - 2*menu_prefs.light_thickness*u
+      Screen.fill_rect(xt + wt - ht + menu_prefs.light_thickness*u,
+                       yt + menu_prefs.light_thickness*u,
+                       sz, sz, { val, val, val, 1 })
+
+      local fw, fh = HGlobals.fontn:measure_text(item[7])
+      local yh = yt + ht/2 - fh/2
+      local xh = xt + wt - ht - 5*u - fw
+      HGlobals.fontn:draw_text(item[7], xh, yh, clr)
+    
+    elseif HMenu.clickable(item[1]) then
+--       if HStatus.current_menu_item == idx then
+--         Screen.frame_rect(x - menu_prefs.button_indent*u,
+--                           y - menu_prefs.button_indent*u,
+--                           w + 2*menu_prefs.button_indent*u,
+--                           h + 2*menu_prefs.button_indent*u,
+--                           colors.current_button,
+--                           2*menu_prefs.button_indent*u)
+--       end
+      
+      local state = HMenu.button_state(item[2])
+      HMenu.draw_button_background(item, state)
+      
+      local xo = 7
+      if item[1] == "checkbox" or item[1] == "radio" then
+        xo = 17
+      elseif item[1] == "light" then
+        local fw, fh = HGlobals.fontn:measure_text(item[7])
+        xo = item[5] - 7 - fw/u
+      elseif item[1] == "dbutton" then
+        local fw, fh = HGlobals.fontn:measure_text(item[7])
+        xo = (w/u - fw/u)/2         
+      end
+      HMenu.draw_button_text(item, state, xo)
+        
+      if item[1] == "checkbox" or item[1] == "radio" then
+        local nm = "dcheck"
+        if item[1] == "radio" then
+          nm = "dradio"
         end
-        Screen.fill_rect(x, y, w, h, { md, md, md, 1 })
-        Screen.fill_rect(x, y, w, 2*u, { lt, lt, lt, 1 })
-        Screen.fill_rect(x, y + 2*u, 2*u, h - 2*u, { lt, lt, lt, 1 })
-        Screen.fill_rect(x + 2*u, y + h - 2*u,
-                         w - 2*u, 2*u,
-                         { dk, dk, dk, 1 })
-        Screen.fill_rect(x + w - 2*u, y + 2*u,
-                         2*u, h - 2*u,
-                         { dk, dk, dk, 1 })
-        local xo = 7
-        if item[1] == "checkbox" then
-          xo = 17
-          imgs["bcheck_on"]:draw(x + 4*u, y + h/2 - imgs["bcheck_on"].width/2)
-        elseif item[1] == "radio" then
-          xo = 17
-          imgs["bradio_on"]:draw(x + 4*u, y + h/2 - imgs["bradio_on"].width/2)
-        elseif item[1] == "dradio" then
-          xo = 17
-          imgs["dradio_on"]:draw(x + 4*u, y + h/2 - imgs["dradio_on"].width/2)
-        elseif item[1] == "light" then
-          local fw, fh = HGlobals.fontn:measure_text(item[7])
-          xo = item[5] - 7 - fw/u
-          local val = HLights.val(tonumber(string.sub(item[2], 7)))
-          Screen.fill_rect(x + 2*u, y + 2*u, h - 4*u, h - 4*u, { val, val, val, 1 })
-        elseif item[1] == "dbutton" then
-          local fw, fh = HGlobals.fontn:measure_text(item[7])
-          xo = (w/u - fw/u)/2         
+        if state == "enabled" then
+          nm = nm .. "_off"
+        elseif state == "disabled" then
+          nm = nm .. "_dis"
+        elseif state == "active" then
+          nm = nm .. "_on"
         end
-        HGlobals.fontn:draw_text(item[7],
-                                 math.floor(x + xo*u), math.floor(y + h/2 - HGlobals.fheight/2),
-                                 { tr, tg, tb, 1 })
+        
+        local img = imgs[nm]
+        if img then
+          local x = HGlobals.xoff + item[3]*u + menu_prefs.button_indent*u
+          local y = HGlobals.yoff + item[4]*u + menu_prefs.button_indent*u
+          local h = item[6]*u - 2*menu_prefs.button_indent*u
+          img:draw(x + 4*u, y + h/2 - img.height/2)
+        end
+      elseif item[1] == "light" then
+        local val = HLights.val(tonumber(string.sub(item[2], 7)))
+        Screen.fill_rect(x + 2*u, y + 2*u, h - 4*u, h - 4*u, { val, val, val, 1 })
       end
     end
   end
@@ -814,20 +817,44 @@ function HMenu.button_state(name)
   
   return state
 end
+function HMenu.draw_button_background(item, state)
+  local u = HGlobals.scale
+  local x = HGlobals.xoff + item[3]*u + menu_prefs.button_indent*u
+  local y = HGlobals.yoff + item[4]*u + menu_prefs.button_indent*u
+  local w = item[5]*u - 2*menu_prefs.button_indent*u
+  local h = item[6]*u - 2*menu_prefs.button_indent*u
+  local th = menu_prefs.button_highlight_thickness*u
+  local ts = menu_prefs.button_shadow_thickness*u
+  local c = colors.button[state]
+
+  Screen.fill_rect(x, y, w, h, c.background)
+  Screen.fill_rect(x, y, w, th, c.highlight)
+  Screen.fill_rect(x, y + th, th, h - th, c.highlight)
+  Screen.fill_rect(x + th, y + h - ts, w - th, ts, c.shadow)
+  Screen.fill_rect(x + w - ts, y + th, ts, h - th - ts, c.shadow)
+end
+function HMenu.draw_button_text(item, state, xoff)
+  local u = HGlobals.scale
+  local x = HGlobals.xoff + item[3]*u + menu_prefs.button_indent*u
+  local y = HGlobals.yoff + item[4]*u + menu_prefs.button_indent*u
+  local h = item[6]*u - 2*menu_prefs.button_indent*u
+  
+  HGlobals.fontn:draw_text(item[7],
+                           math.floor(x + xoff*u),
+                           math.floor(y + h/2 - HGlobals.fheight/2),
+                           colors.button[state].text)
+end
+
 function HMenu.init_menu(mode)
   local menu = HMenu.menus[mode]
   if mode == HMode.attribute then
     if HCounts.num_lights > 0 then
-      for i = 1,math.min(HCounts.num_lights, 50) do
+      for i = 1,math.min(HCounts.num_lights, 56) do
         local l = i - 1
---       local yoff = (l % 10) * 20
---       local xoff = math.floor(l / 10) * 32
---       local yoff = math.floor(l / 10) * 20
---       local xoff = (l % 10) * 42
-      local yoff = (l % 5) * 20
-      local xoff = math.floor(l / 5) * 42
-      table.insert(menu, 13 + l,
-        { "light", "light_" .. l, 200 + xoff, 85 + yoff, 40, 18, tostring(l) })
+        local yoff = (l % 7) * 20
+        local xoff = math.floor(l / 7) * 50
+        table.insert(menu, 13 + l,
+          { "light", "light_" .. l, 200 + xoff, 85 + yoff, 50, 20, tostring(l) })
       end
       HMenu.inited[mode] = true
     end
@@ -957,19 +984,19 @@ function HCollections.init()
     local w = math.floor(600 / n)
     
     local x = 20
-    local y = 372
+    local y = 370
     for i = 1,n do
       local cinfo = menu_colls[i]
       local cnum = cinfo.cnum
       local cname = HCollections.names[cnum + 1]
       table.insert(cbuttons,
-        { "dbutton", "coll_" .. cnum, x, y, w - 2, 18, cname })
+        { "dbutton", "coll_" .. cnum, x, y, w, 20, cname })
         
       -- collection preview
       if true then
-        local xx = x + 2
-        local yy = y + 20
-        local ww = w - 4
+        local xx = x + 1
+        local yy = y + 21
+        local ww = w - 2
         local hh = 75
         
         local bct, rows, cols = cinfo.bct, cinfo.rows, cinfo.cols
@@ -1019,7 +1046,7 @@ function HCollections.init()
       end
       table.insert(buttons,
         { "texture", "choose_" .. cc .. "_" .. ct, 
-          x, y, tsize - 2, tsize - 2, cc .. ", " .. ct })
+          x, y, tsize, tsize, cc .. ", " .. ct })
     end
     for _,v in ipairs(cbuttons) do
       table.insert(buttons, v)
@@ -1099,7 +1126,7 @@ HLights.inited = false
 HLights.intensities = {}
 function HLights.update()
   if HCounts.num_lights < 1 then return end
-  for i = 1,math.min(HCounts.num_lights, 50) do
+  for i = 1,math.min(HCounts.num_lights, 56) do
     HLights.intensities[i] = Player.texture_palette.slots[199 + i].texture_index / 128
   end
   HLights.inited = true

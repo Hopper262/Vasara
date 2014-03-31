@@ -860,32 +860,32 @@ end
 SMenu = {}
 SMenu.menus = {}
 SMenu.menus[SMode.attribute] = {
-  { "label", nil, 20, 65, 155, 18, "Attributes" },
-  { "checkbox", "apply_light", 20, 85, 155, 18, "Apply light" },
-  { "checkbox", "apply_tex", 20, 105, 155, 18, "Apply texture" },
-  { "checkbox", "apply_align", 20, 125, 155, 18, "Align adjacent" },
-  { "checkbox", "apply_edit", 20, 145, 155, 18, "Edit switches and panels" },
-  { "checkbox", "apply_xparent", 20, 165, 155, 18, "Edit transparent sides" },
-  { "label", "nil", 20, 205, 155, 18, "Snap to grid" },
-  { "radio", "snap_0", 20, 225, 155, 18, "Off" },
-  { "radio", "snap_1", 20, 245, 155, 18, "1/4 WU" },
-  { "radio", "snap_2", 20, 265, 155, 18, "1/5 WU" },
-  { "radio", "snap_3", 20, 285, 155, 18, "1/8 WU" },
-  { "label", nil, 200, 65, 150, 18, "Light" },
-  { "label", nil, 200, 205, 235, 18, "Texture mode" },
-  { "radio", "transfer_0", 200, 225, 116, 18, "Normal" },
-  { "radio", "transfer_1", 200, 245, 116, 18, "Pulsate" },
-  { "radio", "transfer_2", 200, 265, 116, 18, "Wobble" },
-  { "radio", "transfer_6", 200, 285, 116, 18, "Horizontal slide" },
-  { "radio", "transfer_8", 200, 305, 116, 18, "Vertical slide" },
-  { "radio", "transfer_10", 200, 325, 116, 18, "Wander" },
-  { "radio", "transfer_5", 318, 225, 117, 18, "Landscape" },
-  { "radio", "transfer_4", 318, 245, 117, 18, "Static" },
-  { "radio", "transfer_3", 318, 265, 117, 18, "Fast wobble" },
-  { "radio", "transfer_7", 318, 285, 117, 18, "Fast horizontal slide" },
-  { "radio", "transfer_9", 318, 305, 117, 18, "Fast vertical slide" },
-  { "radio", "transfer_11", 318, 325, 117, 18, "Fast wander" },
-  { "label", nil, 460, 205, 160, 18, "Preview" } }
+  { "label", nil, 20+18, 65, 155-18, 20, "Attributes" },
+  { "checkbox", "apply_light", 20, 85, 155, 20, "Apply light" },
+  { "checkbox", "apply_tex", 20, 105, 155, 20, "Apply texture" },
+  { "checkbox", "apply_align", 20, 125, 155, 20, "Align adjacent" },
+  { "checkbox", "apply_edit", 20, 145, 155, 20, "Edit switches and panels" },
+  { "checkbox", "apply_xparent", 20, 165, 155, 20, "Edit transparent sides" },
+  { "label", "nil", 20+18, 250, 155-18, 20, "Snap to grid" },
+  { "radio", "snap_0", 20, 270, 155, 20, "Off" },
+  { "radio", "snap_1", 20, 290, 155, 20, "1/4 WU" },
+  { "radio", "snap_2", 20, 310, 155, 20, "1/5 WU" },
+  { "radio", "snap_3", 20, 330, 155, 20, "1/8 WU" },
+  { "label", nil, 200+18, 65, 240-18, 20, "Light" },
+  { "label", nil, 200+18, 250, 240-18, 20, "Texture mode" },
+  { "radio", "transfer_0", 200, 270, 120, 20, "Normal" },
+  { "radio", "transfer_1", 200, 290, 120, 20, "Pulsate" },
+  { "radio", "transfer_2", 200, 310, 120, 20, "Wobble" },
+  { "radio", "transfer_6", 200, 330, 120, 20, "Horizontal slide" },
+  { "radio", "transfer_8", 200, 350, 120, 20, "Vertical slide" },
+  { "radio", "transfer_10", 200, 370, 120, 20, "Wander" },
+  { "radio", "transfer_5", 320, 270, 120, 20, "Landscape" },
+  { "radio", "transfer_4", 320, 290, 120, 20, "Static" },
+  { "radio", "transfer_3", 320, 310, 120, 20, "Fast wobble" },
+  { "radio", "transfer_7", 320, 330, 120, 20, "Fast horizontal slide" },
+  { "radio", "transfer_9", 320, 350, 120, 20, "Fast vertical slide" },
+  { "radio", "transfer_11", 320, 370, 120, 20, "Fast wander" },
+  { "label", nil, 460, 250, 160, 20, "Preview" } }
 SMenu.inited = {}
 SMenu.inited[SMode.attribute] = false
 SMenu.buttons = {}
@@ -920,12 +920,12 @@ end
 function SMenu.init_menu(mode)
   local menu = SMenu.menus[mode]
   if mode == SMode.attribute then
-    for i = 1,math.min(#Lights, 50) do
+    for i = 1,math.min(#Lights, 56) do
       local l = i - 1
-      local yoff = (l % 5) * 20
-      local xoff = math.floor(l / 5) * 42
+      local yoff = (l % 7) * 20
+      local xoff = math.floor(l / 7) * 50
       table.insert(menu, 13 + l,
-        { "light", "light_" .. l, 200 + xoff, 85 + yoff, 40, 18, tostring(l) })
+        { "light", "light_" .. l, 200 + xoff, 85 + yoff, 50, 20, tostring(l) })
     end
     SMenu.inited[mode] = true
   end
@@ -1048,11 +1048,11 @@ function SCollections.init()
       local w = math.floor(600 / n)
       
       local x = 20
-      local y = 372
+      local y = 370
       for i = 1,n do
         local cnum = menu_colls[i]
         table.insert(cbuttons,
-          { "dbutton", "coll_" .. cnum, x, y, w - 2, 18, "" })
+          { "dbutton", "coll_" .. cnum, x, y, w, 20, "" })
         x = x + w
       end
     end  
@@ -1084,7 +1084,7 @@ function SCollections.init()
         end
         table.insert(buttons,
           { "texture", "choose_" .. cc .. "_" .. ct, 
-            x, y, tsize - 2, tsize - 2, cc .. ", " .. ct })
+            x, y, tsize, tsize, cc .. ", " .. ct })
       end
       for _,v in ipairs(cbuttons) do
         table.insert(buttons, v)
@@ -1299,7 +1299,7 @@ SLights = {}
 function SLights.update()
   for p in Players() do
     if p.local_ then
-      for i = 1,math.min(#Lights, 50) do
+      for i = 1,math.min(#Lights, 56) do
         p.texture_palette.slots[199 + i].texture_index = math.floor(Lights[i - 1].intensity * 128)
       end
     end
