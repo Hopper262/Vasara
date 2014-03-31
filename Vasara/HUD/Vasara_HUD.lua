@@ -1,19 +1,6 @@
 -- Vasara 1.0 ALPHA (HUD script)
 -- by Hopper and Ares Ex Machina
 
--- testing stuff here
--- change these in Lua script too, else bad stuff will happen
-
-vert_range = 30   -- max: 30
-horiz_range = 70  -- max: 160
-
-vert_size = 325   -- max: 430
-horiz_size = 600  -- max: 640
-
-vert_offset = 65
-horiz_offset = 20
-
-
 -- PREFERENCES
 
 -- Preview full collections on Choose or Visual Mode screens
@@ -85,6 +72,13 @@ menu_prefs.light_thickness = 2
 -- END PREFERENCES -- no user serviceable parts below ;)
 
 Triggers = {}
+
+vert_range = 30   -- max: 30
+horiz_range = 70  -- max: 160
+vert_size = 325   -- max: 430
+horiz_size = 600  -- max: 640
+vert_offset = 65
+horiz_offset = 20
 
 g_scriptChecked = false
 g_initMode = 0

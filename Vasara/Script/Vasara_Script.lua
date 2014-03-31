@@ -2,19 +2,7 @@
 -- by Hopper and Ares Ex Machina
 -- from work by Irons and Smith, released under the JUICE LICENSE!
 
--- testing stuff here
--- change these in HUD script too, else bad stuff will happen
-
-vert_range = 30   -- max: 30
-horiz_range = 70  -- max: 160
-
-vert_size = 325   -- max: 430
-horiz_size = 600  -- max: 640
-
-vert_offset = 65
-horiz_offset = 20
-
--- user configurable stuff here
+-- PREFERENCES
 
 walls = { 17, 18, 19, 20, 21 } 
 landscapes = { 27, 28, 29, 30 }
@@ -28,7 +16,15 @@ max_scripts = 40
 -- highlight selected destination in Teleport mode
 show_teleport_destination = true
 
--- don't modify below this line!
+
+-- END PREFERENCES -- no user serviceable parts below ;)
+
+vert_range = 30   -- max: 30
+horiz_range = 70  -- max: 160
+vert_size = 325   -- max: 430
+horiz_size = 600  -- max: 640
+vert_offset = 65
+horiz_offset = 20
 
 Game.monsters_replenish = not suppress_monsters
 snap_denominators = { 4, 5, 8 }
