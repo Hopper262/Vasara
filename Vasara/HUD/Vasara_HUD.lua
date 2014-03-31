@@ -16,6 +16,11 @@ horiz_offset = 20
 
 -- PREFERENCES
 
+-- Preview full collections on Choose or Visual Mode screens
+-- (set one or both to false to spend less time "Loading textures...")
+preview_all_collections = true
+preview_collection_when_applying = true
+
 -- Displayed names for texture collections
 collection_names = {
 [0] = "Landscapes",
@@ -952,27 +957,28 @@ function HCollections.init()
     local preview = {}
     local cinfo = menu_colls[i]
     local cnum, bct, rows, cols = cinfo.cnum, cinfo.bct, cinfo.rows, cinfo.cols
-    
-    local w = 180
-    local h = 90
-    local tsize = math.min(w / cols, h / rows)
-    local x = 620 - (tsize * cols)
-    local y = 380
-    for j = 1,bct do
-      local col = (j - 1) % cols
-      local row = math.floor((j - 1) / cols)
-      local xt = x + (tsize * col)
-      local yt = y + (tsize * row)
-      
-      local cc = cnum
-      local ct = j - 1
-      if cnum == 0 then
-        cc = HCollections.landscape_textures[j][1]
-        ct = HCollections.landscape_textures[j][2]
+    if preview_collection_when_applying then
+      local w = 180
+      local h = 90
+      local tsize = math.min(w / cols, h / rows)
+      local x = 620 - (tsize * cols)
+      local y = 380
+      for j = 1,bct do
+        local col = (j - 1) % cols
+        local row = math.floor((j - 1) / cols)
+        local xt = x + (tsize * col)
+        local yt = y + (tsize * row)
+        
+        local cc = cnum
+        local ct = j - 1
+        if cnum == 0 then
+          cc = HCollections.landscape_textures[j][1]
+          ct = HCollections.landscape_textures[j][2]
+        end
+        table.insert(preview,
+          { "dtexture", "display_" .. cc .. "_" .. ct, 
+            xt, yt, tsize, tsize, cc .. ", " .. ct })
       end
-      table.insert(preview,
-        { "dtexture", "display_" .. cc .. "_" .. ct, 
-          xt, yt, tsize, tsize, cc .. ", " .. ct })
     end
     HMenu.menus["preview_" .. cnum] = preview
   end  
@@ -993,11 +999,11 @@ function HCollections.init()
         { "dbutton", "coll_" .. cnum, x, y, w, 20, cname })
         
       -- collection preview
-      if true then
-        local xx = x + 1
-        local yy = y + 21
-        local ww = w - 2
-        local hh = 75
+      if preview_all_collections then
+        local xx = x + menu_prefs.button_indent
+        local yy = y + 20 + menu_prefs.button_indent
+        local ww = w - 2*menu_prefs.button_indent
+        local hh = 75 - 2*menu_prefs.button_indent
         
         local bct, rows, cols = cinfo.bct, cinfo.rows, cinfo.cols
         local tsize = math.min(ww / cols, hh / rows)
