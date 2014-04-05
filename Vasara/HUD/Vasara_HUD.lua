@@ -497,11 +497,9 @@ HStatus.frozen = 1
 HStatus.undo_active = 2
 HStatus.redo_active = 3
 HStatus.action_active = 4
-HStatus.saved_direction = 0
 HStatus.current_menu_item = 0
 function HStatus.update()
   HStatus.bitfield = Player.texture_palette.slots[41].texture_index
-  HStatus.saved_direction = 2 * Player.texture_palette.slots[42].texture_index
   HStatus.current_menu_item = Player.texture_palette.slots[47].texture_index
   
   local lbls = HMode.labels[HMode.apply]

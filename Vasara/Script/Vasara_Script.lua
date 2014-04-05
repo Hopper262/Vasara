@@ -302,7 +302,6 @@ function SMode.update()
       p.texture_palette.slots[37].texture_index = p._target_poly % 128
       p.texture_palette.slots[38].texture_index = math.floor(p._target_poly/128)
       p.texture_palette.slots[40].texture_index = p._mode
-      p.texture_palette.slots[42].texture_index = math.floor(p._saved_facing.direction / 2)
     end
   end
 end
