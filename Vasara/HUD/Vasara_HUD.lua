@@ -116,6 +116,7 @@ function Triggers.draw()
   HLights.update()
   HPlatforms.update()
   HTeleport.update()
+  HPanel.update()
   
   if HMode.changed then layout() end
 
@@ -1159,3 +1160,37 @@ function HTeleport.update()
 --     lbls[6][5] = "Next Polygon (" .. ((HTeleport.poly + 1) % HCounts.num_polys) .. ")"
 --   end
 end
+
+HPanel = {}
+HPanel.bitfield_class = 0
+HPanel.oxygen = 1
+HPanel.x1 = 2
+HPanel.x2 = 3
+HPanel.x3 = 4
+HPanel.light_switch = 5
+HPanel.platform_switch = 6
+HPanel.tag_switch = 7
+HPanel.save = 8
+HPanel.terminal = 9
+HPanel.chip = 10
+HPanel.wires = 11
+HPanel.current_class = 0
+HPanel.bitfield_option = 0
+HPanel.light_dependent = 1
+HPanel.weapons_only = 2
+HPanel.repair = 3
+HPanel.active = 4
+HPanel.permutation = 0
+function HPanel.update()
+  HPanel.bitfield_class = Player.texture_palette.slots[48].texture_index + 128*Player.texture_palette.slots[49].texture_index
+  HPanel.current_class = Player.texture_palette.slots[50].texture_index
+  HPanel.bitfield_option = Player.texture_palette.slots[51].texture_index
+  HPanel.permutation = Player.texture_palette.slots[52].texture_index + 128*Player.texture_palette.slots[53].texture_index
+end
+function HPanel.valid_class(k)
+  return hasbit(HPanel.bitfield_class, k)
+end
+function HPanel.option_set(k)
+  return hasbit(HPanel.bitfield_option, k)
+end
+

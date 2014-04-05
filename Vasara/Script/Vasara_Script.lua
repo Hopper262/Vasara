@@ -76,6 +76,7 @@ function init()
   
   SKeys.init()
   SCollections.init()
+  SPanel.init()
   SPlatforms.init()
   SMode.init()
   SUndo.init()
@@ -803,6 +804,90 @@ function SKeys.update()
         if p._keys.map.highlight then down = down + 64 end
         
         p.texture_palette.slots[39].texture_index = down
+      end
+    end
+  end
+end
+
+SPanel = {}
+SPanel.device_collections = {}
+function SPanel.init()
+  -- these must be hard-coded into Forge; the engine can't tell them apart
+  ControlPanelTypes[3]._type = "chip insertion"
+  ControlPanelTypes[9]._type = "wires"
+  ControlPanelTypes[19]._type = "chip insertion"
+  ControlPanelTypes[20]._type = "wires"
+  ControlPanelTypes[30]._type = "chip insertion"
+  ControlPanelTypes[31]._type = "wires"
+  ControlPanelTypes[41]._type = "chip insertion"
+  ControlPanelTypes[42]._type = "wires"
+
+  for t in ControlPanelTypes() do
+    if t.collection then
+      if not SPanel.device_collections[t.collection] then
+        SPanel.device_collections[t.collection] = {}
+      end
+      local cc = SPanel.device_collections[t.collection]
+      
+      local ttype = t.class.mnemonic
+      if t._type then ttype = t._type end
+      
+      for _,v in ipairs({ t.active_texture_index, t.inactive_texture_index }) do
+        if not cc[v] then cc[v] = {} end
+        if not cc[v][ttype] then
+          cc[v][ttype] = t
+        end
+      end
+    end
+  end
+end
+function SPanel.update()
+  for p in Players() do
+    if p.local_ then
+    
+      local cc = p._collections.current_collection
+      if cc == 0 then
+        cc = p._collections.current_landscape_collection
+      end
+      local ct = p._collections.current_textures[cc]
+
+      if SPanel.device_collections[cc] and SPanel.device_collections[cc][ct] then
+        local dinfo = SPanel.device_collections[cc][ct]
+        local class1 = 0
+        local class2 = 0
+        if dinfo["oxygen recharger"] then class1 = class1 + 1 end
+        if dinfo["single shield recharger"] then class1 = class1 + 2 end
+        if dinfo["double shield recharger"] then class1 = class1 + 4 end
+        if dinfo["triple shield recharger"] then class1 = class1 + 8 end
+        if dinfo["light switch"] then class1 = class1 + 16 end
+        if dinfo["platform switch"] then class1 = class1 + 32 end
+        if dinfo["tag switch"] then class1 = class1 + 64 end
+        if dinfo["pattern buffer"] then class2 = class2 + 1 end
+        if dinfo["terminal"] then class2 = class2 + 2 end
+        if dinfo["chip insertion"] then class2 = class2 + 4 end
+        if dinfo["wires"] then class2 = class2 + 8 end        
+        p.texture_palette.slots[48].texture_index = class1
+        p.texture_palette.slots[49].texture_index = class2
+        
+        -- tbd: currently selected class
+        p.texture_palette.slots[50].texture_index = 0
+        
+        local option = 0
+        if p._panel.light_dependent then option = option + 1 end
+        if p._panel.only_toggled_by_weapons then option = option + 2 end
+        if p._panel.repair then option = option + 4 end
+        if p._panel.status then option = option + 8 end
+        p.texture_palette.slots[51].texture_index = option
+        
+        p.texture_palette.slots[52].texture_index = p._panel.permutation % 128
+        p.texture_palette.slots[53].texture_index = math.floor(p._panel.permutation/128)
+      else
+        p.texture_palette.slots[48].texture_index = 0
+        p.texture_palette.slots[49].texture_index = 0
+        p.texture_palette.slots[50].texture_index = 0
+        p.texture_palette.slots[51].texture_index = 0
+        p.texture_palette.slots[52].texture_index = 0
+        p.texture_palette.slots[53].texture_index = 0
       end
     end
   end
