@@ -10,8 +10,8 @@ landscapes = { 27, 28, 29, 30 }
 suppress_items = true
 suppress_monsters = true
 
-max_tags = 32
-max_scripts = 40
+max_tags = 80     -- max: 80
+max_scripts = 80  -- max: 80
 
 -- highlight selected destination in Teleport mode
 show_teleport_destination = true
@@ -101,6 +101,7 @@ function Triggers.idle()
   SUndo.update()
   SStatus.update()
   SCollections.update()
+  SPanel.update()
   
   for p in Players() do
     p.life = 409
@@ -131,9 +132,7 @@ SMode.apply = 0
 SMode.choose = 1
 SMode.attribute = 2
 SMode.teleport = 3
-SMode.switch = 4
-SMode.recharger = 5
-SMode.terminal = 6
+SMode.panel = 4
 
 function SMode.init()
   for p in Players() do
@@ -283,12 +282,8 @@ function SMode.update()
       SMode.handle_choose(p)
     elseif p._mode == SMode.attribute then
       SMode.handle_attribute(p)
-    elseif p._mode == SMode.switch then
-      SMode.handle_switch(p)
-    elseif p._mode == SMode.recharger then
-      SMode.handle_recharger(p)
-    elseif p._mode == SMode.terminal then
-      SMode.handle_terminal(p)
+    elseif p._mode == SMode.panel then
+      SMode.handle_panel(p)
     end
     
     -- handle freeze
@@ -307,7 +302,7 @@ function SMode.update()
   end
 end
 function SMode.menu_mode(mode)
-  return mode == SMode.choose or mode == SMode.attribute or mode == SMode.switch or mode == SMode.recharger or mode == SMode.terminal
+  return mode == SMode.choose or mode == SMode.attribute or mode == SMode.panel
 end
 function SMode.toggle(p, mode)
   if p._mode == mode then
@@ -668,19 +663,7 @@ function SMode.handle_attribute(p)
     end
   end
 end
-function SMode.handle_switch(p)
-  if p._keys.primary.released then
-    -- tbd -- handle change
-    p._mode = SMode.apply
-  end
-end
-function SMode.handle_recharger(p)
-  if p._keys.primary.released then
-    -- tbd -- handle change
-    p._mode = SMode.apply
-  end
-end
-function SMode.handle_terminal(p)
+function SMode.handle_panel(p)
   if p._keys.primary.released then
     -- tbd -- handle change
     p._mode = SMode.apply
@@ -879,8 +862,12 @@ function SPanel.update()
         if p._panel.status then option = option + 8 end
         p.texture_palette.slots[51].texture_index = option
         
-        p.texture_palette.slots[52].texture_index = p._panel.permutation % 128
-        p.texture_palette.slots[53].texture_index = math.floor(p._panel.permutation/128)
+        local perm = 0
+        if p._panel and p._panel.permutation then
+          perm = p._panel.permutation
+        end
+        p.texture_palette.slots[52].texture_index = perm % 128
+        p.texture_palette.slots[53].texture_index = math.floor(perm/128)
       else
         p.texture_palette.slots[48].texture_index = 0
         p.texture_palette.slots[49].texture_index = 0
@@ -1010,6 +997,42 @@ function SMenu.init_menu(mode)
         { "light", "light_" .. l, 200 + xoff, 85 + yoff, 50, 20, tostring(l) })
     end
     SMenu.inited[mode] = true
+  elseif mode == "panel_light" then
+    for i = 1,math.min(#Lights, 56) do
+      local l = i - 1
+      local yoff = (l % 7) * 20
+      local xoff = math.floor(l / 7) * 50
+      table.insert(menu,
+        { "light", "pperm_" .. l, 200 + xoff, 145 + yoff, 50, 20, tostring(l) })
+    end
+    SMenu.inited[mode] = true
+  elseif mode == "panel_terminal" then
+    for i = 1,math.min(num_scripts, 80) do
+      local l = i - 1
+      local yoff = (l % 10) * 20
+      local xoff = math.floor(l / 10) * 50
+      table.insert(menu,
+        { "radio", "pperm_" .. l, 200 + xoff, 145 + yoff, 50, 20, tostring(l) })
+    end
+    HMenu.inited[mode] = true
+  elseif mode == "panel_tag" then
+    for i = 1,math.min(num_tags, 80) do
+      local l = i - 1
+      local yoff = (l % 10) * 20
+      local xoff = math.floor(l / 10) * 50
+      table.insert(menu,
+        { "radio", "pperm_" .. l, 200 + xoff, 145 + yoff, 50, 20, tostring(l) })
+    end
+    HMenu.inited[mode] = true
+  elseif mode == "panel_platform" then
+    for i = 1,math.min(#Platforms, 80) do
+      local l = i - 1
+      local yoff = (l % 10) * 20
+      local xoff = math.floor(l / 10) * 50
+      table.insert(menu,
+        { "radio", "pperm_" .. l, 200 + xoff, 145 + yoff, 50, 20, tostring(Platforms[l].polygon.index) })
+    end
+    HMenu.inited[mode] = true
   end
   
   local blist = SMenu.buttons[mode]
