@@ -996,7 +996,6 @@ function SMenu.init_menu(mode)
       table.insert(menu, 13 + l,
         { "light", "light_" .. l, 200 + xoff, 85 + yoff, 50, 20, tostring(l) })
     end
-    SMenu.inited[mode] = true
   elseif mode == "panel_light" then
     for i = 1,math.min(#Lights, 56) do
       local l = i - 1
@@ -1005,7 +1004,6 @@ function SMenu.init_menu(mode)
       table.insert(menu,
         { "light", "pperm_" .. l, 200 + xoff, 145 + yoff, 50, 20, tostring(l) })
     end
-    SMenu.inited[mode] = true
   elseif mode == "panel_terminal" then
     for i = 1,math.min(num_scripts, 80) do
       local l = i - 1
@@ -1014,7 +1012,6 @@ function SMenu.init_menu(mode)
       table.insert(menu,
         { "radio", "pperm_" .. l, 200 + xoff, 145 + yoff, 50, 20, tostring(l) })
     end
-    HMenu.inited[mode] = true
   elseif mode == "panel_tag" then
     for i = 1,math.min(num_tags, 80) do
       local l = i - 1
@@ -1023,7 +1020,6 @@ function SMenu.init_menu(mode)
       table.insert(menu,
         { "radio", "pperm_" .. l, 200 + xoff, 145 + yoff, 50, 20, tostring(l) })
     end
-    HMenu.inited[mode] = true
   elseif mode == "panel_platform" then
     for i = 1,math.min(#Platforms, 80) do
       local l = i - 1
@@ -1032,7 +1028,6 @@ function SMenu.init_menu(mode)
       table.insert(menu,
         { "radio", "pperm_" .. l, 200 + xoff, 145 + yoff, 50, 20, tostring(Platforms[l].polygon.index) })
     end
-    HMenu.inited[mode] = true
   end
   
   local blist = SMenu.buttons[mode]
@@ -1045,6 +1040,7 @@ function SMenu.init_menu(mode)
       table.insert(blist, idx)
     end
   end
+  SMenu.inited[mode] = true
 end
 function SMenu.highlight_item(p, mode, inc)
   if not SMenu.inited[mode] then SMenu.init_menu(mode) end

@@ -990,6 +990,8 @@ function HMenu.init_menu(mode)
       end
       HMenu.inited[mode] = true
     end
+  else
+    HMenu.inited[mode] = true
   end
 end
 function HMenu.clickable(item_type)
