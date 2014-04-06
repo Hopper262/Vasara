@@ -288,7 +288,7 @@ function SMode.update()
       end
       
       if p._prev_mode == SMode.teleport then
-        UTeleport.end_highlight(p)
+        UTeleport.remove_highlight(p)
       end
     end
     if in_menu then
@@ -517,7 +517,7 @@ function SMode.handle_teleport(p)
     local poly = Polygons[p._target_poly]
     p:position(poly.x, poly.y, poly.z, poly)
     p.monster:play_sound("teleport in")
-    UTeleport.end_highlight(p)
+    UTeleport.remove_highlight(p)
     p._frozen = false
     return
   end
@@ -1561,13 +1561,13 @@ UTeleport = {}
 function UTeleport.highlight(p, poly)
   if not show_teleport_destination then return end
   if poly ~= p._teleport.last_target then
-    UTeleport.end_highlight(p)
+    UTeleport.remove_highlight(p)
     p._teleport.last_target = poly
     p._teleport.last_target_mode = poly.floor.transfer_mode
     poly.floor.transfer_mode = "static"
   end
 end
-function UTeleport.end_highlight(p)
+function UTeleport.remove_highlight(p)
   if not show_teleport_destination then return end
   if p._teleport.last_target ~= nil then
     -- restore last selected poly
