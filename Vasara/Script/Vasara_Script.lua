@@ -157,6 +157,14 @@ function SMode.init()
     p._teleport.last_target = nil
     p._teleport.last_target_mode = nil
     
+    p._panel = {}
+    p._panel.classnum = 0
+    p._panel.permutation = 0
+    p._panel.light_dependent = false
+    p._panel.only_toggled_by_weapons = false
+    p._panel.repair = false
+    p._panel.status = false
+    
     p._point = {}
     p._point.x = 0
     p._point.y = 0
@@ -664,9 +672,35 @@ function SMode.handle_attribute(p)
   end
 end
 function SMode.handle_panel(p)
+  if p._keys.prev_weapon.pressed then
+    local m = SPanel.menu_name(p)
+    SMenu.highlight_item(p, m, -1)
+    SMenu.point_at_item(p, m, p._menu_item)
+  end
+  if p._keys.next_weapon.pressed then
+    local m = SPanel.menu_name(p)
+    SMenu.highlight_item(p, m, 1)
+    SMenu.point_at_item(p, m, p._menu_item)
+  end
   if p._keys.primary.released then
-    -- tbd -- handle change
-    p._mode = SMode.apply
+    local name = SMenu.selection(p, SPanel.menu_name(p))
+    if name == nil then return end
+    
+    if name == "panel_light" then
+      p._panel.light_dependent = not p._panel.light_dependent
+    elseif name == "panel_weapon" then
+      p._panel.only_toggled_by_weapons = not p._panel.only_toggled_by_weapons
+    elseif name == "panel_repair" then
+      p._panel.repair = not p._panel.repair
+    elseif name == "panel_status" then
+      p._panel.status = not p._panel.status
+    elseif string.sub(name, 1, 6) == "ptype_" then
+      local mode = tonumber(string.sub(name, 7))
+      p._panel.classnum = mode
+    elseif string.sub(name, 1, 6) == "pperm_" then
+      local mode = tonumber(string.sub(name, 7))
+      p._panel.permutation = mode
+    end
   end
 end
 
@@ -852,8 +886,12 @@ function SPanel.update()
         p.texture_palette.slots[48].texture_index = class1
         p.texture_palette.slots[49].texture_index = class2
         
-        -- tbd: currently selected class
-        p.texture_palette.slots[50].texture_index = 0
+        local current_class = 0
+        if p._panel and (p._panel.classnum ~= nil) then
+          local 
+          current_class = p._panel.classnum
+        end
+        p.texture_palette.slots[50].texture_index = current_class
         
         local option = 0
         if p._panel.light_dependent then option = option + 1 end
@@ -878,6 +916,21 @@ function SPanel.update()
       end
     end
   end
+end
+function SPanel.menu_name(p)
+  local current_class = 0
+  if p._panel and (p._panel.classnum ~= nil) then
+    current_class = p._panel.classnum
+  end
+  
+  if current_class < 4 or current_class == 7 then
+    return "panel_plain"
+  elseif current_class == 4 then
+    return "panel_light"
+  elseif current_class == 5 then
+    return "panel_platform"
+  end
+  return "panel_tag"
 end
 
 
@@ -955,6 +1008,82 @@ SMenu.menus[SMode.attribute] = {
   { "radio", "transfer_9", 320, 350, 120, 20, "Fast vertical slide" },
   { "radio", "transfer_11", 320, 370, 120, 20, "Fast wander" },
   { "label", nil, 460, 250, 160, 20, "Preview" } }
+SMenu.menus["panel_plain"] = {
+  { "radio", "ptype_4", 20, 85, 125, 20, "Light switch" },
+  { "radio", "ptype_5", 20, 105, 125, 20, "Platform switch" },
+  { "radio", "ptype_6", 20, 125, 125, 20, "Tag switch" },
+  { "radio", "ptype_9", 20, 145, 125, 20, "Chip insertion" },
+  { "radio", "ptype_10", 20, 165, 125, 20, "Wires" },
+  { "radio", "ptype_0", 20, 185, 125, 20, "Oxygen" },
+  { "radio", "ptype_1", 20, 205, 125, 20, "1X health" },
+  { "radio", "ptype_2", 20, 225, 125, 20, "2X health" },
+  { "radio", "ptype_3", 20, 245, 125, 20, "3X health" },
+  { "radio", "ptype_7", 20, 265, 125, 20, "Pattern buffer" },
+  { "radio", "ptype_8", 20, 285, 125, 20, "Terminal" },
+  { "checkbox", "panel_light", 200, 85, 125, 20, "Light dependent" } }
+SMenu.menus["panel_terminal"] = {
+  { "radio", "ptype_4", 20, 85, 125, 20, "Light switch" },
+  { "radio", "ptype_5", 20, 105, 125, 20, "Platform switch" },
+  { "radio", "ptype_6", 20, 125, 125, 20, "Tag switch" },
+  { "radio", "ptype_9", 20, 145, 125, 20, "Chip insertion" },
+  { "radio", "ptype_10", 20, 165, 125, 20, "Wires" },
+  { "radio", "ptype_0", 20, 185, 125, 20, "Oxygen" },
+  { "radio", "ptype_1", 20, 205, 125, 20, "1X health" },
+  { "radio", "ptype_2", 20, 225, 125, 20, "2X health" },
+  { "radio", "ptype_3", 20, 245, 125, 20, "3X health" },
+  { "radio", "ptype_7", 20, 265, 125, 20, "Pattern buffer" },
+  { "radio", "ptype_8", 20, 285, 125, 20, "Terminal" },
+  { "checkbox", "panel_light", 200, 85, 155, 20, "Light dependent" },
+  { "label", nil, 200, 125, 155, 20, "Terminal script" } }
+ SMenu.menus["panel_light"] = {
+  { "radio", "ptype_4", 20, 85, 125, 20, "Light switch" },
+  { "radio", "ptype_5", 20, 105, 125, 20, "Platform switch" },
+  { "radio", "ptype_6", 20, 125, 125, 20, "Tag switch" },
+  { "radio", "ptype_9", 20, 145, 125, 20, "Chip insertion" },
+  { "radio", "ptype_10", 20, 165, 125, 20, "Wires" },
+  { "radio", "ptype_0", 20, 185, 125, 20, "Oxygen" },
+  { "radio", "ptype_1", 20, 205, 125, 20, "1X health" },
+  { "radio", "ptype_2", 20, 225, 125, 20, "2X health" },
+  { "radio", "ptype_3", 20, 245, 125, 20, "3X health" },
+  { "radio", "ptype_7", 20, 265, 125, 20, "Pattern buffer" },
+  { "radio", "ptype_8", 20, 285, 125, 20, "Terminal" },
+  { "checkbox", "panel_light", 200, 85, 155, 20, "Light dependent" },
+  { "checkbox", "panel_weapon", 200, 105, 155, 20, "Only toggled by weapons" },
+  { "checkbox", "panel_repair", 360, 85, 155, 20, "Repair switch" },
+  { "label", nil, 200, 125, 155, 20, "Light" } }
+ SMenu.menus["panel_platform"] = {
+  { "radio", "ptype_4", 20, 85, 125, 20, "Light switch" },
+  { "radio", "ptype_5", 20, 105, 125, 20, "Platform switch" },
+  { "radio", "ptype_6", 20, 125, 125, 20, "Tag switch" },
+  { "radio", "ptype_9", 20, 145, 125, 20, "Chip insertion" },
+  { "radio", "ptype_10", 20, 165, 125, 20, "Wires" },
+  { "radio", "ptype_0", 20, 185, 125, 20, "Oxygen" },
+  { "radio", "ptype_1", 20, 205, 125, 20, "1X health" },
+  { "radio", "ptype_2", 20, 225, 125, 20, "2X health" },
+  { "radio", "ptype_3", 20, 245, 125, 20, "3X health" },
+  { "radio", "ptype_7", 20, 265, 125, 20, "Pattern buffer" },
+  { "radio", "ptype_8", 20, 285, 125, 20, "Terminal" },
+  { "checkbox", "panel_light", 200, 85, 155, 20, "Light dependent" },
+  { "checkbox", "panel_weapon", 200, 105, 155, 20, "Only toggled by weapons" },
+  { "checkbox", "panel_repair", 360, 85, 155, 20, "Repair switch" },
+  { "label", nil, 200, 125, 155, 20, "Platform" } }
+ SMenu.menus["panel_tag"] = {
+  { "radio", "ptype_4", 20, 85, 125, 20, "Light switch" },
+  { "radio", "ptype_5", 20, 105, 125, 20, "Platform switch" },
+  { "radio", "ptype_6", 20, 125, 125, 20, "Tag switch" },
+  { "radio", "ptype_9", 20, 145, 125, 20, "Chip insertion" },
+  { "radio", "ptype_10", 20, 165, 125, 20, "Wires" },
+  { "radio", "ptype_0", 20, 185, 125, 20, "Oxygen" },
+  { "radio", "ptype_1", 20, 205, 125, 20, "1X health" },
+  { "radio", "ptype_2", 20, 225, 125, 20, "2X health" },
+  { "radio", "ptype_3", 20, 245, 125, 20, "3X health" },
+  { "radio", "ptype_7", 20, 265, 125, 20, "Pattern buffer" },
+  { "radio", "ptype_8", 20, 285, 125, 20, "Terminal" },
+  { "checkbox", "panel_light", 200, 85, 155, 20, "Light dependent" },
+  { "checkbox", "panel_weapon", 200, 105, 155, 20, "Only toggled by weapons" },
+  { "checkbox", "panel_repair", 360, 85, 155, 20, "Repair switch" },
+  { "checkbox", "panel_active", 360, 105, 155, 20, "Tag is active" },
+  { "label", nil, 200, 125, 155, 20, "Tag" } }
 SMenu.inited = {}
 SMenu.inited[SMode.attribute] = false
 SMenu.buttons = {}

@@ -188,6 +188,8 @@ function Triggers.draw()
     local m = HMode.current
     if HMode.is(HMode.choose) then
       m = "choose_" .. HCollections.current_collection
+    elseif HMode.is(HMode.panel) then
+      m = HPanel.menu_name()
     end
     if HMenu.menus[m] then
       HMenu.draw_menu(m)
@@ -1337,5 +1339,14 @@ function HPanel.valid_option(k)
   end
   return false
 end
-    
+function HPanel.menu_name()
+  if HPanel.current_class < 4 or HPanel.current_class == 7 then
+    return "panel_plain"
+  elseif HPanel.current_class == 4 then
+    return "panel_light"
+  elseif HPanel.current_class == 5 then
+    return "panel_platform"
+  end
+  return "panel_tag"
+end
 
