@@ -205,9 +205,22 @@ end
 function SMode.update()
   for p in Players() do
     
-    -- mode transitions
     p._prev_mode = p._mode
+
+    -- process mode actions
+    if p._mode == SMode.apply then
+      SMode.handle_apply(p)
+    elseif p._mode == SMode.teleport then
+      SMode.handle_teleport(p)
+    elseif p._mode == SMode.choose then
+      SMode.handle_choose(p)
+    elseif p._mode == SMode.attribute then
+      SMode.handle_attribute(p)
+    elseif p._mode == SMode.panel then
+      SMode.handle_panel(p)
+    end
     
+    -- handle mode switches
     if not p._keys.mic.down then
       if p._keys.map.pressed then
         if p._overhead then
@@ -282,18 +295,6 @@ function SMode.update()
       SMenu.recenter(p)
     end
 
-    if p._mode == SMode.apply then
-      SMode.handle_apply(p)
-    elseif p._mode == SMode.teleport then
-      SMode.handle_teleport(p)
-    elseif p._mode == SMode.choose then
-      SMode.handle_choose(p)
-    elseif p._mode == SMode.attribute then
-      SMode.handle_attribute(p)
-    elseif p._mode == SMode.panel then
-      SMode.handle_panel(p)
-    end
-    
     -- handle freeze
     if p._frozen or SMode.menu_mode(p._mode) then
       p:position(p._point.x, p._point.y, p._point.z, p._point.poly)
