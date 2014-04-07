@@ -636,84 +636,100 @@ HMenu.menus[HMode.attribute] = {
   { "radio", "transfer_9", 320, 350, 120, 20, "Fast vertical slide" },
   { "radio", "transfer_11", 320, 370, 120, 20, "Fast wander" },
   { "label", nil, 460, 250, 160, 20, "Preview" } }
+HMenu.menus["panel_off"] = {
+  { "radio", "ptype_5", 20, 85, 125, 20, "Light switch" },
+  { "radio", "ptype_6", 20, 105, 125, 20, "Platform switch" },
+  { "radio", "ptype_7", 20, 125, 125, 20, "Tag switch" },
+  { "radio", "ptype_10", 20, 145, 125, 20, "Chip insertion" },
+  { "radio", "ptype_11", 20, 165, 125, 20, "Wires" },
+  { "radio", "ptype_1", 20, 195, 125, 20, "Oxygen" },
+  { "radio", "ptype_2", 20, 215, 125, 20, "1X health" },
+  { "radio", "ptype_3", 20, 235, 125, 20, "2X health" },
+  { "radio", "ptype_4", 20, 255, 125, 20, "3X health" },
+  { "radio", "ptype_8", 20, 285, 125, 20, "Pattern buffer" },
+  { "radio", "ptype_9", 20, 305, 125, 20, "Terminal" },
+  { "radio", "ptype_0", 20, 335, 125, 20, "Inactive" } }
 HMenu.menus["panel_plain"] = {
-  { "radio", "ptype_4", 20, 85, 125, 20, "Light switch" },
-  { "radio", "ptype_5", 20, 105, 125, 20, "Platform switch" },
-  { "radio", "ptype_6", 20, 125, 125, 20, "Tag switch" },
-  { "radio", "ptype_9", 20, 145, 125, 20, "Chip insertion" },
-  { "radio", "ptype_10", 20, 165, 125, 20, "Wires" },
-  { "radio", "ptype_0", 20, 185, 125, 20, "Oxygen" },
-  { "radio", "ptype_1", 20, 205, 125, 20, "1X health" },
-  { "radio", "ptype_2", 20, 225, 125, 20, "2X health" },
-  { "radio", "ptype_3", 20, 245, 125, 20, "3X health" },
-  { "radio", "ptype_7", 20, 265, 125, 20, "Pattern buffer" },
-  { "radio", "ptype_8", 20, 285, 125, 20, "Terminal" },
+  { "radio", "ptype_5", 20, 85, 125, 20, "Light switch" },
+  { "radio", "ptype_6", 20, 105, 125, 20, "Platform switch" },
+  { "radio", "ptype_7", 20, 125, 125, 20, "Tag switch" },
+  { "radio", "ptype_10", 20, 145, 125, 20, "Chip insertion" },
+  { "radio", "ptype_11", 20, 165, 125, 20, "Wires" },
+  { "radio", "ptype_1", 20, 195, 125, 20, "Oxygen" },
+  { "radio", "ptype_2", 20, 215, 125, 20, "1X health" },
+  { "radio", "ptype_3", 20, 235, 125, 20, "2X health" },
+  { "radio", "ptype_4", 20, 255, 125, 20, "3X health" },
+  { "radio", "ptype_8", 20, 285, 125, 20, "Pattern buffer" },
+  { "radio", "ptype_9", 20, 305, 125, 20, "Terminal" },
+  { "radio", "ptype_0", 20, 335, 125, 20, "Inactive" },
   { "checkbox", "panel_light", 200, 85, 125, 20, "Light dependent" } }
 HMenu.menus["panel_terminal"] = {
-  { "radio", "ptype_4", 20, 85, 125, 20, "Light switch" },
-  { "radio", "ptype_5", 20, 105, 125, 20, "Platform switch" },
-  { "radio", "ptype_6", 20, 125, 125, 20, "Tag switch" },
-  { "radio", "ptype_9", 20, 145, 125, 20, "Chip insertion" },
-  { "radio", "ptype_10", 20, 165, 125, 20, "Wires" },
-  { "radio", "ptype_0", 20, 185, 125, 20, "Oxygen" },
-  { "radio", "ptype_1", 20, 205, 125, 20, "1X health" },
-  { "radio", "ptype_2", 20, 225, 125, 20, "2X health" },
-  { "radio", "ptype_3", 20, 245, 125, 20, "3X health" },
-  { "radio", "ptype_7", 20, 265, 125, 20, "Pattern buffer" },
-  { "radio", "ptype_8", 20, 285, 125, 20, "Terminal" },
+  { "radio", "ptype_5", 20, 85, 125, 20, "Light switch" },
+  { "radio", "ptype_6", 20, 105, 125, 20, "Platform switch" },
+  { "radio", "ptype_7", 20, 125, 125, 20, "Tag switch" },
+  { "radio", "ptype_10", 20, 145, 125, 20, "Chip insertion" },
+  { "radio", "ptype_11", 20, 165, 125, 20, "Wires" },
+  { "radio", "ptype_1", 20, 195, 125, 20, "Oxygen" },
+  { "radio", "ptype_2", 20, 215, 125, 20, "1X health" },
+  { "radio", "ptype_3", 20, 235, 125, 20, "2X health" },
+  { "radio", "ptype_4", 20, 255, 125, 20, "3X health" },
+  { "radio", "ptype_8", 20, 285, 125, 20, "Pattern buffer" },
+  { "radio", "ptype_9", 20, 305, 125, 20, "Terminal" },
+  { "radio", "ptype_0", 20, 335, 125, 20, "Inactive" },
   { "checkbox", "panel_light", 200, 85, 155, 20, "Light dependent" },
   { "label", nil, 200, 125, 155, 20, "Terminal script" } }
  HMenu.menus["panel_light"] = {
-  { "radio", "ptype_4", 20, 85, 125, 20, "Light switch" },
-  { "radio", "ptype_5", 20, 105, 125, 20, "Platform switch" },
-  { "radio", "ptype_6", 20, 125, 125, 20, "Tag switch" },
-  { "radio", "ptype_9", 20, 145, 125, 20, "Chip insertion" },
-  { "radio", "ptype_10", 20, 165, 125, 20, "Wires" },
-  { "radio", "ptype_0", 20, 185, 125, 20, "Oxygen" },
-  { "radio", "ptype_1", 20, 205, 125, 20, "1X health" },
-  { "radio", "ptype_2", 20, 225, 125, 20, "2X health" },
-  { "radio", "ptype_3", 20, 245, 125, 20, "3X health" },
-  { "radio", "ptype_7", 20, 265, 125, 20, "Pattern buffer" },
-  { "radio", "ptype_8", 20, 285, 125, 20, "Terminal" },
+  { "radio", "ptype_5", 20, 85, 125, 20, "Light switch" },
+  { "radio", "ptype_6", 20, 105, 125, 20, "Platform switch" },
+  { "radio", "ptype_7", 20, 125, 125, 20, "Tag switch" },
+  { "radio", "ptype_10", 20, 145, 125, 20, "Chip insertion" },
+  { "radio", "ptype_11", 20, 165, 125, 20, "Wires" },
+  { "radio", "ptype_1", 20, 195, 125, 20, "Oxygen" },
+  { "radio", "ptype_2", 20, 215, 125, 20, "1X health" },
+  { "radio", "ptype_3", 20, 235, 125, 20, "2X health" },
+  { "radio", "ptype_4", 20, 255, 125, 20, "3X health" },
+  { "radio", "ptype_8", 20, 285, 125, 20, "Pattern buffer" },
+  { "radio", "ptype_9", 20, 305, 125, 20, "Terminal" },
+  { "radio", "ptype_0", 20, 335, 125, 20, "Inactive" },
   { "checkbox", "panel_light", 200, 85, 155, 20, "Light dependent" },
   { "checkbox", "panel_weapon", 200, 105, 155, 20, "Only toggled by weapons" },
   { "checkbox", "panel_repair", 360, 85, 155, 20, "Repair switch" },
   { "label", nil, 200, 125, 155, 20, "Light" } }
  HMenu.menus["panel_platform"] = {
-  { "radio", "ptype_4", 20, 85, 125, 20, "Light switch" },
-  { "radio", "ptype_5", 20, 105, 125, 20, "Platform switch" },
-  { "radio", "ptype_6", 20, 125, 125, 20, "Tag switch" },
-  { "radio", "ptype_9", 20, 145, 125, 20, "Chip insertion" },
-  { "radio", "ptype_10", 20, 165, 125, 20, "Wires" },
-  { "radio", "ptype_0", 20, 185, 125, 20, "Oxygen" },
-  { "radio", "ptype_1", 20, 205, 125, 20, "1X health" },
-  { "radio", "ptype_2", 20, 225, 125, 20, "2X health" },
-  { "radio", "ptype_3", 20, 245, 125, 20, "3X health" },
-  { "radio", "ptype_7", 20, 265, 125, 20, "Pattern buffer" },
-  { "radio", "ptype_8", 20, 285, 125, 20, "Terminal" },
+  { "radio", "ptype_5", 20, 85, 125, 20, "Light switch" },
+  { "radio", "ptype_6", 20, 105, 125, 20, "Platform switch" },
+  { "radio", "ptype_7", 20, 125, 125, 20, "Tag switch" },
+  { "radio", "ptype_10", 20, 145, 125, 20, "Chip insertion" },
+  { "radio", "ptype_11", 20, 165, 125, 20, "Wires" },
+  { "radio", "ptype_1", 20, 195, 125, 20, "Oxygen" },
+  { "radio", "ptype_2", 20, 215, 125, 20, "1X health" },
+  { "radio", "ptype_3", 20, 235, 125, 20, "2X health" },
+  { "radio", "ptype_4", 20, 255, 125, 20, "3X health" },
+  { "radio", "ptype_8", 20, 285, 125, 20, "Pattern buffer" },
+  { "radio", "ptype_9", 20, 305, 125, 20, "Terminal" },
+  { "radio", "ptype_0", 20, 335, 125, 20, "Inactive" },
   { "checkbox", "panel_light", 200, 85, 155, 20, "Light dependent" },
   { "checkbox", "panel_weapon", 200, 105, 155, 20, "Only toggled by weapons" },
   { "checkbox", "panel_repair", 360, 85, 155, 20, "Repair switch" },
   { "label", nil, 200, 125, 155, 20, "Platform" } }
  HMenu.menus["panel_tag"] = {
-  { "radio", "ptype_4", 20, 85, 125, 20, "Light switch" },
-  { "radio", "ptype_5", 20, 105, 125, 20, "Platform switch" },
-  { "radio", "ptype_6", 20, 125, 125, 20, "Tag switch" },
-  { "radio", "ptype_9", 20, 145, 125, 20, "Chip insertion" },
-  { "radio", "ptype_10", 20, 165, 125, 20, "Wires" },
-  { "radio", "ptype_0", 20, 185, 125, 20, "Oxygen" },
-  { "radio", "ptype_1", 20, 205, 125, 20, "1X health" },
-  { "radio", "ptype_2", 20, 225, 125, 20, "2X health" },
-  { "radio", "ptype_3", 20, 245, 125, 20, "3X health" },
-  { "radio", "ptype_7", 20, 265, 125, 20, "Pattern buffer" },
-  { "radio", "ptype_8", 20, 285, 125, 20, "Terminal" },
+  { "radio", "ptype_5", 20, 85, 125, 20, "Light switch" },
+  { "radio", "ptype_6", 20, 105, 125, 20, "Platform switch" },
+  { "radio", "ptype_7", 20, 125, 125, 20, "Tag switch" },
+  { "radio", "ptype_10", 20, 145, 125, 20, "Chip insertion" },
+  { "radio", "ptype_11", 20, 165, 125, 20, "Wires" },
+  { "radio", "ptype_1", 20, 195, 125, 20, "Oxygen" },
+  { "radio", "ptype_2", 20, 215, 125, 20, "1X health" },
+  { "radio", "ptype_3", 20, 235, 125, 20, "2X health" },
+  { "radio", "ptype_4", 20, 255, 125, 20, "3X health" },
+  { "radio", "ptype_8", 20, 285, 125, 20, "Pattern buffer" },
+  { "radio", "ptype_9", 20, 305, 125, 20, "Terminal" },
+  { "radio", "ptype_0", 20, 335, 125, 20, "Inactive" },
   { "checkbox", "panel_light", 200, 85, 155, 20, "Light dependent" },
   { "checkbox", "panel_weapon", 200, 105, 155, 20, "Only toggled by weapons" },
   { "checkbox", "panel_repair", 360, 85, 155, 20, "Repair switch" },
   { "checkbox", "panel_active", 360, 105, 155, 20, "Tag is active" },
   { "label", nil, 200, 125, 155, 20, "Tag" } }
- 
-
 HMenu.inited = {}
 HMenu.inited[HMode.attribute] = false
 function HMenu.draw_menu(mode, transparent)
@@ -890,6 +906,7 @@ function HMenu.button_state(name)
   elseif string.sub(name, 1, 6) == "ptype_" then
     local mode = tonumber(string.sub(name, 7))
     if not HPanel.valid_class(mode) then state = "disabled" end
+    if mode == 0 then state = "enabled" end
     if mode == HPanel.current_class then state = "active" end
   elseif name == "panel_light" then
     if HPanel.option_set(1) then state = "active" end
@@ -987,8 +1004,9 @@ function HMenu.init_menu(mode)
         local l = i - 1
         local yoff = (l % 10) * 20
         local xoff = math.floor(l / 10) * 50
+        l = HPlatforms.indexes[l]
         table.insert(menu,
-          { "radio", "pperm_" .. l, 200 + xoff, 145 + yoff, 50, 20, tostring(HPlatforms.indexes[l]) })
+          { "radio", "pperm_" .. l, 200 + xoff, 145 + yoff, 50, 20, tostring(l) })
       end
       HMenu.inited[mode] = true
     end
@@ -1324,29 +1342,34 @@ function HPanel.update()
   HPanel.permutation = Player.texture_palette.slots[52].texture_index + 128*Player.texture_palette.slots[53].texture_index
 end
 function HPanel.valid_class(k)
-  return hasbit(HPanel.bitfield_class, k + 1)
+  return hasbit(HPanel.bitfield_class, k)
 end
 function HPanel.option_set(k)
   return hasbit(HPanel.bitfield_option, k)
 end
 function HPanel.valid_option(k)
-  if k == 1 then
+  if k == HPanel.light_dependent then
     return true
-  elseif k == 2 or k == 3 then
-    return HPanel.current_class == 4 or HPanel.current_class == 5 or HPanel.current_class == 6 or HPanel.current_class == 9 or HPanel.current_class == 10
-  elseif k == 4 then
-    return HPanel.current_class == 6 or HPanel.current_class == 9 or HPanel.current_class == 10
+  elseif k == HPanel.weapons_only or k == HPanel.repair then
+    return HPanel.current_class == HPanel.light_switch or HPanel.current_class == HPanel.platform_switch or HPanel.current_class == HPanel.tag_switch or HPanel.current_class == HPanel.chip or HPanel.current_class == HPanel.wires
+  elseif k == HPanel.active then
+    return HPanel.current_class == HPanel.tag_switch or HPanel.current_class == HPanel.chip or HPanel.current_class == HPanel.wires
   end
   return false
 end
 function HPanel.menu_name()
-  if HPanel.current_class < 4 or HPanel.current_class == 7 then
+  local current_class = HPanel.current_class
+  if current_class == HPanel.oxygen or current_class == HPanel.x1 or current_class == HPanel.x2 or current_class == HPanel.x3 or current_class == HPanel.save then
     return "panel_plain"
-  elseif HPanel.current_class == 4 then
+  elseif current_class == HPanel.terminal then
+    return "panel_terminal"
+  elseif current_class == HPanel.light_switch then
     return "panel_light"
-  elseif HPanel.current_class == 5 then
+  elseif current_class == HPanel.platform_switch then
     return "panel_platform"
+  elseif current_class == HPanel.tag_switch or current_class == HPanel.chip or current_class == HPanel.wires then
+    return "panel_tag"
   end
-  return "panel_tag"
+  return "panel_off"
 end
 
