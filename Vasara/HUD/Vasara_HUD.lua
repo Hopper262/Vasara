@@ -204,41 +204,14 @@ function Triggers.draw()
     local yp = HGlobals.yoff + 270*u
     local sz = 120*u
     
-    local coll = HCollections.current_coll()
-    local tex = Player.texture_palette.slots[coll].texture_index
-    local bct = Collections[coll].bitmap_count
-    
-    if HApply.down(HApply.use_texture) then
-      HCollections.draw(coll, tex, xp, yp, 120*HGlobals.scale)
-      if HApply.current_transfer ~= 5 and HApply.current_transfer ~= 4 then
-        local val = HLights.adj(HApply.current_light)
-        Screen.fill_rect(xp, yp, sz, sz, { 0, 0, 0, 1 - val })
-      end
-    elseif HApply.down(HApply.use_light) then 
-      local val = HLights.val(HApply.current_light)
-      Screen.fill_rect(xp, yp, sz, sz { val, val, val, 1 })
-    end
-
+    HCollections.preview_current(xp, yp, sz)
   end
   if HMode.is(HMode.apply) then
     local xp = HGlobals.xoff + 20*HGlobals.scale
     local yp = HGlobals.yoff + 380*HGlobals.scale
     
-    local coll = HCollections.current_coll()
-    local tex = Player.texture_palette.slots[coll].texture_index
-    local bct = Collections[coll].bitmap_count
-    
     -- lower left: current texture
-    if HApply.down(HApply.use_texture) then
-      HCollections.draw(coll, tex, xp, yp, 85*HGlobals.scale)
-      if HApply.current_transfer ~= 5 and HApply.current_transfer ~= 4 then
-        local val = HLights.adj(HApply.current_light)
-        Screen.fill_rect(xp, yp, 85*HGlobals.scale, 85*HGlobals.scale, { 0, 0, 0, 1 - val })
-      end
-    elseif HApply.down(HApply.use_light) then 
-      local val = HLights.val(HApply.current_light)
-      Screen.fill_rect(xp, yp, 85*HGlobals.scale, 85*HGlobals.scale, { val, val, val, 1 })
-    end
+    HCollections.preview_current(xp, yp, 85*HGlobals.scale)
     
     -- lower middle: attributes
     local xm = xp + 110*HGlobals.scale
@@ -1254,6 +1227,23 @@ function HCollections.draw(coll, tex, x, y, size)
   end
   shp:rescale(size, size)
   shp:draw(x, y)
+end
+function HCollections.preview_current(x, y, size)
+  local coll = HCollections.current_coll()
+  local tex = Player.texture_palette.slots[coll].texture_index
+
+  if HApply.down(HApply.use_texture) then
+    HCollections.draw(coll, tex, x, y, size)
+    if HApply.down(HApply.use_light) then
+      if HApply.current_transfer ~= 5 and HApply.current_transfer ~= 4 then
+        local val = HLights.adj(HApply.current_light)
+        Screen.fill_rect(x, y, size, size, { 0, 0, 0, 1 - val })
+      end
+    end
+  elseif HApply.down(HApply.use_light) then 
+    local val = HLights.val(HApply.current_light)
+    Screen.fill_rect(x, y, size, size, { val, val, val, 1 })
+  end
 end
 
 HCounts = {}
