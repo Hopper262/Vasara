@@ -104,8 +104,13 @@ function Triggers.idle()
   SPanel.update()
   
   for p in Players() do
-    p.life = 409
+    p.life = 450
     p.oxygen = 10800
+  end
+end
+function Triggers.postidle()
+  for p in Players() do
+    p.life = 409  -- signal to HUD that Vasara is active
   end
 end
 
@@ -118,7 +123,8 @@ function Triggers.terminal_exit(_, player)
   player._terminal = false
 end
 function Triggers.player_damaged(p, ap, am, dt, da, pr)
-  p.life = 409
+  p.life = 450
+  p.oxygen = 10800
 end
 
 function PIN(v, min, max)
