@@ -299,6 +299,7 @@ function Triggers.init()
                        "fcheck_on", "fcheck_off" }) do
     imgs[nm] = Images.new{path = "resources/" .. nm .. ".png"}
   end
+  img_static = Images.new{path = "resources/static.png"}
 
   Triggers.resize()
 end
@@ -1229,13 +1230,52 @@ function HCollections.draw(coll, tex, x, y, size)
   shp:draw(x, y)
 end
 function HCollections.preview_current(x, y, size)
+  local oldx = Screen.clip_rect.x
+  local oldy = Screen.clip_rect.y
+  local oldw = Screen.clip_rect.width
+  local oldh = Screen.clip_rect.height
+  Screen.clip_rect.x = x
+  Screen.clip_rect.y = y
+  Screen.clip_rect.width = size
+  Screen.clip_rect.height = size
+
   local coll = HCollections.current_coll()
   local tex = Player.texture_palette.slots[coll].texture_index
 
   if HApply.down(HApply.use_texture) then
-    HCollections.draw(coll, tex, x, y, size)
-    if HApply.down(HApply.use_light) then
-      if HApply.current_transfer ~= 5 and HApply.current_transfer ~= 4 then
+    if HApply.current_transfer == 4 then
+      local xoff = math.random() * math.max(0, img_static.width - size)
+      local yoff = math.random() * math.max(0, img_static.height - size)
+      img_static:draw(x - xoff, y - yoff)
+    else
+      local xoff, yoff, sxmult, symult = HCollections.calc_transfer(HApply.current_transfer)
+      xoff = xoff * size
+      yoff = yoff * size
+      local xp = x + xoff
+      local yp = y + yoff
+      local sx = size * sxmult
+      local sy = size * symult
+      
+      local shp = HCollections.shape(coll, tex)
+      if HCollections.is_landscape(coll) or HApply.current_transfer == 5 then
+        sx = sx * 2
+        sy = sy * 2
+      end
+      shp:rescale(sx, sy)
+      
+      local extrax = { { true, xp }, { xoff > 0, xp - sx }, { (xoff + sx) < size, xp + sx } }
+      local extray = { { true, yp }, { yoff > 0, yp - sy }, { (yoff + sy) < size, yp + sy } }
+      for _,xv in ipairs(extrax) do
+        if xv[1] then
+          for _,yv in ipairs(extray) do
+            if yv[1] then
+              shp:draw(xv[2], yv[2])
+            end
+          end
+        end
+      end      
+    
+      if HApply.down(HApply.use_light) and HApply.current_transfer ~= 5 then
         local val = HLights.adj(HApply.current_light)
         Screen.fill_rect(x, y, size, size, { 0, 0, 0, 1 - val })
       end
@@ -1244,7 +1284,63 @@ function HCollections.preview_current(x, y, size)
     local val = HLights.val(HApply.current_light)
     Screen.fill_rect(x, y, size, size, { val, val, val, 1 })
   end
+  
+  Screen.clip_rect.x = oldx
+  Screen.clip_rect.y = oldy
+  Screen.clip_rect.width = oldw
+  Screen.clip_rect.height = oldh
 end
+function HCollections.calc_transfer(ttype)
+  local x = 0
+  local y = 0
+  local sx = 1
+  local sy = 1
+  if ttype == 1 or ttype == 2 or ttype == 3 then
+    local phase = Game.ticks
+    if ttype == 3 then phase = phase * 15 end
+    phase = bit32.band(phase, 63)
+    if phase >= 32 then
+      phase = 48 - phase
+    else
+      phase = phase - 16
+    end
+    if ttype == 1 then
+      sx = 1 - (phase - 8) / 1024
+      x = (phase - 8) / 2
+      sy = sx
+      y = x
+    else
+      sx = 1 + (phase - 8) / 1024
+      sy = 1 - (phase - 8) / 1024
+      y = (phase - 8) / 2
+    end
+  elseif ttype > 5 then
+    local phase = Game.ticks
+    if ttype == 7 or ttype == 9 or ttype == 11 then phase = phase * 2 end
+    if ttype == 6 or ttype == 7 then
+      x = bit32.band(phase * 4, 1023)
+    elseif ttype == 8 or ttype == 9 then
+      y = bit32.band(phase * 4, 1023)
+    elseif ttype == 10 or ttype == 11 then
+      local alt = phase % 5120
+      phase = phase % 3072
+      x = (math.cos(HCollections.norm_angle(alt)) +
+           math.cos(HCollections.norm_angle(2*alt))/2 +
+           math.cos(HCollections.norm_angle(5*alt))/2)*256
+      y = (math.sin(HCollections.norm_angle(phase)) +
+           math.sin(HCollections.norm_angle(2*phase))/2 +
+           math.sin(HCollections.norm_angle(3*phase))/2)*256
+      while x > 1024 do x = x - 1024 end
+      while x < 0 do x = x + 1024 end
+      while y < 0 do y = y + 1024 end
+    end
+  end
+  return x/1024, y/1024, sx, sy
+end
+function HCollections.norm_angle(angle)
+  return bit32.band(angle, 511) * 2*math.pi / 512
+end
+
 
 HCounts = {}
 HCounts.num_lights = 0
