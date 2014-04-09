@@ -860,7 +860,7 @@ function HMenu.button_state(name)
   elseif string.sub(name, 1, 9) == "transfer_" then
     local mode = tonumber(string.sub(name, 10))
     if HApply.current_transfer == mode then state = "active" end
-    if HCollections.current_collection == 0 then state = "disabled" end
+    if HCollections.current_collection == 0 and mode ~= 5 then state = "disabled" end
   elseif string.sub(name, 1, 6) == "light_" then
     local mode = tonumber(string.sub(name, 7))
     if HApply.current_light == mode then state = "active" end
