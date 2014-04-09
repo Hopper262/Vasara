@@ -1096,7 +1096,7 @@ function HCollections.init()
           ct = HCollections.landscape_textures[j][2]
         end
         table.insert(preview,
-          { "dtexture", "display_" .. cc .. "_" .. ct, 
+          { "texture", "choose_" .. cc .. "_" .. ct, 
             xt, yt, tsize, tsize, cc .. ", " .. ct })
       end
     end
