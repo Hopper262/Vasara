@@ -859,6 +859,11 @@ function SKeys.update()
         if p._keys.map.highlight then down = down + 64 end
         
         p.texture_palette.slots[39].texture_index = down
+        
+        local dummy = 0
+        if p._mic_dummy then dummy = dummy + 4 end
+        
+        p.texture_palette.slots[42].texture_index = dummy
       end
     end
   end

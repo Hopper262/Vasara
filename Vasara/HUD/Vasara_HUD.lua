@@ -140,6 +140,8 @@ function Triggers.draw()
       end
     elseif (info[1] ~= HKeys.mic) and HKeys.down(HKeys.mic) then
       state = "disabled"
+    elseif (info[1] == HKeys.mic) and HKeys.dummy(HKeys.mic) then
+      state = "disabled"
     end
     local lcolor = colors.commands[state].label
     local acolor = colors.commands[state].key
@@ -416,13 +418,18 @@ HKeys.prev_weapon = 4
 HKeys.next_weapon = 5
 HKeys.action = 6
 HKeys.map = 7
+HKeys.dummyfield = 0
 HKeys.names = {"Trigger", "2nd Trigger", "Microphone", "Previous Weapon", "Next Weapon", "Action", "Auto Map"}
 HKeys.shortnames = {"Trigger", "2nd", "Mic", "Previous", "Next", "Action", "Map"}
 function HKeys.update()
   HKeys.bitfield = Player.texture_palette.slots[39].texture_index
+  HKeys.dummyfield = Player.texture_palette.slots[42].texture_index
 end
 function HKeys.down(k)
   return hasbit(HKeys.bitfield, k)
+end
+function HKeys.dummy(k)
+  return hasbit(HKeys.dummyfield, k)
 end
 
 HApply = {}
