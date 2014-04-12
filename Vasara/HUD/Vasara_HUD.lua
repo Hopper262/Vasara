@@ -121,42 +121,7 @@ function Triggers.draw()
   if HMode.changed then layout() end
 
   -- keys
-  local x = HGlobals.xoff
-  local xspots = { x + 106*HGlobals.scale, x + 320*HGlobals.scale, x + 533*HGlobals.scale }
-  local y = HGlobals.yoff + 48*HGlobals.scale
-  local yspots = { y - 4*HGlobals.fheight, y - 3*HGlobals.fheight, y - 2*HGlobals.fheight, y - HGlobals.fheight }
-  
-  local lfont = HGlobals.fontn
-  local lback = HGlobals.fwidth
-
-  local labels = HMode.labels[HMode.current]
-    
-  for _, info in pairs(labels) do
-    local state = "enabled"
-    if HKeys.down(info[1]) then state = "active" end
-    if info[4] then
-      if not HKeys.down(HKeys.mic) then
-        state = "disabled"
-      end
-    elseif (info[1] ~= HKeys.mic) and HKeys.down(HKeys.mic) then
-      state = "disabled"
-    elseif (info[1] == HKeys.mic) and HKeys.dummy(HKeys.mic) then
-      state = "disabled"
-    end
-    local lcolor = colors.commands[state].label
-    local acolor = colors.commands[state].key
-    
-    local ltxt
-    if info[4] then
-      ltxt = "Mic + " .. HKeys.shortnames[info[1]] .. ":"
-    else
-      ltxt = HKeys.names[info[1]] .. ":"
-    end
-    local atxt = info[5]
-    
-    lfont:draw_text(ltxt, xspots[info[2]] - lback - lfont:measure_text(ltxt), yspots[info[3]], lcolor)
-    lfont:draw_text(atxt, xspots[info[2]], yspots[info[3]], acolor)
-  end
+  HMenu.draw_menu("key_" .. HMode.current, true)
   
   -- teleport notices
   if HMode.is(HMode.teleport) then
@@ -431,6 +396,21 @@ end
 function HKeys.dummy(k)
   return hasbit(HKeys.dummyfield, k)
 end
+function HKeys.button_state(keyname, mic_modifier)
+  local k = HKeys[keyname]
+  local state = "enabled"
+  if HKeys.down(k) then state = "active" end
+  
+  if k == HKeys.mic then
+    if HKeys.dummy(HKeys.mic) then state = "disabled" end
+  elseif mic_modifier then
+    if not HKeys.down(HKeys.mic) then state = "disabled" end
+  elseif HKeys.down(HKeys.mic) then
+    state = "disabled"
+  end
+  
+  return state
+end
 
 HApply = {}
 HApply.bitfield = 0
@@ -450,22 +430,18 @@ function HApply.update()
   HApply.current_transfer = Player.texture_palette.slots[44].texture_index
   HApply.current_snap = Player.texture_palette.slots[45].texture_index
 
-  local lbls = HMode.labels[HMode.apply]
---   if HCounts.num_lights > 0 then
---     lbls[7][5] = "Previous Light (" .. tostring((HApply.current_light - 1) % HCounts.num_lights) .. ")"
---     lbls[8][5] = "Next Light (" .. tostring((HApply.current_light + 1) % HCounts.num_lights) .. ")"
---   end
+  local lbls = HMenu.menus["key_" .. HMode.apply]
   
   if HApply.down(HApply.use_texture) then
     if HApply.down(HApply.use_light) then
-      lbls[3][5] = "Apply Light + Texture"
+      lbls[3][7] = "Apply Light + Texture"
     else
-      lbls[3][5] = "Apply Texture"
+      lbls[3][7] = "Apply Texture"
     end
   elseif HApply.down(HApply.use_light) then
-    lbls[3][5] = "Apply Light"
+    lbls[3][7] = "Apply Light"
   else
-    lbls[3][5] = "Move Texture"
+    lbls[3][7] = "Move Texture"
   end
 
 end
@@ -484,34 +460,34 @@ function HStatus.update()
   HStatus.bitfield = Player.texture_palette.slots[41].texture_index
   HStatus.current_menu_item = Player.texture_palette.slots[47].texture_index
   
-  local lbls = HMode.labels[HMode.apply]
-  local lbls2 = HMode.labels[HMode.teleport]
+  local lbls = HMenu.menus["key_" .. HMode.apply]
+  local lbls2 = HMenu.menus["key_" .. HMode.teleport]
   
   if HStatus.down(HStatus.frozen) then
-    lbls[6][5] = "Unfreeze"
+    lbls[6][7] = "Unfreeze"
   else
-    lbls[6][5] = "Freeze"
+    lbls[6][7] = "Freeze"
   end
   
   if HStatus.down(HStatus.undo_active) then
-    lbls[1][5] = "Undo"
-    lbls[9][5] = "Undo"
+    lbls[1][7] = "Undo"
+    lbls[9][7] = "Undo"
   else
-    lbls[1][5] = "(Can't Undo)"
-    lbls[9][5] = "(Can't Undo)"
+    lbls[1][7] = "(Can't Undo)"
+    lbls[9][7] = "(Can't Undo)"
   end
   if HStatus.down(HStatus.redo_active) then
-    lbls[2][5] = "Redo"
-    lbls[9][5] = "Redo"
+    lbls[2][7] = "Redo"
+    lbls[9][7] = "Redo"
   else
-    lbls[2][5] = "(Can't Redo)"
+    lbls[2][7] = "(Can't Redo)"
   end
   if HStatus.down(HStatus.action_active) then
-    lbls[10][5] = "Activate"
-    lbls2[7][5] = "Activate"
+    lbls[10][7] = "Activate"
+    lbls2[7][7] = "Activate"
   else
-    lbls[10][5] = "Choose Texture"
-    lbls2[7][5] = "Choose Texture"
+    lbls[10][7] = "Choose Texture"
+    lbls2[7][7] = "Choose Texture"
   end
   
   
@@ -528,53 +504,6 @@ HMode.attribute = 2
 HMode.teleport = 3
 HMode.panel = 4
 HMode.changed = false
-
-HMode.labels = {}
-HMode.labels[HMode.apply] = {
-    { HKeys.primary,     1, 1, true,  "Undo" },
-    { HKeys.secondary,   1, 2, true,  "Redo" },
-    { HKeys.primary,     1, 3, false, "Apply Texture" },
-    { HKeys.secondary,   1, 4, false, "Sample Light + Texture" },
-    { HKeys.prev_weapon, 2, 1, true,  "Jump" },
-    { HKeys.next_weapon, 2, 2, true,  "Freeze" },
-    { HKeys.prev_weapon, 2, 3, false, "Previous Light" },
-    { HKeys.next_weapon, 2, 4, false, "Next Light" },
-    { HKeys.action,      3, 1, true,  "Undo" },
-    { HKeys.action,      3, 2, false, "Choose Texture / Action" },
-    { HKeys.mic,         3, 3, false, "Options" },
-    { HKeys.map,         3, 4, false, "Teleport" } }
-HMode.labels[HMode.choose] = {
-    { HKeys.primary,     1, 1, true,  "Cycle Textures" },
-    { HKeys.secondary,   1, 2, true,  "Cycle Collections" },
-    { HKeys.primary,     1, 3, false, "Select Texture" },
-    { HKeys.secondary,   1, 4, false, "Return" },
-    { HKeys.prev_weapon, 2, 1, true,  "Previous Texture" },
-    { HKeys.next_weapon, 2, 2, true,  "Next Texture" },
-    { HKeys.prev_weapon, 2, 3, false, "Previous Collection" },
-    { HKeys.next_weapon, 2, 4, false, "Next Collection" },
-    { HKeys.action,      3, 2, false, "Return" },
-    { HKeys.mic,         3, 3, false, "Options" },
-    { HKeys.map,         3, 4, false, "Teleport" } }
-HMode.labels[HMode.attribute] = {
-    { HKeys.primary,     1, 3, false, "Select Option" },
-    { HKeys.secondary,   1, 4, false, "Return" },
-    { HKeys.prev_weapon, 2, 3, false, "Previous Option" },
-    { HKeys.next_weapon, 2, 4, false, "Next Option" },
-    { HKeys.action,      3, 2, false, "Choose Texture" },
-    { HKeys.mic,         3, 3, false, "Return" },
-    { HKeys.map,         3, 4, false, "Teleport" } }
-HMode.labels[HMode.teleport] = {
-    { HKeys.primary,     1, 1, true,  "Rewind Polygon" },
-    { HKeys.secondary,   1, 2, true,  "Fast Forward Polygon" },
-    { HKeys.primary,     1, 3, false, "Teleport" },
-    { HKeys.secondary,   1, 4, false, "Return" },
-    { HKeys.prev_weapon, 2, 3, false, "Previous Polygon" },
-    { HKeys.next_weapon, 2, 4, false, "Next Polygon" },
-    { HKeys.action,      3, 2, false, "Choose Texture / Action" },
-    { HKeys.mic,         3, 3, false, "Options" },
-    { HKeys.map,         3, 4, false, "Return" } }
-HMode.labels[HMode.panel] = HMode.labels[HMode.attribute]
-
 function HMode.update()
   local newstate = Player.texture_palette.slots[40].texture_index
   if newstate ~= HMode.current then
@@ -711,6 +640,89 @@ HMenu.menus["panel_terminal"] = {
   { "checkbox", "panel_repair", 360, 85, 155, 20, "Repair switch" },
   { "checkbox", "panel_active", 360, 105, 155, 20, "Tag is active" },
   { "label", nil, 200, 125, 155, 20, "Tag" } }
+HMenu.menus["key_" .. HMode.apply] = {
+  { "kaction", "key_mic_primary", 105, 0, 120, 12, "Undo" },
+  { "kaction", "key_mic_secondary", 105, 12, 120, 12, "Redo" },
+  { "kaction", "key_primary", 105, 24, 120, 12, "Apply Texture" },
+  { "kaction", "key_secondary", 105, 36, 120, 12, "Sample Light + Texture" },
+  { "kaction", "key_mic_prev_weapon", 320, 0, 120, 12, "Jump" },
+  { "kaction", "key_mic_next_weapon", 320, 12, 120, 12, "Freeze" },
+  { "kaction", "key_prev_weapon", 320, 24, 120, 12, "Previous Light" },
+  { "kaction", "key_next_weapon", 320, 36, 120, 12, "Next Light" },
+  { "kaction", "key_mic_action", 535, 0, 120, 12, "Undo" },
+  { "kaction", "key_action", 535, 12, 120, 12, "Choose Texture" },
+  { "kaction", "key_mic", 535, 24, 120, 12, "Options" },
+  { "kaction", "key_map", 535, 36, 120, 12, "Teleport" },
+  { "klabel", "key_mic_primary", 10, 0, 90, 12, "Mic + Trigger:" },
+  { "klabel", "key_mic_secondary", 10, 12, 90, 12, "Mic + 2nd:" },
+  { "klabel", "key_primary", 10, 24, 90, 12, "Trigger:" },
+  { "klabel", "key_secondary", 10, 36, 90, 12, "2nd Trigger:" },
+  { "klabel", "key_mic_prev_weapon", 225, 0, 90, 12, "Mic + Previous:" },
+  { "klabel", "key_mic_next_weapon", 225, 12, 90, 12, "Mic + Next:" },
+  { "klabel", "key_prev_weapon", 225, 24, 90, 12, "Previous Weapon:" },
+  { "klabel", "key_next_weapon", 225, 36, 90, 12, "Next Weapon:" },
+  { "klabel", "key_mic_action", 440, 0, 90, 12, "Mic + Action:" },
+  { "klabel", "key_action", 440, 12, 90, 12, "Action:" },
+  { "klabel", "key_mic", 440, 24, 90, 12, "Microphone:" },
+  { "klabel", "key_map", 440, 36, 90, 12, "Auto Map:" } }
+HMenu.menus["key_" .. HMode.teleport] = {
+  { "kaction", "key_mic_primary", 105, 0, 120, 12, "Rewind Polygon" },
+  { "kaction", "key_mic_secondary", 105, 12, 120, 12, "Fast Forward Polygon" },
+  { "kaction", "key_primary", 105, 24, 120, 12, "Teleport" },
+  { "kaction", "key_secondary", 105, 36, 120, 12, "Return" },
+  { "kaction", "key_prev_weapon", 320, 24, 120, 12, "Previous Polygon" },
+  { "kaction", "key_next_weapon", 320, 36, 120, 12, "Next Polygon" },
+  { "kaction", "key_action", 535, 12, 120, 12, "Activate" },
+  { "kaction", "key_mic", 535, 24, 120, 12, "Options" },
+  { "kaction", "key_map", 535, 36, 120, 12, "Return" },
+  { "klabel", "key_mic_primary", 10, 0, 90, 12, "Mic + Trigger:" },
+  { "klabel", "key_mic_secondary", 10, 12, 90, 12, "Mic + 2nd:" },
+  { "klabel", "key_primary", 10, 24, 90, 12, "Trigger:" },
+  { "klabel", "key_secondary", 10, 36, 90, 12, "2nd Trigger:" },
+  { "klabel", "key_prev_weapon", 225, 24, 90, 12, "Previous Weapon:" },
+  { "klabel", "key_next_weapon", 225, 36, 90, 12, "Next Weapon:" },
+  { "klabel", "key_action", 440, 12, 90, 12, "Action:" },
+  { "klabel", "key_mic", 440, 24, 90, 12, "Microphone:" },
+  { "klabel", "key_map", 440, 36, 90, 12, "Auto Map:" } }
+HMenu.menus["key_" .. HMode.choose] = {
+  { "kaction", "key_mic_primary", 105, 0, 120, 12, "Cycle Textures" },
+  { "kaction", "key_mic_secondary", 105, 12, 120, 12, "Cycle Collections" },
+  { "kaction", "key_primary", 105, 24, 120, 12, "Select Texture" },
+  { "kaction", "key_secondary", 105, 36, 120, 12, "Return" },
+  { "kaction", "key_mic_prev_weapon", 320, 0, 120, 12, "Previous Texture" },
+  { "kaction", "key_mic_next_weapon", 320, 12, 120, 12, "Next Texture" },
+  { "kaction", "key_prev_weapon", 320, 24, 120, 12, "Previous Collection" },
+  { "kaction", "key_next_weapon", 320, 36, 120, 12, "Next Collection" },
+  { "kaction", "key_action", 535, 12, 120, 12, "Return" },
+  { "kaction", "key_mic", 535, 24, 120, 12, "Options" },
+  { "kaction", "key_map", 535, 36, 120, 12, "Teleport" },
+  { "klabel", "key_mic_primary", 10, 0, 90, 12, "Mic + Trigger:" },
+  { "klabel", "key_mic_secondary", 10, 12, 90, 12, "Mic + 2nd:" },
+  { "klabel", "key_primary", 10, 24, 90, 12, "Trigger:" },
+  { "klabel", "key_secondary", 10, 36, 90, 12, "2nd Trigger:" },
+  { "klabel", "key_mic_prev_weapon", 225, 0, 90, 12, "Mic + Previous:" },
+  { "klabel", "key_mic_next_weapon", 225, 12, 90, 12, "Mic + Next:" },
+  { "klabel", "key_prev_weapon", 225, 24, 90, 12, "Previous Weapon:" },
+  { "klabel", "key_next_weapon", 225, 36, 90, 12, "Next Weapon:" },
+  { "klabel", "key_action", 440, 12, 90, 12, "Action:" },
+  { "klabel", "key_mic", 440, 24, 90, 12, "Microphone:" },
+  { "klabel", "key_map", 440, 36, 90, 12, "Auto Map:" } }
+HMenu.menus["key_" .. HMode.attribute] = {
+  { "kaction", "key_primary", 105, 24, 120, 12, "Select Option" },
+  { "kaction", "key_secondary", 105, 36, 120, 12, "Return" },
+  { "kaction", "key_prev_weapon", 320, 24, 120, 12, "Previous Option" },
+  { "kaction", "key_next_weapon", 320, 36, 120, 12, "Next Option" },
+  { "kaction", "key_action", 535, 12, 120, 12, "Choose Texture" },
+  { "kaction", "key_mic", 535, 24, 120, 12, "Return" },
+  { "kaction", "key_map", 535, 36, 120, 12, "Teleport" },
+  { "klabel", "key_primary", 10, 24, 90, 12, "Trigger:" },
+  { "klabel", "key_secondary", 10, 36, 90, 12, "2nd Trigger:" },
+  { "klabel", "key_prev_weapon", 225, 24, 90, 12, "Previous Weapon:" },
+  { "klabel", "key_next_weapon", 225, 36, 90, 12, "Next Weapon:" },
+  { "klabel", "key_action", 440, 12, 90, 12, "Action:" },
+  { "klabel", "key_mic", 440, 24, 90, 12, "Microphone:" },
+  { "klabel", "key_map", 440, 36, 90, 12, "Auto Map:" } }
+HMenu.menus["key_" .. HMode.panel] = HMenu.menus["key_" .. HMode.attribute]
 HMenu.inited = {}
 HMenu.inited[HMode.attribute] = false
 function HMenu.draw_menu(mode, transparent)
@@ -736,6 +748,17 @@ function HMenu.draw_menu(mode, transparent)
       HGlobals.fontn:draw_text(item[7],
                                math.floor(x), math.floor(y + h/2 - HGlobals.fheight/2),
                                colors.menu_label)
+    elseif item[1] == "klabel" then
+      local fw, fh = HGlobals.fontn:measure_text(item[7])
+      local state = HMenu.button_state(item[2])
+      HGlobals.fontn:draw_text(item[7],
+                               math.floor(x + w - fw), math.floor(y + h/2 - HGlobals.fheight/2),
+                               colors.commands[state].label)
+    elseif item[1] == "kaction" then
+      local state = HMenu.button_state(item[2])
+      HGlobals.fontn:draw_text(item[7],
+                               math.floor(x), math.floor(y + h/2 - HGlobals.fheight/2),
+                               colors.commands[state].key)
     elseif item[1] == "texture" or item[1] == "dtexture" then
       local cc, ct = string.match(item[2], "(%d+)_(%d+)")
       local state = "enabled"
@@ -902,6 +925,10 @@ function HMenu.button_state(name)
   elseif name == "panel_active" then
     if HPanel.option_set(4) then state = "active" end
     if not HPanel.valid_option(4) then state = "disabled" end
+  elseif string.sub(name, 1, 8) == "key_mic_" then
+    state = HKeys.button_state(string.sub(name, 9), true)
+  elseif string.sub(name, 1, 4) == "key_" then
+    state = HKeys.button_state(string.sub(name, 5), false)
   end
   
   return state
@@ -1401,12 +1428,6 @@ HTeleport = {}
 HTeleport.poly = 0
 function HTeleport.update()
   HTeleport.poly = Player.texture_palette.slots[37].texture_index + 128*Player.texture_palette.slots[38].texture_index
-  
---   if HMode.is(HMode.teleport) then
---     local lbls = HMode.labels[HMode.teleport]
---     lbls[5][5] = "Previous Polygon (" .. ((HTeleport.poly - 1) % HCounts.num_polys) .. ")"
---     lbls[6][5] = "Next Polygon (" .. ((HTeleport.poly + 1) % HCounts.num_polys) .. ")"
---   end
 end
 
 HPanel = {}
