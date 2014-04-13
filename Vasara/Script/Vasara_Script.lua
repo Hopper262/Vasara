@@ -23,7 +23,7 @@ vert_range = 30   -- max: 30
 horiz_range = 70  -- max: 160
 vert_size = 325   -- max: 430
 horiz_size = 600  -- max: 640
-vert_offset = 65
+vert_offset = 75
 horiz_offset = 20
 
 Game.monsters_replenish = not suppress_monsters
@@ -1122,18 +1122,18 @@ end
 SMenu = {}
 SMenu.menus = {}
 SMenu.menus[SMode.attribute] = {
-  { "label", nil, 20+18, 65, 155-18, 20, "Attributes" },
-  { "checkbox", "apply_light", 20, 85, 155, 20, "Apply light" },
-  { "checkbox", "apply_tex", 20, 105, 155, 20, "Apply texture" },
-  { "checkbox", "apply_align", 20, 125, 155, 20, "Align adjacent" },
-  { "checkbox", "apply_edit", 20, 145, 155, 20, "Edit switches and panels" },
-  { "checkbox", "apply_xparent", 20, 165, 155, 20, "Edit transparent sides" },
+  { "label", nil, 20+18, 85, 155-18, 20, "Attributes" },
+  { "checkbox", "apply_light", 20, 105, 155, 20, "Apply light" },
+  { "checkbox", "apply_tex", 20, 125, 155, 20, "Apply texture" },
+  { "checkbox", "apply_align", 20, 145, 155, 20, "Align adjacent" },
+  { "checkbox", "apply_edit", 20, 165, 155, 20, "Edit switches and panels" },
+  { "checkbox", "apply_xparent", 20, 185, 155, 20, "Edit transparent sides" },
   { "label", "nil", 20+18, 250, 155-18, 20, "Snap to grid" },
   { "radio", "snap_0", 20, 270, 155, 20, "Off" },
   { "radio", "snap_1", 20, 290, 155, 20, "1/4 WU" },
   { "radio", "snap_2", 20, 310, 155, 20, "1/5 WU" },
   { "radio", "snap_3", 20, 330, 155, 20, "1/8 WU" },
-  { "label", nil, 200+18, 65, 240-18, 20, "Light" },
+  { "label", nil, 200+18, 85, 240-18, 20, "Light" },
   { "label", nil, 200+18, 250, 240-18, 20, "Texture mode" },
   { "radio", "transfer_0", 200, 270, 120, 20, "Normal" },
   { "radio", "transfer_1", 200, 290, 120, 20, "Pulsate" },
@@ -1281,7 +1281,7 @@ function SMenu.init_menu(mode)
       local yoff = (l % 7) * 20
       local xoff = math.floor(l / 7) * 50
       table.insert(menu, 13 + l,
-        { "light", "light_" .. l, 200 + xoff, 85 + yoff, 50, 20, tostring(l) })
+        { "light", "light_" .. l, 200 + xoff, 105 + yoff, 50, 20, tostring(l) })
     end
   elseif mode == "panel_light" then
     for i = 1,math.min(#Lights, 56) do
@@ -1439,7 +1439,7 @@ function SCollections.init()
       local w = math.floor(600 / n)
       
       local x = 20
-      local y = 370
+      local y = 380
       for i = 1,n do
         local cnum = menu_colls[i]
         table.insert(cbuttons,
@@ -1465,7 +1465,7 @@ function SCollections.init()
         local col = (i - 1) % cols
         local row = math.floor((i - 1) / cols)
         local x = 20 + (tsize * col) + (600 - (tsize * cols))/2
-        local y = 65 + (tsize * row) + (300 - (tsize * rows))/2
+        local y = 80 + (tsize * row) + (300 - (tsize * rows))/2
         
         local cc = cnum
         local ct = i - 1

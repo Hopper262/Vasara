@@ -55,8 +55,14 @@ colors.button.active.text = { 0.0, 1.0, 0.0, 1 }
 
 colors.apply = {}
 colors.apply.enabled = {}
+colors.apply.enabled.background = { 0.0, 0.0, 0.0, 1 }
+colors.apply.enabled.highlight = { 0.0, 0.0, 0.0, 1 }
+colors.apply.enabled.shadow = { 0.0, 0.0, 0.0, 1 }
 colors.apply.enabled.text = { 0.5, 0.5, 0.5, 1 }
 colors.apply.active = {}
+colors.apply.active.background = { 0.0, 0.0, 0.0, 1 }
+colors.apply.active.highlight = { 0.0, 0.0, 0.0, 1 }
+colors.apply.active.shadow = { 0.0, 0.0, 0.0, 1 }
 colors.apply.active.text = { 1, 1, 1, 1 }
 
 -- other menu UI prefs
@@ -77,7 +83,7 @@ vert_range = 30   -- max: 30
 horiz_range = 70  -- max: 160
 vert_size = 325   -- max: 430
 horiz_size = 600  -- max: 640
-vert_offset = 65
+vert_offset = 75
 horiz_offset = 20
 
 g_scriptChecked = false
@@ -175,22 +181,16 @@ function Triggers.draw()
   end
   if HMode.is(HMode.apply) then
     local xp = HGlobals.xoff + 20*HGlobals.scale
-    local yp = HGlobals.yoff + 380*HGlobals.scale
+    local yp = HGlobals.yoff + (320+72)*HGlobals.scale
     
     -- lower left: current texture
-    HCollections.preview_current(xp, yp, 85*HGlobals.scale)
+    HCollections.preview_current(xp, yp + 2*HGlobals.scale, 84*HGlobals.scale)
     
     -- lower middle: attributes
-    local xm = xp + 110*HGlobals.scale
-    local ym = yp
-    local yplus = HGlobals.fheight + 4*HGlobals.scale
-    local att
-    
-    att = "Apply Light: " .. HApply.current_light
-    draw_mode(att, xm, ym, (HApply.down(HApply.use_light) and HApply.current_transfer ~= 5))
-    ym = ym + yplus
+    local lbls = HMenu.menus["apply_options"]
+    lbls[1][7] = "Apply Light: " .. HApply.current_light    
 
-    att = "Apply Texture"
+    local att = "Apply Texture"
     local tmode = HApply.transfer_modes[HApply.current_transfer + 1]
     if HCollections.current_collection == 0 then
       if HApply.current_transfer == 5 then tmode = nil end
@@ -200,21 +200,46 @@ function Triggers.draw()
     if tmode ~= nil then
       att = att .. ": " .. tmode
     end
-    draw_mode(att, xm, ym, HApply.down(HApply.use_texture))
-    ym = ym + yplus
+    lbls[2][7] = att
+
+    lbls[6][7] = "Snap to grid: " .. HApply.snap_modes[HApply.current_snap + 1]
+
+    HMenu.draw_menu("apply_options", true)
     
-    draw_mode("Align adjacent", xm, ym, HApply.down(HApply.align))
-    ym = ym + yplus
-    
-    draw_mode("Edit switches and panels", xm, ym, HApply.down(HApply.edit_panels))
-    ym = ym + yplus
-    
-    draw_mode("Edit transparent sides", xm, ym, HApply.down(HApply.transparent))
-    ym = ym + yplus
-    
-    att = "Snap to grid: " .. HApply.snap_modes[HApply.current_snap + 1]
-    draw_mode(att, xm, ym, HApply.current_snap ~= 0)
-    ym = ym + yplus
+--     local xm = xp + 110*HGlobals.scale
+--     local ym = yp + 2*HGlobals.scale
+--     local yplus = 14*HGlobals.scale
+--     local att
+--     
+--     att = "Apply Light: " .. HApply.current_light
+--     draw_mode(att, xm, ym, (HApply.down(HApply.use_light) and HApply.current_transfer ~= 5))
+--     ym = ym + yplus
+-- 
+--     att = "Apply Texture"
+--     local tmode = HApply.transfer_modes[HApply.current_transfer + 1]
+--     if HCollections.current_collection == 0 then
+--       if HApply.current_transfer == 5 then tmode = nil end
+--     else
+--       if HApply.current_transfer == 0 then tmode = nil end
+--     end
+--     if tmode ~= nil then
+--       att = att .. ": " .. tmode
+--     end
+--     draw_mode(att, xm, ym, HApply.down(HApply.use_texture))
+--     ym = ym + yplus
+--     
+--     draw_mode("Align adjacent", xm, ym, HApply.down(HApply.align))
+--     ym = ym + yplus
+--     
+--     draw_mode("Edit switches and panels", xm, ym, HApply.down(HApply.edit_panels))
+--     ym = ym + yplus
+--     
+--     draw_mode("Edit transparent sides", xm, ym, HApply.down(HApply.transparent))
+--     ym = ym + yplus
+--     
+--     att = "Snap to grid: " .. HApply.snap_modes[HApply.current_snap + 1]
+--     draw_mode(att, xm, ym, HApply.current_snap ~= 0)
+--     ym = ym + yplus
     
     -- lower right: full collection
     HMenu.draw_menu("preview_" .. HCollections.current_collection, true)
@@ -304,13 +329,14 @@ function layout()
   local y = HGlobals.yoff
   local w = 640*HGlobals.scale
   local h = 480*HGlobals.scale
+  local header = 72
   
   Screen.clip_rect.x = x
   Screen.clip_rect.y = y
   Screen.clip_rect.width = w
   Screen.clip_rect.height = h
   
-  y = y + 50*HGlobals.scale
+  y = y + header*HGlobals.scale
   h = math.floor(w / 2)
   
   Screen.term_rect.x = x
@@ -318,7 +344,7 @@ function layout()
   Screen.term_rect.width = w
   Screen.term_rect.height = h
   
-  local halfh = math.floor(215*HGlobals.scale)
+  local halfh = math.floor((480 - header)/2)
   Screen.map_rect.x = x
   Screen.map_rect.y = y + halfh
   Screen.map_rect.width = w
@@ -520,18 +546,18 @@ end
 HMenu = {}
 HMenu.menus = {}
 HMenu.menus[HMode.attribute] = {
-  { "label", nil, 20+18, 65, 155-18, 20, "Attributes" },
-  { "checkbox", "apply_light", 20, 85, 155, 20, "Apply light" },
-  { "checkbox", "apply_tex", 20, 105, 155, 20, "Apply texture" },
-  { "checkbox", "apply_align", 20, 125, 155, 20, "Align adjacent" },
-  { "checkbox", "apply_edit", 20, 145, 155, 20, "Edit switches and panels" },
-  { "checkbox", "apply_xparent", 20, 165, 155, 20, "Edit transparent sides" },
+  { "label", nil, 20+18, 85, 155-18, 20, "Attributes" },
+  { "checkbox", "apply_light", 20, 105, 155, 20, "Apply light" },
+  { "checkbox", "apply_tex", 20, 125, 155, 20, "Apply texture" },
+  { "checkbox", "apply_align", 20, 145, 155, 20, "Align adjacent" },
+  { "checkbox", "apply_edit", 20, 165, 155, 20, "Edit switches and panels" },
+  { "checkbox", "apply_xparent", 20, 185, 155, 20, "Edit transparent sides" },
   { "label", "nil", 20+18, 250, 155-18, 20, "Snap to grid" },
   { "radio", "snap_0", 20, 270, 155, 20, "Off" },
   { "radio", "snap_1", 20, 290, 155, 20, "1/4 WU" },
   { "radio", "snap_2", 20, 310, 155, 20, "1/5 WU" },
   { "radio", "snap_3", 20, 330, 155, 20, "1/8 WU" },
-  { "label", nil, 200+18, 65, 240-18, 20, "Light" },
+  { "label", nil, 200+18, 85, 240-18, 20, "Light" },
   { "label", nil, 200+18, 250, 240-18, 20, "Texture mode" },
   { "radio", "transfer_0", 200, 270, 120, 20, "Normal" },
   { "radio", "transfer_1", 200, 290, 120, 20, "Pulsate" },
@@ -546,6 +572,13 @@ HMenu.menus[HMode.attribute] = {
   { "radio", "transfer_9", 320, 350, 120, 20, "Fast vertical slide" },
   { "radio", "transfer_11", 320, 370, 120, 20, "Fast wander" },
   { "label", nil, 460, 250, 160, 20, "Preview" } }
+HMenu.menus["apply_options"] = {
+  { "acheckbox", "apply_light", 110, 394, 155, 14, "Apply light" },
+  { "acheckbox", "apply_tex", 110, 408, 155, 14, "Apply texture" },
+  { "acheckbox", "apply_align", 110, 422, 155, 14, "Align adjacent" },
+  { "acheckbox", "apply_edit", 110, 436, 155, 14, "Edit switches and panels" },
+  { "acheckbox", "apply_xparent", 110, 450, 155, 14, "Edit transparent sides" },
+  { "acheckbox", "apply_snap", 110, 464, 155, 14, "Snap to grid" } }
 HMenu.menus["panel_off"] = {
   { "radio", "ptype_5", 20, 85, 125, 20, "Light switch" },
   { "radio", "ptype_6", 20, 105, 125, 20, "Platform switch" },
@@ -821,7 +854,7 @@ function HMenu.draw_menu(mode, transparent)
       HMenu.draw_button_background(item, state)
       
       local xo = 7
-      if item[1] == "checkbox" or item[1] == "radio" then
+      if item[1] == "checkbox" or item[1] == "acheckbox" or item[1] == "radio" then
         xo = 17
       elseif item[1] == "light" then
         local fw, fh = HGlobals.fontn:measure_text(item[7])
@@ -832,10 +865,12 @@ function HMenu.draw_menu(mode, transparent)
       end
       HMenu.draw_button_text(item, state, xo)
         
-      if item[1] == "checkbox" or item[1] == "radio" then
+      if item[1] == "checkbox" or item[1] == "acheckbox" or item[1] == "radio" then
         local nm = "dcheck"
         if item[1] == "radio" then
           nm = "dradio"
+        elseif item[1] == "acheckbox" then
+          nm = "fcheck"
         end
         if state == "enabled" then
           nm = nm .. "_off"
@@ -884,6 +919,8 @@ function HMenu.button_state(name)
     if HApply.down(HApply.transparent) then state = "active" end
   elseif name == "apply_edit" then
     if HApply.down(HApply.edit_panels) then state = "active" end
+  elseif name == "apply_snap" then
+    if HApply.current_snap > 0 then state = "active" end
   elseif string.sub(name, 1, 5) == "snap_" then
     local mode = tonumber(string.sub(name, 6))
     if HApply.current_snap == mode then state = "active" end
@@ -942,6 +979,7 @@ function HMenu.draw_button_background(item, state)
   local th = menu_prefs.button_highlight_thickness*u
   local ts = menu_prefs.button_shadow_thickness*u
   local c = colors.button[state]
+  if item[1] == "acheckbox" then c = colors.apply[state] end
 
   Screen.fill_rect(x, y, w, h, c.background)
   Screen.fill_rect(x, y, w, th, c.highlight)
@@ -954,11 +992,13 @@ function HMenu.draw_button_text(item, state, xoff)
   local x = HGlobals.xoff + item[3]*u + menu_prefs.button_indent*u
   local y = HGlobals.yoff + item[4]*u + menu_prefs.button_indent*u
   local h = item[6]*u - 2*menu_prefs.button_indent*u
+  local c = colors.button[state]
+  if item[1] == "acheckbox" then c = colors.apply[state] end
   
   HGlobals.fontn:draw_text(item[7],
                            math.floor(x + xoff*u),
                            math.floor(y + h/2 - HGlobals.fheight/2),
-                           colors.button[state].text)
+                           c.text)
 end
 
 function HMenu.init_menu(mode)
@@ -970,7 +1010,7 @@ function HMenu.init_menu(mode)
         local yoff = (l % 7) * 20
         local xoff = math.floor(l / 7) * 50
         table.insert(menu, 13 + l,
-          { "light", "light_" .. l, 200 + xoff, 85 + yoff, 50, 20, tostring(l) })
+          { "light", "light_" .. l, 200 + xoff, 105 + yoff, 50, 20, tostring(l) })
       end
       HMenu.inited[mode] = true
     end
@@ -1024,7 +1064,7 @@ function HMenu.init_menu(mode)
   end
 end
 function HMenu.clickable(item_type)
-  return item_type == "button" or item_type == "checkbox" or item_type == "radio" or item_type == "texture" or item_type == "light" or item_type == "dradio" or item_type == "dbutton"
+  return item_type == "button" or item_type == "checkbox" or item_type == "radio" or item_type == "texture" or item_type == "light" or item_type == "dradio" or item_type == "dbutton" or item_type == "acheckbox"
 end
 
 HChoose = {}
@@ -1114,11 +1154,11 @@ function HCollections.init()
     local cinfo = menu_colls[i]
     local cnum, bct, rows, cols = cinfo.cnum, cinfo.bct, cinfo.rows, cinfo.cols
     if preview_collection_when_applying then
-      local w = 180
-      local h = 90
+      local w = 168
+      local h = 84
       local tsize = math.min(w / cols, h / rows)
       local x = 620 - (tsize * cols)
-      local y = 380
+      local y = 480 - 88/2 - (tsize * rows)/2
       for j = 1,bct do
         local col = (j - 1) % cols
         local row = math.floor((j - 1) / cols)
@@ -1146,7 +1186,7 @@ function HCollections.init()
     local w = math.floor(600 / n)
     
     local x = 20
-    local y = 370
+    local y = 380
     for i = 1,n do
       local cinfo = menu_colls[i]
       local cnum = cinfo.cnum
@@ -1198,7 +1238,7 @@ function HCollections.init()
       local col = (i - 1) % cols
       local row = math.floor((i - 1) / cols)
       local x = 20 + (tsize * col) + (600 - (tsize * cols))/2
-      local y = 65 + (tsize * row) + (300 - (tsize * rows))/2
+      local y = 80 + (tsize * row) + (300 - (tsize * rows))/2
       
       local cc = cnum
       local ct = i - 1
