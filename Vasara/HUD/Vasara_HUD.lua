@@ -367,7 +367,7 @@ function layout()
   Screen.term_rect.width = w
   Screen.term_rect.height = h
   
-  local halfh = math.floor((480 - header)/2)
+  local halfh = math.floor((480 - header)*HGlobals.scale/2)
   Screen.map_rect.x = x
   Screen.map_rect.y = y + halfh
   Screen.map_rect.width = w
