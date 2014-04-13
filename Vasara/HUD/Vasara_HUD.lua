@@ -131,11 +131,6 @@ function Triggers.draw()
   
   -- teleport notices
   if HMode.is(HMode.teleport) then
---     local txt = "Current polygon:"
---     local ifont = HGlobals.fonti
---     ifont:draw_text(txt, xspots[2] - lback - ifont:measure_text(txt), yspots[2], { 0.6, 0.6, 0.6, 1})
---     ifont:draw_text(HTeleport.poly, xspots[2], yspots[2], { 0.6, 0.6, 0.6, 1})
-
     local yp = HGlobals.cpos[2]
     local xp = HGlobals.cpos[1]
     
@@ -205,41 +200,6 @@ function Triggers.draw()
     lbls[6][7] = "Snap to grid: " .. HApply.snap_modes[HApply.current_snap + 1]
 
     HMenu.draw_menu("apply_options", true)
-    
---     local xm = xp + 110*HGlobals.scale
---     local ym = yp + 2*HGlobals.scale
---     local yplus = 14*HGlobals.scale
---     local att
---     
---     att = "Apply Light: " .. HApply.current_light
---     draw_mode(att, xm, ym, (HApply.down(HApply.use_light) and HApply.current_transfer ~= 5))
---     ym = ym + yplus
--- 
---     att = "Apply Texture"
---     local tmode = HApply.transfer_modes[HApply.current_transfer + 1]
---     if HCollections.current_collection == 0 then
---       if HApply.current_transfer == 5 then tmode = nil end
---     else
---       if HApply.current_transfer == 0 then tmode = nil end
---     end
---     if tmode ~= nil then
---       att = att .. ": " .. tmode
---     end
---     draw_mode(att, xm, ym, HApply.down(HApply.use_texture))
---     ym = ym + yplus
---     
---     draw_mode("Align adjacent", xm, ym, HApply.down(HApply.align))
---     ym = ym + yplus
---     
---     draw_mode("Edit switches and panels", xm, ym, HApply.down(HApply.edit_panels))
---     ym = ym + yplus
---     
---     draw_mode("Edit transparent sides", xm, ym, HApply.down(HApply.transparent))
---     ym = ym + yplus
---     
---     att = "Snap to grid: " .. HApply.snap_modes[HApply.current_snap + 1]
---     draw_mode(att, xm, ym, HApply.current_snap ~= 0)
---     ym = ym + yplus
     
     -- lower right: full collection
     HMenu.draw_menu("preview_" .. HCollections.current_collection, true)
@@ -361,24 +321,6 @@ function layout()
     Screen.world_rect.width = halfw
     Screen.world_rect.height = halfh
   end
---  Screen.map_rect.x = x
---  Screen.map_rect.y = y
---  local halfw = math.floor(w / 2)
---  Screen.map_rect.width = halfw
---  Screen.map_rect.height = h
---  
---  Screen.world_rect.x = x
---  Screen.world_rect.y = y
---  Screen.world_rect.width = w
---  Screen.world_rect.height = h
---  
---  if Screen.map_active then
---    local halfh = math.floor(h / 2)
---    Screen.world_rect.x = x + halfw
---    Screen.world_rect.width = w - halfw
---    Screen.world_rect.y = y + halfh/2
---    Screen.world_rect.height = halfh
---  end
   
   HGlobals.cpos = {
     Screen.world_rect.x + Screen.world_rect.width/2,
@@ -841,15 +783,6 @@ function HMenu.draw_menu(mode, transparent)
       HGlobals.fontn:draw_text(item[7], xh, yh, clr)
     
     elseif HMenu.clickable(item[1]) then
---       if HStatus.current_menu_item == idx then
---         Screen.frame_rect(x - menu_prefs.button_indent*u,
---                           y - menu_prefs.button_indent*u,
---                           w + 2*menu_prefs.button_indent*u,
---                           h + 2*menu_prefs.button_indent*u,
---                           colors.current_button,
---                           2*menu_prefs.button_indent*u)
---       end
-      
       local state = HMenu.button_state(item[2])
       HMenu.draw_button_background(item, state)
       
