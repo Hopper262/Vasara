@@ -498,8 +498,10 @@ function HStatus.update()
   
   if HStatus.down(HStatus.frozen) then
     lbls[9][7] = "Unfreeze"
+    lbls2[9][7] = "Unfreeze"
   else
     lbls[9][7] = "Freeze"
+    lbls2[9][7] = "Freeze"
   end
   
   if HStatus.down(HStatus.undo_active) then
@@ -706,16 +708,16 @@ HMenu.menus["key_" .. HMode.teleport] = {
   { "kaction", "key_next_weapon", 235, 50, 100, 12, "Next Polygon" },
   { "kaction", "key_mic_primary", 475, 10, 100, 12, "Rewind Polygon" },
   { "kaction", "key_mic_secondary", 475, 22, 100, 12, "Fast Forward Polygon" },
---   { "kaction", "key_mic_prev_weapon", 475, 38, 100, 12, "Jump" },
---   { "kaction", "key_mic_next_weapon", 475, 50, 100, 12, "Freeze" },
+  { "kaction", "key_mic_prev_weapon", 475, 38, 100, 12, "Jump" },
+  { "kaction", "key_mic_next_weapon", 475, 50, 100, 12, "Freeze" },
   { "klabel", "key_primary", 180, 10, 50, 12, "Trigger 1" },
   { "klabel", "key_secondary", 180, 22, 50, 12, "Trigger 2" },
   { "klabel", "key_prev_weapon", 180, 38, 50, 12, "Prev Weapon" },
   { "klabel", "key_next_weapon", 180, 50, 50, 12, "Next Weapon" },
   { "klabel", "key_mic_primary", 400, 10, 70, 12, "Mic + Trigger 1" },
   { "klabel", "key_mic_secondary", 400, 22, 70, 12, "Mic + Trigger 2" },
---   { "klabel", "key_mic_prev_weapon", 400, 38, 70, 12, "Mic + Prev Weapon" },
---   { "klabel", "key_mic_next_weapon", 400, 50, 70, 12, "Mic + Next Weapon" },
+  { "klabel", "key_mic_prev_weapon", 400, 38, 70, 12, "Mic + Prev Weapon" },
+  { "klabel", "key_mic_next_weapon", 400, 50, 70, 12, "Mic + Next Weapon" },
   { "ktab", "key_map", 20, 4, 130, 16, "Visual Mode" },
   { "ktab", "key_action", 20, 20, 130, 16, "Choose Texture" },
   { "ktab", "key_mic", 20, 36, 130, 16, "Options" },

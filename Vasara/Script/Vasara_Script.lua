@@ -268,18 +268,8 @@ function SMode.update()
     
     -- track mic-as-modifier, and don't switch if we use that
     if p._keys.mic.down then
-      if p._mode == SMode.apply then
-        if p._keys.prev_weapon.down or p._keys.next_weapon.down or p._keys.action.down or p._keys.primary.down or p._keys.primary.released or p._keys.secondary.down or p._keys.secondary.released then
-          p._mic_dummy = true
-        end
-      elseif p._mode == SMode.choose then
-        if p._keys.prev_weapon.down or p._keys.next_weapon.down or p._keys.secondary.down or p._keys.secondary.released then
-          p._mic_dummy = true
-        end
-      elseif p._mode == SMode.teleport then
-        if p._keys.primary.down or p._keys.primary.released or p._keys.secondary.down or p._keys.secondary.released then
-          p._mic_dummy = true
-        end
+      if p._keys.prev_weapon.down or p._keys.next_weapon.down or p._keys.action.down or p._keys.primary.down or p._keys.primary.released or p._keys.secondary.down or p._keys.secondary.released then
+        p._mic_dummy = true
       end
     elseif p._keys.mic.released then
       p._mic_dummy = false
@@ -356,6 +346,7 @@ function SMode.handle_apply(p)
   
   if p._keys.mic.down then
     if p._keys.prev_weapon.held then
+      p._frozen = false
       p:accelerate(0, 0, 0.05)
     elseif p._keys.next_weapon.pressed then
       p._frozen = not p._frozen
@@ -593,6 +584,21 @@ function SMode.handle_teleport(p)
     SMode.annotate(p)
   end
   
+  if p._keys.mic.down then
+    if p._keys.prev_weapon.held then
+      p._frozen = false
+      p:accelerate(0, 0, 0.05)
+    elseif p._keys.next_weapon.pressed then
+      p._frozen = not p._frozen
+      if p._frozen then
+        p._point.x = p.x
+        p._point.y = p.y
+        p._point.z = p.z + 1/1024.0
+        p._point.poly = p.polygon
+      end
+    end
+  end
+
   if (not p._keys.mic.down) and p._keys.primary.released then
     local poly = Polygons[p._target_poly]
     p:position(poly.x, poly.y, poly.z, poly)
