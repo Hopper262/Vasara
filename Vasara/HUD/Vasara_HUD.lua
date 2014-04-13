@@ -22,8 +22,22 @@ collection_names = {
 colors = {}
 colors.menu_label = { 0.8, 0.8, 0.8, 1 }
 colors.current_texture = { 0, 1, 0, 1 }
-colors.current_light = { 0, 1, 0, 1 }
-colors.noncurrent_light = { 0.5, 0.5, 0.5, 1 }
+
+colors.light = {}
+colors.light.enabled = {}
+colors.light.enabled.frame = { 0.5, 0.5, 0.5, 1 }
+colors.light.enabled.text = { 0.5, 0.5, 0.5, 1 }
+colors.light.active = {}
+colors.light.active.frame = { 0, 1, 0, 1 }
+colors.light.active.text = { 0, 1, 0, 1 }
+
+colors.tlight = {}
+colors.tlight.enabled = {}
+colors.tlight.enabled.frame = { 0.5, 0.5, 0.5, 1 }
+colors.tlight.enabled.text = { 1, 1, 1, 1 }
+colors.tlight.active = {}
+colors.tlight.active.frame = { 0, 1, 0, 1 }
+colors.tlight.active.text = { 0, 1, 0, 1 }
 
 colors.commands = {}
 colors.commands.enabled = {}
@@ -83,6 +97,35 @@ colors.ktab.active = {}
 colors.ktab.active.background = { 0.1, 0.1, 0.1, 1 }
 colors.ktab.active.text = { 1, 0.15, 0.15, 1 }
 colors.ktab.active.label = { 1, 0.15, 0.15, 1 }
+
+colors.tab = {}
+colors.tab.background = { 0.15, 0.15, 0.15, 1 }
+colors.tab.enabled = {}
+colors.tab.enabled.background = { 0.1, 0.1, 0.1, 1 }
+colors.tab.enabled.text = { 0.8, 0.8, 0.8, 1 }
+colors.tab.disabled = {}
+colors.tab.disabled.background = { 0.1, 0.1, 0.1, 1 }
+colors.tab.disabled.text = { 0.4, 0.4, 0.4, 1 }
+colors.tab.active = {}
+colors.tab.active.background = { 0.15, 0.15, 0.15, 1 }
+colors.tab.active.text = { 0.0, 1.0, 0.0, 1 }
+
+colors.tbutton = {}
+colors.tbutton.enabled = {}
+colors.tbutton.enabled.background = { 0.15, 0.15, 0.15, 1 }
+colors.tbutton.enabled.highlight = { 0.13, 0.13, 0.13, 1 }
+colors.tbutton.enabled.shadow = { 0.17, 0.17, 0.17, 1 }
+colors.tbutton.enabled.text = { 0.8, 0.8, 0.8, 1 }
+colors.tbutton.disabled = {}
+colors.tbutton.disabled.background = { 0.0, 0.0, 0.0, 0 }
+colors.tbutton.disabled.highlight = { 0.0, 0.0, 0.0, 0 }
+colors.tbutton.disabled.shadow = { 0.0, 0.0, 0.0, 0 }
+colors.tbutton.disabled.text = { 0.5, 0.5, 0.5, 1 }
+colors.tbutton.active = {}
+colors.tbutton.active.background = { 0.3, 0.3, 0.3, 1 }
+colors.tbutton.active.highlight = { 0.35, 0.35, 0.35, 1 }
+colors.tbutton.active.shadow = { 0.25, 0.25, 0.25, 1 }
+colors.tbutton.active.text = { 0.0, 1.0, 0.0, 1 }
 
 
 -- other menu UI prefs
@@ -533,99 +576,105 @@ HMenu.menus["apply_options"] = {
   { "acheckbox", "apply_xparent", 110, 450, 155, 14, "Edit transparent sides" },
   { "acheckbox", "apply_snap", 110, 464, 155, 14, "Snap to grid" } }
 HMenu.menus["panel_off"] = {
-  { "radio", "ptype_5", 20, 85, 125, 20, "Light switch" },
-  { "radio", "ptype_6", 20, 105, 125, 20, "Platform switch" },
-  { "radio", "ptype_7", 20, 125, 125, 20, "Tag switch" },
-  { "radio", "ptype_10", 20, 145, 125, 20, "Chip insertion" },
-  { "radio", "ptype_11", 20, 165, 125, 20, "Wires" },
-  { "radio", "ptype_1", 20, 195, 125, 20, "Oxygen" },
-  { "radio", "ptype_2", 20, 215, 125, 20, "1X health" },
-  { "radio", "ptype_3", 20, 235, 125, 20, "2X health" },
-  { "radio", "ptype_4", 20, 255, 125, 20, "3X health" },
-  { "radio", "ptype_8", 20, 285, 125, 20, "Pattern buffer" },
-  { "radio", "ptype_9", 20, 305, 125, 20, "Terminal" },
-  { "radio", "ptype_0", 20, 335, 125, 20, "Inactive" } }
+  { "tab_bg", nil, 150, 75, 470, 290, nil },
+  { "tab", "ptype_5", 20, 85, 130, 20, "Light switch" },
+  { "tab", "ptype_6", 20, 105, 130, 20, "Platform switch" },
+  { "tab", "ptype_7", 20, 125, 130, 20, "Tag switch" },
+  { "tab", "ptype_10", 20, 145, 130, 20, "Chip insertion" },
+  { "tab", "ptype_11", 20, 165, 130, 20, "Wires" },
+  { "tab", "ptype_1", 20, 195, 130, 20, "Oxygen" },
+  { "tab", "ptype_2", 20, 215, 130, 20, "1X health" },
+  { "tab", "ptype_3", 20, 235, 130, 20, "2X health" },
+  { "tab", "ptype_4", 20, 255, 130, 20, "3X health" },
+  { "tab", "ptype_8", 20, 285, 130, 20, "Pattern buffer" },
+  { "tab", "ptype_9", 20, 305, 130, 20, "Terminal" },
+  { "tab", "ptype_0", 20, 335, 130, 20, "Inactive" } }
 HMenu.menus["panel_plain"] = {
-  { "radio", "ptype_5", 20, 85, 125, 20, "Light switch" },
-  { "radio", "ptype_6", 20, 105, 125, 20, "Platform switch" },
-  { "radio", "ptype_7", 20, 125, 125, 20, "Tag switch" },
-  { "radio", "ptype_10", 20, 145, 125, 20, "Chip insertion" },
-  { "radio", "ptype_11", 20, 165, 125, 20, "Wires" },
-  { "radio", "ptype_1", 20, 195, 125, 20, "Oxygen" },
-  { "radio", "ptype_2", 20, 215, 125, 20, "1X health" },
-  { "radio", "ptype_3", 20, 235, 125, 20, "2X health" },
-  { "radio", "ptype_4", 20, 255, 125, 20, "3X health" },
-  { "radio", "ptype_8", 20, 285, 125, 20, "Pattern buffer" },
-  { "radio", "ptype_9", 20, 305, 125, 20, "Terminal" },
-  { "radio", "ptype_0", 20, 335, 125, 20, "Inactive" },
-  { "checkbox", "panel_light", 200, 85, 125, 20, "Light dependent" } }
+  { "tab_bg", nil, 150, 75, 470, 290, nil },
+  { "tab", "ptype_5", 20, 85, 130, 20, "Light switch" },
+  { "tab", "ptype_6", 20, 105, 130, 20, "Platform switch" },
+  { "tab", "ptype_7", 20, 125, 130, 20, "Tag switch" },
+  { "tab", "ptype_10", 20, 145, 130, 20, "Chip insertion" },
+  { "tab", "ptype_11", 20, 165, 130, 20, "Wires" },
+  { "tab", "ptype_1", 20, 195, 130, 20, "Oxygen" },
+  { "tab", "ptype_2", 20, 215, 130, 20, "1X health" },
+  { "tab", "ptype_3", 20, 235, 130, 20, "2X health" },
+  { "tab", "ptype_4", 20, 255, 130, 20, "3X health" },
+  { "tab", "ptype_8", 20, 285, 130, 20, "Pattern buffer" },
+  { "tab", "ptype_9", 20, 305, 130, 20, "Terminal" },
+  { "tab", "ptype_0", 20, 335, 130, 20, "Inactive" },
+  { "tcheckbox", "panel_light", 200, 85, 125, 20, "Light dependent" } }
 HMenu.menus["panel_terminal"] = {
-  { "radio", "ptype_5", 20, 85, 125, 20, "Light switch" },
-  { "radio", "ptype_6", 20, 105, 125, 20, "Platform switch" },
-  { "radio", "ptype_7", 20, 125, 125, 20, "Tag switch" },
-  { "radio", "ptype_10", 20, 145, 125, 20, "Chip insertion" },
-  { "radio", "ptype_11", 20, 165, 125, 20, "Wires" },
-  { "radio", "ptype_1", 20, 195, 125, 20, "Oxygen" },
-  { "radio", "ptype_2", 20, 215, 125, 20, "1X health" },
-  { "radio", "ptype_3", 20, 235, 125, 20, "2X health" },
-  { "radio", "ptype_4", 20, 255, 125, 20, "3X health" },
-  { "radio", "ptype_8", 20, 285, 125, 20, "Pattern buffer" },
-  { "radio", "ptype_9", 20, 305, 125, 20, "Terminal" },
-  { "radio", "ptype_0", 20, 335, 125, 20, "Inactive" },
-  { "checkbox", "panel_light", 200, 85, 155, 20, "Light dependent" },
-  { "label", nil, 200, 125, 155, 20, "Terminal script" } }
+  { "tab_bg", nil, 150, 75, 470, 290, nil },
+  { "tab", "ptype_5", 20, 85, 130, 20, "Light switch" },
+  { "tab", "ptype_6", 20, 105, 130, 20, "Platform switch" },
+  { "tab", "ptype_7", 20, 125, 130, 20, "Tag switch" },
+  { "tab", "ptype_10", 20, 145, 130, 20, "Chip insertion" },
+  { "tab", "ptype_11", 20, 165, 130, 20, "Wires" },
+  { "tab", "ptype_1", 20, 195, 130, 20, "Oxygen" },
+  { "tab", "ptype_2", 20, 215, 130, 20, "1X health" },
+  { "tab", "ptype_3", 20, 235, 130, 20, "2X health" },
+  { "tab", "ptype_4", 20, 255, 130, 20, "3X health" },
+  { "tab", "ptype_8", 20, 285, 130, 20, "Pattern buffer" },
+  { "tab", "ptype_9", 20, 305, 130, 20, "Terminal" },
+  { "tab", "ptype_0", 20, 335, 130, 20, "Inactive" },
+  { "tcheckbox", "panel_light", 200, 85, 155, 20, "Light dependent" },
+  { "label", nil, 200+18, 125, 155, 20, "Terminal script" } }
  HMenu.menus["panel_light"] = {
-  { "radio", "ptype_5", 20, 85, 125, 20, "Light switch" },
-  { "radio", "ptype_6", 20, 105, 125, 20, "Platform switch" },
-  { "radio", "ptype_7", 20, 125, 125, 20, "Tag switch" },
-  { "radio", "ptype_10", 20, 145, 125, 20, "Chip insertion" },
-  { "radio", "ptype_11", 20, 165, 125, 20, "Wires" },
-  { "radio", "ptype_1", 20, 195, 125, 20, "Oxygen" },
-  { "radio", "ptype_2", 20, 215, 125, 20, "1X health" },
-  { "radio", "ptype_3", 20, 235, 125, 20, "2X health" },
-  { "radio", "ptype_4", 20, 255, 125, 20, "3X health" },
-  { "radio", "ptype_8", 20, 285, 125, 20, "Pattern buffer" },
-  { "radio", "ptype_9", 20, 305, 125, 20, "Terminal" },
-  { "radio", "ptype_0", 20, 335, 125, 20, "Inactive" },
-  { "checkbox", "panel_light", 200, 85, 155, 20, "Light dependent" },
-  { "checkbox", "panel_weapon", 200, 105, 155, 20, "Only toggled by weapons" },
-  { "checkbox", "panel_repair", 360, 85, 155, 20, "Repair switch" },
-  { "label", nil, 200, 125, 155, 20, "Light" } }
+  { "tab_bg", nil, 150, 75, 470, 290, nil },
+  { "tab", "ptype_5", 20, 85, 130, 20, "Light switch" },
+  { "tab", "ptype_6", 20, 105, 130, 20, "Platform switch" },
+  { "tab", "ptype_7", 20, 125, 130, 20, "Tag switch" },
+  { "tab", "ptype_10", 20, 145, 130, 20, "Chip insertion" },
+  { "tab", "ptype_11", 20, 165, 130, 20, "Wires" },
+  { "tab", "ptype_1", 20, 195, 130, 20, "Oxygen" },
+  { "tab", "ptype_2", 20, 215, 130, 20, "1X health" },
+  { "tab", "ptype_3", 20, 235, 130, 20, "2X health" },
+  { "tab", "ptype_4", 20, 255, 130, 20, "3X health" },
+  { "tab", "ptype_8", 20, 285, 130, 20, "Pattern buffer" },
+  { "tab", "ptype_9", 20, 305, 130, 20, "Terminal" },
+  { "tab", "ptype_0", 20, 335, 130, 20, "Inactive" },
+  { "tcheckbox", "panel_light", 200, 85, 155, 20, "Light dependent" },
+  { "tcheckbox", "panel_weapon", 200, 105, 155, 20, "Only toggled by weapons" },
+  { "tcheckbox", "panel_repair", 360, 85, 155, 20, "Repair switch" },
+  { "label", nil, 200+18, 125, 155, 20, "Light" } }
  HMenu.menus["panel_platform"] = {
-  { "radio", "ptype_5", 20, 85, 125, 20, "Light switch" },
-  { "radio", "ptype_6", 20, 105, 125, 20, "Platform switch" },
-  { "radio", "ptype_7", 20, 125, 125, 20, "Tag switch" },
-  { "radio", "ptype_10", 20, 145, 125, 20, "Chip insertion" },
-  { "radio", "ptype_11", 20, 165, 125, 20, "Wires" },
-  { "radio", "ptype_1", 20, 195, 125, 20, "Oxygen" },
-  { "radio", "ptype_2", 20, 215, 125, 20, "1X health" },
-  { "radio", "ptype_3", 20, 235, 125, 20, "2X health" },
-  { "radio", "ptype_4", 20, 255, 125, 20, "3X health" },
-  { "radio", "ptype_8", 20, 285, 125, 20, "Pattern buffer" },
-  { "radio", "ptype_9", 20, 305, 125, 20, "Terminal" },
-  { "radio", "ptype_0", 20, 335, 125, 20, "Inactive" },
-  { "checkbox", "panel_light", 200, 85, 155, 20, "Light dependent" },
-  { "checkbox", "panel_weapon", 200, 105, 155, 20, "Only toggled by weapons" },
-  { "checkbox", "panel_repair", 360, 85, 155, 20, "Repair switch" },
-  { "label", nil, 200, 125, 155, 20, "Platform" } }
+  { "tab_bg", nil, 150, 75, 470, 290, nil },
+  { "tab", "ptype_5", 20, 85, 130, 20, "Light switch" },
+  { "tab", "ptype_6", 20, 105, 130, 20, "Platform switch" },
+  { "tab", "ptype_7", 20, 125, 130, 20, "Tag switch" },
+  { "tab", "ptype_10", 20, 145, 130, 20, "Chip insertion" },
+  { "tab", "ptype_11", 20, 165, 130, 20, "Wires" },
+  { "tab", "ptype_1", 20, 195, 130, 20, "Oxygen" },
+  { "tab", "ptype_2", 20, 215, 130, 20, "1X health" },
+  { "tab", "ptype_3", 20, 235, 130, 20, "2X health" },
+  { "tab", "ptype_4", 20, 255, 130, 20, "3X health" },
+  { "tab", "ptype_8", 20, 285, 130, 20, "Pattern buffer" },
+  { "tab", "ptype_9", 20, 305, 130, 20, "Terminal" },
+  { "tab", "ptype_0", 20, 335, 130, 20, "Inactive" },
+  { "tcheckbox", "panel_light", 200, 85, 155, 20, "Light dependent" },
+  { "tcheckbox", "panel_weapon", 200, 105, 155, 20, "Only toggled by weapons" },
+  { "tcheckbox", "panel_repair", 360, 85, 155, 20, "Repair switch" },
+  { "label", nil, 200+18, 125, 155, 20, "Platform" } }
  HMenu.menus["panel_tag"] = {
-  { "radio", "ptype_5", 20, 85, 125, 20, "Light switch" },
-  { "radio", "ptype_6", 20, 105, 125, 20, "Platform switch" },
-  { "radio", "ptype_7", 20, 125, 125, 20, "Tag switch" },
-  { "radio", "ptype_10", 20, 145, 125, 20, "Chip insertion" },
-  { "radio", "ptype_11", 20, 165, 125, 20, "Wires" },
-  { "radio", "ptype_1", 20, 195, 125, 20, "Oxygen" },
-  { "radio", "ptype_2", 20, 215, 125, 20, "1X health" },
-  { "radio", "ptype_3", 20, 235, 125, 20, "2X health" },
-  { "radio", "ptype_4", 20, 255, 125, 20, "3X health" },
-  { "radio", "ptype_8", 20, 285, 125, 20, "Pattern buffer" },
-  { "radio", "ptype_9", 20, 305, 125, 20, "Terminal" },
-  { "radio", "ptype_0", 20, 335, 125, 20, "Inactive" },
-  { "checkbox", "panel_light", 200, 85, 155, 20, "Light dependent" },
-  { "checkbox", "panel_weapon", 200, 105, 155, 20, "Only toggled by weapons" },
-  { "checkbox", "panel_repair", 360, 85, 155, 20, "Repair switch" },
-  { "checkbox", "panel_active", 360, 105, 155, 20, "Tag is active" },
-  { "label", nil, 200, 125, 155, 20, "Tag" } }
+  { "tab_bg", nil, 150, 75, 470, 290, nil },
+  { "tab", "ptype_5", 20, 85, 130, 20, "Light switch" },
+  { "tab", "ptype_6", 20, 105, 130, 20, "Platform switch" },
+  { "tab", "ptype_7", 20, 125, 130, 20, "Tag switch" },
+  { "tab", "ptype_10", 20, 145, 130, 20, "Chip insertion" },
+  { "tab", "ptype_11", 20, 165, 130, 20, "Wires" },
+  { "tab", "ptype_1", 20, 195, 130, 20, "Oxygen" },
+  { "tab", "ptype_2", 20, 215, 130, 20, "1X health" },
+  { "tab", "ptype_3", 20, 235, 130, 20, "2X health" },
+  { "tab", "ptype_4", 20, 255, 130, 20, "3X health" },
+  { "tab", "ptype_8", 20, 285, 130, 20, "Pattern buffer" },
+  { "tab", "ptype_9", 20, 305, 130, 20, "Terminal" },
+  { "tab", "ptype_0", 20, 335, 130, 20, "Inactive" },
+  { "tcheckbox", "panel_light", 200, 85, 155, 20, "Light dependent" },
+  { "tcheckbox", "panel_weapon", 200, 105, 155, 20, "Only toggled by weapons" },
+  { "tcheckbox", "panel_repair", 360, 85, 155, 20, "Repair switch" },
+  { "tcheckbox", "panel_active", 360, 105, 155, 20, "Tag is active" },
+  { "label", nil, 200+18, 125, 155, 20, "Tag" } }
 HMenu.menus["key_" .. HMode.apply] = {
   { "ktab_bg", nil, 150, 4 + menu_prefs.button_indent, 470, 64 - 2*menu_prefs.button_indent, nil },
   { "kaction", "key_primary", 235, 10, 100, 12, "Apply Texture" },
@@ -805,6 +854,20 @@ function HMenu.draw_menu(mode, transparent)
                                  math.floor(y + h/2 - fh/2),
                                  colors.ktab[state].label)
       end
+    elseif item[1] == "tab_bg" then
+      Screen.fill_rect(x, y, w, h, colors.tab.background)
+    elseif item[1] == "tab" then
+      local state = HMenu.button_state(item[2])
+              
+      Screen.fill_rect(x + menu_prefs.button_indent*u,
+                       y + menu_prefs.button_indent*u,
+                       w - 1*menu_prefs.button_indent*u,
+                       h - 2*menu_prefs.button_indent*u,
+                          colors.tab[state].background)
+      HGlobals.fontn:draw_text(item[7],
+                               math.floor(x + 7*u),
+                               math.floor(y + h/2 - HGlobals.fheight/2),
+                               colors.tab[state].text)
     elseif item[1] == "texture" or item[1] == "dtexture" then
       local cc, ct = string.match(item[2], "(%d+)_(%d+)")
       local state = "enabled"
@@ -830,7 +893,7 @@ function HMenu.draw_menu(mode, transparent)
         wt = wt - 2*menu_prefs.texture_preview_indent*u
       end
       HCollections.draw(cc + 0, ct + 0, xt, yt, wt)
-    elseif item[1] == "light" then
+    elseif item[1] == "light" or item[1] == "tlight" then
       local state = HMenu.button_state(item[2])
     
       local xt = x + menu_prefs.button_indent*u
@@ -838,9 +901,9 @@ function HMenu.draw_menu(mode, transparent)
       local wt = w - 2*menu_prefs.button_indent*u
       local ht = h - 2*menu_prefs.button_indent*u
       
-      local clr = colors.noncurrent_light
-      if state == "active" then clr = colors.current_light end
-      Screen.frame_rect(xt + wt - ht, yt, ht, ht, clr, menu_prefs.light_thickness*u)
+      local c = colors.light[state]
+      if item[1] == "tlight" then c = colors.tlight[state] end
+      Screen.frame_rect(xt + wt - ht, yt, ht, ht, c.frame, menu_prefs.light_thickness*u)
       
       local val = HLights.val(tonumber(string.sub(item[2], 7)))
       local sz = ht - 2*menu_prefs.light_thickness*u
@@ -851,16 +914,16 @@ function HMenu.draw_menu(mode, transparent)
       local fw, fh = HGlobals.fontn:measure_text(item[7])
       local yh = yt + ht/2 - fh/2
       local xh = xt + wt - ht - 5*u - fw
-      HGlobals.fontn:draw_text(item[7], xh, yh, clr)
+      HGlobals.fontn:draw_text(item[7], xh, yh, c.text)
     
     elseif HMenu.clickable(item[1]) then
       local state = HMenu.button_state(item[2])
       HMenu.draw_button_background(item, state)
       
       local xo = 7
-      if item[1] == "checkbox" or item[1] == "acheckbox" or item[1] == "radio" then
+      if item[1] == "checkbox" or item[1] == "acheckbox" or item[1] == "tcheckbox" or item[1] == "radio" or item[1] == "tradio" then
         xo = 17
-      elseif item[1] == "light" then
+      elseif item[1] == "light" or item[1] == "tlight" then
         local fw, fh = HGlobals.fontn:measure_text(item[7])
         xo = item[5] - 7 - fw/u
       elseif item[1] == "dbutton" then
@@ -869,9 +932,9 @@ function HMenu.draw_menu(mode, transparent)
       end
       HMenu.draw_button_text(item, state, xo)
         
-      if item[1] == "checkbox" or item[1] == "acheckbox" or item[1] == "radio" then
+      if item[1] == "checkbox" or item[1] == "acheckbox" or item[1] == "tcheckbox" or item[1] == "radio" or item[1] == "tradio" then
         local nm = "dcheck"
-        if item[1] == "radio" then
+        if item[1] == "radio" or item[1] == "tradio" then
           nm = "dradio"
         elseif item[1] == "acheckbox" then
           nm = "fcheck"
@@ -891,7 +954,7 @@ function HMenu.draw_menu(mode, transparent)
           local h = item[6]*u - 2*menu_prefs.button_indent*u
           img:draw(x + 4*u, y + h/2 - img.height/2)
         end
-      elseif item[1] == "light" then
+      elseif item[1] == "light" or item[1] == "tlight" then
         local val = HLights.val(tonumber(string.sub(item[2], 7)))
         Screen.fill_rect(x + 2*u, y + 2*u, h - 4*u, h - 4*u, { val, val, val, 1 })
       end
@@ -990,6 +1053,7 @@ function HMenu.draw_button_background(item, state)
   local ts = menu_prefs.button_shadow_thickness*u
   local c = colors.button[state]
   if item[1] == "acheckbox" then c = colors.apply[state] end
+  if item[1] == "tcheckbox" or item[1] == "tradio" then c = colors.tbutton[state] end
 
   Screen.fill_rect(x, y, w, h, c.background)
   Screen.fill_rect(x, y, w, th, c.highlight)
@@ -1004,7 +1068,8 @@ function HMenu.draw_button_text(item, state, xoff)
   local h = item[6]*u - 2*menu_prefs.button_indent*u
   local c = colors.button[state]
   if item[1] == "acheckbox" then c = colors.apply[state] end
-  
+  if item[1] == "tcheckbox" or item[1] == "tradio" then c = colors.tbutton[state] end
+
   HGlobals.fontn:draw_text(item[7],
                            math.floor(x + xoff*u),
                            math.floor(y + h/2 - HGlobals.fheight/2),
@@ -1031,7 +1096,7 @@ function HMenu.init_menu(mode)
         local yoff = (l % 7) * 20
         local xoff = math.floor(l / 7) * 50
         table.insert(menu,
-          { "light", "pperm_" .. l, 200 + xoff, 145 + yoff, 50, 20, tostring(l) })
+          { "tlight", "pperm_" .. l, 200 + xoff, 145 + yoff, 50, 20, tostring(l) })
       end
       HMenu.inited[mode] = true
     end
@@ -1042,7 +1107,7 @@ function HMenu.init_menu(mode)
         local yoff = (l % 10) * 20
         local xoff = math.floor(l / 10) * 50
         table.insert(menu,
-          { "radio", "pperm_" .. l, 200 + xoff, 145 + yoff, 50, 20, tostring(l) })
+          { "tradio", "pperm_" .. l, 200 + xoff, 145 + yoff, 50, 20, tostring(l) })
       end
       HMenu.inited[mode] = true
     end
@@ -1053,7 +1118,7 @@ function HMenu.init_menu(mode)
         local yoff = (l % 10) * 20
         local xoff = math.floor(l / 10) * 50
         table.insert(menu,
-          { "radio", "pperm_" .. l, 200 + xoff, 145 + yoff, 50, 20, tostring(l) })
+          { "tradio", "pperm_" .. l, 200 + xoff, 145 + yoff, 50, 20, tostring(l) })
       end
       HMenu.inited[mode] = true
     end
@@ -1065,7 +1130,7 @@ function HMenu.init_menu(mode)
         local xoff = math.floor(l / 10) * 50
         l = HPlatforms.indexes[l]
         table.insert(menu,
-          { "radio", "pperm_" .. l, 200 + xoff, 145 + yoff, 50, 20, tostring(l) })
+          { "tradio", "pperm_" .. l, 200 + xoff, 145 + yoff, 50, 20, tostring(l) })
       end
       HMenu.inited[mode] = true
     end
@@ -1074,7 +1139,7 @@ function HMenu.init_menu(mode)
   end
 end
 function HMenu.clickable(item_type)
-  return item_type == "button" or item_type == "checkbox" or item_type == "radio" or item_type == "texture" or item_type == "light" or item_type == "dradio" or item_type == "dbutton" or item_type == "acheckbox"
+  return item_type == "button" or item_type == "checkbox" or item_type == "radio" or item_type == "texture" or item_type == "light" or item_type == "dradio" or item_type == "dbutton" or item_type == "acheckbox" or item_type == "tab" or item_type == "tradio" or item_type == "tcheckbox" or item_type == "tlight"
 end
 
 HChoose = {}

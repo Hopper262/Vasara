@@ -1194,99 +1194,105 @@ SMenu.menus[SMode.attribute] = {
   { "radio", "transfer_11", 320, 370, 120, 20, "Fast wander" },
   { "label", nil, 460, 250, 160, 20, "Preview" } }
 SMenu.menus["panel_off"] = {
-  { "radio", "ptype_5", 20, 85, 125, 20, "Light switch" },
-  { "radio", "ptype_6", 20, 105, 125, 20, "Platform switch" },
-  { "radio", "ptype_7", 20, 125, 125, 20, "Tag switch" },
-  { "radio", "ptype_10", 20, 145, 125, 20, "Chip insertion" },
-  { "radio", "ptype_11", 20, 165, 125, 20, "Wires" },
-  { "radio", "ptype_1", 20, 195, 125, 20, "Oxygen" },
-  { "radio", "ptype_2", 20, 215, 125, 20, "1X health" },
-  { "radio", "ptype_3", 20, 235, 125, 20, "2X health" },
-  { "radio", "ptype_4", 20, 255, 125, 20, "3X health" },
-  { "radio", "ptype_8", 20, 285, 125, 20, "Pattern buffer" },
-  { "radio", "ptype_9", 20, 305, 125, 20, "Terminal" },
-  { "radio", "ptype_0", 20, 335, 125, 20, "Inactive" } }
+  { "tab_bg", nil, 150, 75, 470, 290, nil },
+  { "tab", "ptype_5", 20, 85, 130, 20, "Light switch" },
+  { "tab", "ptype_6", 20, 105, 130, 20, "Platform switch" },
+  { "tab", "ptype_7", 20, 125, 130, 20, "Tag switch" },
+  { "tab", "ptype_10", 20, 145, 130, 20, "Chip insertion" },
+  { "tab", "ptype_11", 20, 165, 130, 20, "Wires" },
+  { "tab", "ptype_1", 20, 195, 130, 20, "Oxygen" },
+  { "tab", "ptype_2", 20, 215, 130, 20, "1X health" },
+  { "tab", "ptype_3", 20, 235, 130, 20, "2X health" },
+  { "tab", "ptype_4", 20, 255, 130, 20, "3X health" },
+  { "tab", "ptype_8", 20, 285, 130, 20, "Pattern buffer" },
+  { "tab", "ptype_9", 20, 305, 130, 20, "Terminal" },
+  { "tab", "ptype_0", 20, 335, 130, 20, "Inactive" } }
 SMenu.menus["panel_plain"] = {
-  { "radio", "ptype_5", 20, 85, 125, 20, "Light switch" },
-  { "radio", "ptype_6", 20, 105, 125, 20, "Platform switch" },
-  { "radio", "ptype_7", 20, 125, 125, 20, "Tag switch" },
-  { "radio", "ptype_10", 20, 145, 125, 20, "Chip insertion" },
-  { "radio", "ptype_11", 20, 165, 125, 20, "Wires" },
-  { "radio", "ptype_1", 20, 195, 125, 20, "Oxygen" },
-  { "radio", "ptype_2", 20, 215, 125, 20, "1X health" },
-  { "radio", "ptype_3", 20, 235, 125, 20, "2X health" },
-  { "radio", "ptype_4", 20, 255, 125, 20, "3X health" },
-  { "radio", "ptype_8", 20, 285, 125, 20, "Pattern buffer" },
-  { "radio", "ptype_9", 20, 305, 125, 20, "Terminal" },
-  { "radio", "ptype_0", 20, 335, 125, 20, "Inactive" },
-  { "checkbox", "panel_light", 200, 85, 125, 20, "Light dependent" } }
+  { "tab_bg", nil, 150, 75, 470, 290, nil },
+  { "tab", "ptype_5", 20, 85, 130, 20, "Light switch" },
+  { "tab", "ptype_6", 20, 105, 130, 20, "Platform switch" },
+  { "tab", "ptype_7", 20, 125, 130, 20, "Tag switch" },
+  { "tab", "ptype_10", 20, 145, 130, 20, "Chip insertion" },
+  { "tab", "ptype_11", 20, 165, 130, 20, "Wires" },
+  { "tab", "ptype_1", 20, 195, 130, 20, "Oxygen" },
+  { "tab", "ptype_2", 20, 215, 130, 20, "1X health" },
+  { "tab", "ptype_3", 20, 235, 130, 20, "2X health" },
+  { "tab", "ptype_4", 20, 255, 130, 20, "3X health" },
+  { "tab", "ptype_8", 20, 285, 130, 20, "Pattern buffer" },
+  { "tab", "ptype_9", 20, 305, 130, 20, "Terminal" },
+  { "tab", "ptype_0", 20, 335, 130, 20, "Inactive" },
+  { "tcheckbox", "panel_light", 200, 85, 125, 20, "Light dependent" } }
 SMenu.menus["panel_terminal"] = {
-  { "radio", "ptype_5", 20, 85, 125, 20, "Light switch" },
-  { "radio", "ptype_6", 20, 105, 125, 20, "Platform switch" },
-  { "radio", "ptype_7", 20, 125, 125, 20, "Tag switch" },
-  { "radio", "ptype_10", 20, 145, 125, 20, "Chip insertion" },
-  { "radio", "ptype_11", 20, 165, 125, 20, "Wires" },
-  { "radio", "ptype_1", 20, 195, 125, 20, "Oxygen" },
-  { "radio", "ptype_2", 20, 215, 125, 20, "1X health" },
-  { "radio", "ptype_3", 20, 235, 125, 20, "2X health" },
-  { "radio", "ptype_4", 20, 255, 125, 20, "3X health" },
-  { "radio", "ptype_8", 20, 285, 125, 20, "Pattern buffer" },
-  { "radio", "ptype_9", 20, 305, 125, 20, "Terminal" },
-  { "radio", "ptype_0", 20, 335, 125, 20, "Inactive" },
-  { "checkbox", "panel_light", 200, 85, 155, 20, "Light dependent" },
-  { "label", nil, 200, 125, 155, 20, "Terminal script" } }
+  { "tab_bg", nil, 150, 75, 470, 290, nil },
+  { "tab", "ptype_5", 20, 85, 130, 20, "Light switch" },
+  { "tab", "ptype_6", 20, 105, 130, 20, "Platform switch" },
+  { "tab", "ptype_7", 20, 125, 130, 20, "Tag switch" },
+  { "tab", "ptype_10", 20, 145, 130, 20, "Chip insertion" },
+  { "tab", "ptype_11", 20, 165, 130, 20, "Wires" },
+  { "tab", "ptype_1", 20, 195, 130, 20, "Oxygen" },
+  { "tab", "ptype_2", 20, 215, 130, 20, "1X health" },
+  { "tab", "ptype_3", 20, 235, 130, 20, "2X health" },
+  { "tab", "ptype_4", 20, 255, 130, 20, "3X health" },
+  { "tab", "ptype_8", 20, 285, 130, 20, "Pattern buffer" },
+  { "tab", "ptype_9", 20, 305, 130, 20, "Terminal" },
+  { "tab", "ptype_0", 20, 335, 130, 20, "Inactive" },
+  { "tcheckbox", "panel_light", 200, 85, 155, 20, "Light dependent" },
+  { "label", nil, 200+18, 125, 155, 20, "Terminal script" } }
  SMenu.menus["panel_light"] = {
-  { "radio", "ptype_5", 20, 85, 125, 20, "Light switch" },
-  { "radio", "ptype_6", 20, 105, 125, 20, "Platform switch" },
-  { "radio", "ptype_7", 20, 125, 125, 20, "Tag switch" },
-  { "radio", "ptype_10", 20, 145, 125, 20, "Chip insertion" },
-  { "radio", "ptype_11", 20, 165, 125, 20, "Wires" },
-  { "radio", "ptype_1", 20, 195, 125, 20, "Oxygen" },
-  { "radio", "ptype_2", 20, 215, 125, 20, "1X health" },
-  { "radio", "ptype_3", 20, 235, 125, 20, "2X health" },
-  { "radio", "ptype_4", 20, 255, 125, 20, "3X health" },
-  { "radio", "ptype_8", 20, 285, 125, 20, "Pattern buffer" },
-  { "radio", "ptype_9", 20, 305, 125, 20, "Terminal" },
-  { "radio", "ptype_0", 20, 335, 125, 20, "Inactive" },
-  { "checkbox", "panel_light", 200, 85, 155, 20, "Light dependent" },
-  { "checkbox", "panel_weapon", 200, 105, 155, 20, "Only toggled by weapons" },
-  { "checkbox", "panel_repair", 360, 85, 155, 20, "Repair switch" },
-  { "label", nil, 200, 125, 155, 20, "Light" } }
+  { "tab_bg", nil, 150, 75, 470, 290, nil },
+  { "tab", "ptype_5", 20, 85, 130, 20, "Light switch" },
+  { "tab", "ptype_6", 20, 105, 130, 20, "Platform switch" },
+  { "tab", "ptype_7", 20, 125, 130, 20, "Tag switch" },
+  { "tab", "ptype_10", 20, 145, 130, 20, "Chip insertion" },
+  { "tab", "ptype_11", 20, 165, 130, 20, "Wires" },
+  { "tab", "ptype_1", 20, 195, 130, 20, "Oxygen" },
+  { "tab", "ptype_2", 20, 215, 130, 20, "1X health" },
+  { "tab", "ptype_3", 20, 235, 130, 20, "2X health" },
+  { "tab", "ptype_4", 20, 255, 130, 20, "3X health" },
+  { "tab", "ptype_8", 20, 285, 130, 20, "Pattern buffer" },
+  { "tab", "ptype_9", 20, 305, 130, 20, "Terminal" },
+  { "tab", "ptype_0", 20, 335, 130, 20, "Inactive" },
+  { "tcheckbox", "panel_light", 200, 85, 155, 20, "Light dependent" },
+  { "tcheckbox", "panel_weapon", 200, 105, 155, 20, "Only toggled by weapons" },
+  { "tcheckbox", "panel_repair", 360, 85, 155, 20, "Repair switch" },
+  { "label", nil, 200+18, 125, 155, 20, "Light" } }
  SMenu.menus["panel_platform"] = {
-  { "radio", "ptype_5", 20, 85, 125, 20, "Light switch" },
-  { "radio", "ptype_6", 20, 105, 125, 20, "Platform switch" },
-  { "radio", "ptype_7", 20, 125, 125, 20, "Tag switch" },
-  { "radio", "ptype_10", 20, 145, 125, 20, "Chip insertion" },
-  { "radio", "ptype_11", 20, 165, 125, 20, "Wires" },
-  { "radio", "ptype_1", 20, 195, 125, 20, "Oxygen" },
-  { "radio", "ptype_2", 20, 215, 125, 20, "1X health" },
-  { "radio", "ptype_3", 20, 235, 125, 20, "2X health" },
-  { "radio", "ptype_4", 20, 255, 125, 20, "3X health" },
-  { "radio", "ptype_8", 20, 285, 125, 20, "Pattern buffer" },
-  { "radio", "ptype_9", 20, 305, 125, 20, "Terminal" },
-  { "radio", "ptype_0", 20, 335, 125, 20, "Inactive" },
-  { "checkbox", "panel_light", 200, 85, 155, 20, "Light dependent" },
-  { "checkbox", "panel_weapon", 200, 105, 155, 20, "Only toggled by weapons" },
-  { "checkbox", "panel_repair", 360, 85, 155, 20, "Repair switch" },
-  { "label", nil, 200, 125, 155, 20, "Platform" } }
+  { "tab_bg", nil, 150, 75, 470, 290, nil },
+  { "tab", "ptype_5", 20, 85, 130, 20, "Light switch" },
+  { "tab", "ptype_6", 20, 105, 130, 20, "Platform switch" },
+  { "tab", "ptype_7", 20, 125, 130, 20, "Tag switch" },
+  { "tab", "ptype_10", 20, 145, 130, 20, "Chip insertion" },
+  { "tab", "ptype_11", 20, 165, 130, 20, "Wires" },
+  { "tab", "ptype_1", 20, 195, 130, 20, "Oxygen" },
+  { "tab", "ptype_2", 20, 215, 130, 20, "1X health" },
+  { "tab", "ptype_3", 20, 235, 130, 20, "2X health" },
+  { "tab", "ptype_4", 20, 255, 130, 20, "3X health" },
+  { "tab", "ptype_8", 20, 285, 130, 20, "Pattern buffer" },
+  { "tab", "ptype_9", 20, 305, 130, 20, "Terminal" },
+  { "tab", "ptype_0", 20, 335, 130, 20, "Inactive" },
+  { "tcheckbox", "panel_light", 200, 85, 155, 20, "Light dependent" },
+  { "tcheckbox", "panel_weapon", 200, 105, 155, 20, "Only toggled by weapons" },
+  { "tcheckbox", "panel_repair", 360, 85, 155, 20, "Repair switch" },
+  { "label", nil, 200+18, 125, 155, 20, "Platform" } }
  SMenu.menus["panel_tag"] = {
-  { "radio", "ptype_5", 20, 85, 125, 20, "Light switch" },
-  { "radio", "ptype_6", 20, 105, 125, 20, "Platform switch" },
-  { "radio", "ptype_7", 20, 125, 125, 20, "Tag switch" },
-  { "radio", "ptype_10", 20, 145, 125, 20, "Chip insertion" },
-  { "radio", "ptype_11", 20, 165, 125, 20, "Wires" },
-  { "radio", "ptype_1", 20, 195, 125, 20, "Oxygen" },
-  { "radio", "ptype_2", 20, 215, 125, 20, "1X health" },
-  { "radio", "ptype_3", 20, 235, 125, 20, "2X health" },
-  { "radio", "ptype_4", 20, 255, 125, 20, "3X health" },
-  { "radio", "ptype_8", 20, 285, 125, 20, "Pattern buffer" },
-  { "radio", "ptype_9", 20, 305, 125, 20, "Terminal" },
-  { "radio", "ptype_0", 20, 335, 125, 20, "Inactive" },
-  { "checkbox", "panel_light", 200, 85, 155, 20, "Light dependent" },
-  { "checkbox", "panel_weapon", 200, 105, 155, 20, "Only toggled by weapons" },
-  { "checkbox", "panel_repair", 360, 85, 155, 20, "Repair switch" },
-  { "checkbox", "panel_active", 360, 105, 155, 20, "Tag is active" },
-  { "label", nil, 200, 125, 155, 20, "Tag" } }
+  { "tab_bg", nil, 150, 75, 470, 290, nil },
+  { "tab", "ptype_5", 20, 85, 130, 20, "Light switch" },
+  { "tab", "ptype_6", 20, 105, 130, 20, "Platform switch" },
+  { "tab", "ptype_7", 20, 125, 130, 20, "Tag switch" },
+  { "tab", "ptype_10", 20, 145, 130, 20, "Chip insertion" },
+  { "tab", "ptype_11", 20, 165, 130, 20, "Wires" },
+  { "tab", "ptype_1", 20, 195, 130, 20, "Oxygen" },
+  { "tab", "ptype_2", 20, 215, 130, 20, "1X health" },
+  { "tab", "ptype_3", 20, 235, 130, 20, "2X health" },
+  { "tab", "ptype_4", 20, 255, 130, 20, "3X health" },
+  { "tab", "ptype_8", 20, 285, 130, 20, "Pattern buffer" },
+  { "tab", "ptype_9", 20, 305, 130, 20, "Terminal" },
+  { "tab", "ptype_0", 20, 335, 130, 20, "Inactive" },
+  { "tcheckbox", "panel_light", 200, 85, 155, 20, "Light dependent" },
+  { "tcheckbox", "panel_weapon", 200, 105, 155, 20, "Only toggled by weapons" },
+  { "tcheckbox", "panel_repair", 360, 85, 155, 20, "Repair switch" },
+  { "tcheckbox", "panel_active", 360, 105, 155, 20, "Tag is active" },
+  { "label", nil, 200+18, 125, 155, 20, "Tag" } }
 SMenu.inited = {}
 SMenu.inited[SMode.attribute] = false
 SMenu.buttons = {}
@@ -1334,7 +1340,7 @@ function SMenu.init_menu(mode)
       local yoff = (l % 7) * 20
       local xoff = math.floor(l / 7) * 50
       table.insert(menu,
-        { "light", "pperm_" .. l, 200 + xoff, 145 + yoff, 50, 20, tostring(l) })
+        { "tlight", "pperm_" .. l, 200 + xoff, 145 + yoff, 50, 20, tostring(l) })
     end
   elseif mode == "panel_terminal" then
     local num_scripts = #Terminals
@@ -1344,7 +1350,7 @@ function SMenu.init_menu(mode)
       local yoff = (l % 10) * 20
       local xoff = math.floor(l / 10) * 50
       table.insert(menu,
-        { "radio", "pperm_" .. l, 200 + xoff, 145 + yoff, 50, 20, tostring(l) })
+        { "tradio", "pperm_" .. l, 200 + xoff, 145 + yoff, 50, 20, tostring(l) })
     end
   elseif mode == "panel_tag" then
     for i = 1,math.min(max_tags, 80) do
@@ -1352,7 +1358,7 @@ function SMenu.init_menu(mode)
       local yoff = (l % 10) * 20
       local xoff = math.floor(l / 10) * 50
       table.insert(menu,
-        { "radio", "pperm_" .. l, 200 + xoff, 145 + yoff, 50, 20, tostring(l) })
+        { "tradio", "pperm_" .. l, 200 + xoff, 145 + yoff, 50, 20, tostring(l) })
     end
   elseif mode == "panel_platform" then
     for i = 1,math.min(#Platforms, 80) do
@@ -1361,7 +1367,7 @@ function SMenu.init_menu(mode)
       local xoff = math.floor(l / 10) * 50
       l = Platforms[l].polygon.index
       table.insert(menu,
-        { "radio", "pperm_" .. l, 200 + xoff, 145 + yoff, 50, 20, tostring(l) })
+        { "tradio", "pperm_" .. l, 200 + xoff, 145 + yoff, 50, 20, tostring(l) })
     end
   end
   
@@ -1416,7 +1422,7 @@ function SMenu.point_at_name(p, mode, name)
   SMenu.point_at_item(p, mode, SMenu.index_for_name(mode, name))
 end  
 function SMenu.clickable(item_type)
-  return item_type == "button" or item_type == "checkbox" or item_type == "radio" or item_type == "texture" or item_type == "light" or item_type == "dradio" or item_type == "dbutton"
+  return item_type == "button" or item_type == "checkbox" or item_type == "radio" or item_type == "texture" or item_type == "light" or item_type == "dradio" or item_type == "dbutton" or item_type == "acheckbox" or item_type == "tab" or item_type == "tradio" or item_type == "tcheckbox" or item_type == "tlight"
 end
 
 
