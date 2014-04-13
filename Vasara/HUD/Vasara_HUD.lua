@@ -27,14 +27,14 @@ colors.noncurrent_light = { 0.5, 0.5, 0.5, 1 }
 
 colors.commands = {}
 colors.commands.enabled = {}
-colors.commands.enabled.label = { 0, 1, 0, 1 }
+colors.commands.enabled.label = { 0.7, 0.7, 0.3, 1 }
 colors.commands.enabled.key = { 1, 1, 1, 1 }
 colors.commands.disabled = {}
-colors.commands.disabled.label = { 0, 0.5, 0, 1 }
+colors.commands.disabled.label = { 0.4, 0.4, 0.2, 1 }
 colors.commands.disabled.key = { 0.5, 0.5, 0.5, 1 }
 colors.commands.active = {}
-colors.commands.active.label = { 1, 0, 0, 1 }
-colors.commands.active.key = { 1, 1, 0, 1 }
+colors.commands.active.label = { 1, 0.15, 0.15, 1 }
+colors.commands.active.key = { 1, 0.15, 0.15, 1 }
 
 colors.button = {}
 colors.button.enabled = {}
@@ -69,20 +69,20 @@ colors.ktab = {}
 colors.ktab.background = { 0.15, 0.15, 0.15, 1 }
 colors.ktab.current = {}
 colors.ktab.current.background = { 0.15, 0.15, 0.15, 1 }
-colors.ktab.current.text = { 0.8, 0.8, 0.8, 1 }
+colors.ktab.current.text = { 0.0, 1.0, 0.0, 1 }
 colors.ktab.current.label = { 0, 0, 0, 0 }
 colors.ktab.enabled = {}
 colors.ktab.enabled.background = { 0.1, 0.1, 0.1, 1 }
 colors.ktab.enabled.text = { 0.8, 0.8, 0.8, 1 }
-colors.ktab.enabled.label = { 0, 1, 0, 1 }
+colors.ktab.enabled.label = { 0.7, 0.7, 0.3, 1 }
 colors.ktab.disabled = {}
 colors.ktab.disabled.background = { 0.1, 0.1, 0.1, 1 }
 colors.ktab.disabled.text = { 0.4, 0.4, 0.4, 1 }
-colors.ktab.disabled.label = { 0, 0.5, 0, 1 }
+colors.ktab.disabled.label = { 0.4, 0.4, 0.2, 1 }
 colors.ktab.active = {}
 colors.ktab.active.background = { 0.1, 0.1, 0.1, 1 }
-colors.ktab.active.text = { 1, 1, 1, 1 }
-colors.ktab.active.label = { 1, 0, 0, 1 }
+colors.ktab.active.text = { 1, 0.15, 0.15, 1 }
+colors.ktab.active.label = { 1, 0.15, 0.15, 1 }
 
 
 -- other menu UI prefs
