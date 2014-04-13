@@ -90,6 +90,14 @@ function Triggers.idle()
     kill_script()
     return
   end
+
+  for p in Players() do
+    if p._restore_visual then
+      p.direction = p._restore_visual.direction
+      p.elevation = p._restore_visual.elevation
+      p._restore_visual = nil
+    end
+  end
   
   if not inited_script then init() end
   
@@ -111,6 +119,13 @@ end
 function Triggers.postidle()
   for p in Players() do
     p.life = 409  -- signal to HUD that Vasara is active
+    
+    if p._freeze_visual then
+      p._restore_visual = { direction = p.direction, elevation = p.elevation }
+      p.direction = p._freeze_visual.direction
+      p.elevation = p._freeze_visual.elevation
+      p._freeze_visual = nil
+    end
   end
 end
 
@@ -384,6 +399,7 @@ function SMode.handle_apply(p)
         p._saved_surface.direction = p.direction
         p._saved_surface.elevation = p.elevation
         p._saved_surface.dragstart = Game.ticks
+        p._saved_surface.dragged = false
         
         SUndo.add_undo(p, surface)
         UApply.apply_texture(p, surface, coll, tex, landscape)
@@ -449,6 +465,29 @@ function SMode.handle_apply(p)
       
       elseif Game.ticks > p._keys.primary.first + TRIGGER_DELAY then
         -- dragging
+        if not p._frozen then
+          if Game.ticks == p._keys.primary.first + TRIGGER_DELAY + 1 then
+            p._point.x = p.x
+            p._point.y = p.y
+            p._point.z = p.z + 1/1024.0
+            p._point.poly = p.polygon
+          else
+            p:position(p._point.x, p._point.y, p._point.z, p._point.poly)
+            p.external_velocity.i = 0
+            p.external_velocity.j = 0
+            p.external_velocity.k = 0
+          end
+        end
+        if Game.ticks == p._keys.primary.first + TRIGGER_DELAY + 1 then
+          p._drag_position = {}
+          p._drag_position.direction = p.direction
+          p._drag_position.elevation = p.elevation
+          p._saved_surface.dragged = true
+        end
+        p._freeze_visual = {}
+        p._freeze_visual.elevation = p._drag_position.elevation
+        p._freeze_visual.direction = p._drag_position.direction
+        
         local delta_pitch = p._saved_surface.elevation - p.elevation
         local delta_yaw = p._saved_surface.direction - p.direction
         if is_polygon_floor(surface) or is_polygon_ceiling(surface) then
@@ -484,6 +523,12 @@ function SMode.handle_apply(p)
         end
       end
     elseif p._keys.primary.released then
+      -- snap us to visually locked position from drag
+      if p._saved_surface.dragged then
+        p.direction = p._drag_position.direction
+        p.elevation = p._drag_position.elevation
+      end
+      
       -- are we editing control panels
       if p._apply.texture and p._apply.edit_panels and is_primary_side(p._saved_surface.surface) then
         if SPanel.surface_can_hold_panel(p._saved_surface.surface) then
