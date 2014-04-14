@@ -165,6 +165,8 @@ function SMode.init()
     p._quantize = 0
     p._menu_button = nil
     p._menu_item = 0
+    p._cursor_x = 320
+    p._cursor_y = 240
     
     p._apply = {}
     p._apply.texture = true
@@ -343,6 +345,10 @@ function SMode.toggle(p, mode)
 end
 function SMode.handle_apply(p)
   local clear_surface = true
+  if p.local_ then
+    p._cursor_x = 320
+    p._cursor_y = 72 + 160
+  end
   
   if p._keys.mic.down then
     if p._keys.prev_weapon.held then
@@ -517,6 +523,11 @@ function SMode.handle_apply(p)
         
         local delta_yaw = (nd + p._drag_position.extra_dir)/hscale
         local delta_pitch = (ne + p._drag_position.extra_elev)/vscale
+        
+        if p.local_ then
+          p._cursor_x = p._cursor_x - delta_yaw * 300
+          p._cursor_y = p._cursor_y + delta_pitch * 140
+        end
                 
         if is_polygon_floor(surface) or is_polygon_ceiling(surface) then
           if is_polygon_ceiling(surface) then delta_pitch = -delta_pitch end
@@ -599,6 +610,10 @@ function SMode.handle_apply(p)
   if clear_surface then p._saved_surface.surface = nil end
 end
 function SMode.handle_teleport(p)
+  if p.local_ then
+    p._cursor_x = 320
+    p._cursor_y = math.floor((3*72 + 480)/4)
+  end
   if p._saved_facing.just_set then
     p._saved_facing.direction = p.direction
     p._saved_facing.elevation = p.elevation
@@ -679,6 +694,8 @@ function SMode.annotate(p)
   p._annotation.y = poly.y
 end
 function SMode.handle_choose(p)
+  if p.local_ then p._cursor_x, p._cursor_y = SMenu.coord(p) end
+  
   -- cycle textures
   if p._keys.mic.down and (p._keys.prev_weapon.held or p._keys.next_weapon.held or p._keys.primary.held) then
     local diff = 1
@@ -761,6 +778,8 @@ function SMode.handle_choose(p)
 
 end
 function SMode.handle_attribute(p)
+  if p.local_ then p._cursor_x, p._cursor_y = SMenu.coord(p) end
+  
   if p._keys.prev_weapon.pressed then
     SMenu.highlight_item(p, SMode.attribute, -1)
     SMenu.point_at_item(p, SMode.attribute, p._menu_item)
@@ -796,6 +815,8 @@ function SMode.handle_attribute(p)
   end
 end
 function SMode.handle_panel(p)
+  if p.local_ then p._cursor_x, p._cursor_y = SMenu.coord(p) end
+  
   if p._keys.prev_weapon.pressed then
     local m = SPanel.menu_name(p)
     SMenu.highlight_item(p, m, -1)
@@ -1172,6 +1193,10 @@ function SStatus.init()
       p.texture_palette.slots[45].texture_index = 0
       p.texture_palette.slots[46].texture_index = 0
       p.texture_palette.slots[47].texture_index = 0
+      p.texture_palette.slots[54].texture_index = 0
+      p.texture_palette.slots[55].texture_index = 0
+      p.texture_palette.slots[56].texture_index = 0
+      p.texture_palette.slots[57].texture_index = 0
     end
   end
 end
@@ -1203,6 +1228,10 @@ function SStatus.update()
       
       p.texture_palette.slots[47].texture_index = p._menu_item
       
+      p.texture_palette.slots[54].texture_index = p._cursor_x % 128
+      p.texture_palette.slots[55].texture_index = math.floor(p._cursor_x / 128)
+      p.texture_palette.slots[56].texture_index = p._cursor_y % 128
+      p.texture_palette.slots[57].texture_index = math.floor(p._cursor_y / 128)
     end
   end
 end

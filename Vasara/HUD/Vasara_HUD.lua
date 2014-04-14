@@ -143,13 +143,6 @@ menu_prefs.light_thickness = 2
 
 Triggers = {}
 
-vert_range = 30   -- max: 30
-horiz_range = 70  -- max: 160
-vert_size = 325   -- max: 430
-horiz_size = 600  -- max: 640
-vert_offset = 75
-horiz_offset = 20
-
 g_scriptChecked = false
 g_initMode = 0
 
@@ -212,9 +205,6 @@ function Triggers.draw()
     end
   end
   
-  local cxoff = 0
-  local cyoff = 0
-  
   -- menus
   if HMode.is(HMode.attribute) or HMode.is(HMode.panel) or HMode.is(HMode.choose) then
     local m = HMode.current
@@ -225,7 +215,6 @@ function Triggers.draw()
     end
     if HMenu.menus[m] then
       HMenu.draw_menu(m)
-      cxoff, cyoff = HMenu.cursorpos()
     end
   end
   
@@ -270,11 +259,7 @@ function Triggers.draw()
   end
   
   -- cursor
-  draw_cursor(HMode.apply, "apply")
-  draw_cursor(HMode.teleport, "teleport")
-  draw_cursor(HMode.choose, "menu", cxoff, cyoff)
-  draw_cursor(HMode.attribute, "menu", cxoff, cyoff)
-  draw_cursor(HMode.panel, "menu", cxoff, cyoff)
+  draw_cursor()
   
 end
 
@@ -289,17 +274,20 @@ function draw_mode(label, x, y, active)
   HGlobals.fontn:draw_text(label, x + 13*HGlobals.scale, y, clr)
 end
 
-function draw_cursor(mode, name, xoff, yoff, abs)
-  if not HMode.is(mode) then return end
-  if xoff == nil then xoff = 0 end
-  if yoff == nil then yoff = 0 end
-  local n = "cursor_" .. name
-  if HKeys.down(HKeys.primary) and (not HKeys.down(HKeys.mic)) then n = n .. "_down" end
-  if not abs then
-    xoff = xoff + HGlobals.cpos[1]
-    yoff = yoff + HGlobals.cpos[2]
+function draw_cursor()
+  local cname = "menu"
+  if HMode.is(HMode.apply) then
+    cname = "apply"
+  elseif HMode.is(HMode.teleport) then
+    cname = "teleport"
   end
-  imgs[n]:draw(xoff - HGlobals.coff[1], yoff - HGlobals.coff[2])
+  if HKeys.down(HKeys.primary) and (not HKeys.down(HKeys.mic)) then
+    cname = cname .. "_down"
+  end
+
+  local x = (HStatus.cursor_x*HGlobals.scale) + HGlobals.xoff
+  local y = (HStatus.cursor_y*HGlobals.scale) + HGlobals.yoff
+  imgs["cursor_" .. cname]:draw(x - HGlobals.coff[1], y - HGlobals.coff[2])
 end
 
 imgs = {}
@@ -490,9 +478,13 @@ HStatus.undo_active = 2
 HStatus.redo_active = 3
 HStatus.action_active = 4
 HStatus.current_menu_item = 0
+HStatus.cursor_x = 0
+HStatus.cursor_y = 0
 function HStatus.update()
   HStatus.bitfield = Player.texture_palette.slots[41].texture_index
   HStatus.current_menu_item = Player.texture_palette.slots[47].texture_index
+  HStatus.cursor_x = Player.texture_palette.slots[54].texture_index + 128*Player.texture_palette.slots[55].texture_index
+  HStatus.cursor_y = Player.texture_palette.slots[56].texture_index + 128*Player.texture_palette.slots[57].texture_index
   
   local lbls = HMenu.menus["key_" .. HMode.apply]
   local lbls2 = HMenu.menus["key_" .. HMode.teleport]
@@ -964,18 +956,6 @@ function HMenu.draw_menu(mode, transparent)
       end
     end
   end
-end
-function HMenu.coord()
-  local y = vert_offset + vert_size/(vert_range*2) * PIN(vert_range - Player.pitch, 0, vert_range*2)
-  local x = horiz_offset + horiz_size/(horiz_range*2) * PIN(horiz_range + Player.direction - 180, 0, horiz_range*2)
-  
-  return x, y
-end
-function HMenu.cursorpos()
-  local x, y = HMenu.coord()
-  local xa = (x*HGlobals.scale) + HGlobals.xoff - HGlobals.cpos[1]
-  local ya = (y*HGlobals.scale) + HGlobals.yoff - HGlobals.cpos[2]
-  return xa, ya
 end
 function HMenu.button_state(name)
   local state = "enabled"
