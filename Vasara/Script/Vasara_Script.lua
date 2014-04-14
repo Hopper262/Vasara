@@ -497,10 +497,10 @@ function SMode.handle_apply(p)
           ne = 0
         end
 
-        local hscale = 90
+        local hscale = 120
         local hrange = 2
         local hhalf = hrange * hscale / 2
-        local vscale = 90
+        local vscale = 80
         local vrange = 2
         local vhalf = vrange * vscale / 2
         
