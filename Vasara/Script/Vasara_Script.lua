@@ -520,22 +520,11 @@ function SMode.handle_apply(p)
                 
         if is_polygon_floor(surface) or is_polygon_ceiling(surface) then
           if is_polygon_ceiling(surface) then delta_pitch = -delta_pitch end
-          
-          local xoff, yoff
-          if (p._saved_surface.direction >= 315) or (p._saved_surface.direction < 45) then
-            xoff = delta_pitch
-            yoff = delta_yaw
-          elseif p._saved_surface.direction < 135 then
-            xoff = -delta_yaw
-            yoff = delta_pitch
-          elseif p._saved_surface.direction < 225 then
-            xoff = -delta_pitch
-            yoff = -delta_yaw
-          else
-            xoff = delta_yaw
-            yoff = -delta_pitch
-          end
-          
+
+          local orad = math.rad(p._drag_position.direction)
+          local xoff = delta_pitch * math.cos(orad) - delta_yaw * math.sin(orad)
+          local yoff = delta_pitch * math.sin(orad) + delta_yaw * math.cos(orad)
+                    
           surface.texture_x = VML.quantize(p, p._saved_surface.x + xoff)
           surface.texture_y = VML.quantize(p, p._saved_surface.y + yoff)
           
