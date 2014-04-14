@@ -134,6 +134,7 @@ menu_prefs.button_indent = 1
 menu_prefs.button_highlight_thickness = 2
 menu_prefs.button_shadow_thickness = 2
 menu_prefs.texture_choose_indent = 1
+menu_prefs.texture_apply_indent = 0.5
 menu_prefs.texture_preview_indent = 0
 menu_prefs.light_thickness = 2
 
@@ -871,30 +872,30 @@ function HMenu.draw_menu(mode, transparent)
                                math.floor(x + 7*u),
                                math.floor(y + h/2 - HGlobals.fheight/2),
                                colors.tab[state].text)
-    elseif item[1] == "texture" or item[1] == "dtexture" then
+    elseif item[1] == "texture" or item[1] == "atexture" or item[1] == "dtexture" then
       local cc, ct = string.match(item[2], "(%d+)_(%d+)")
+      local indent = menu_prefs.texture_preview_indent
       local state = "enabled"
-      if item[1] == "texture" then state = HMenu.button_state(item[2]) end
-      if state == "active" then
-        Screen.frame_rect(x - menu_prefs.button_indent*u,
-                          y - menu_prefs.button_indent*u,
-                          w + 2*menu_prefs.button_indent*u,
-                          h + 2*menu_prefs.button_indent*u,
-                          colors.current_texture,
-                          2*menu_prefs.button_indent*u)
-      end
-      local xt = x
-      local yt = y
-      local wt = w
+      
       if item[1] == "texture" then
-        xt = xt + menu_prefs.texture_choose_indent*u
-        yt = yt + menu_prefs.texture_choose_indent*u
-        wt = wt - 2*menu_prefs.texture_choose_indent*u
-      else
-        xt = xt + menu_prefs.texture_preview_indent*u
-        yt = yt + menu_prefs.texture_preview_indent*u
-        wt = wt - 2*menu_prefs.texture_preview_indent*u
+        state = HMenu.button_state(item[2])
+        indent = menu_prefs.texture_choose_indent
+      elseif item[1] == "atexture" then
+        state = HMenu.button_state(item[2])
+        indent = menu_prefs.texture_apply_indent
       end
+
+      if state == "active" then
+        Screen.frame_rect(x - indent*u,
+                          y - indent*u,
+                          w + 2*indent*u,
+                          h + 2*indent*u,
+                          colors.current_texture,
+                          2*indent*u)
+      end
+      local xt = x + indent*u
+      local yt = y + indent*u
+      local wt = w - 2*indent*u
       HCollections.draw(cc + 0, ct + 0, xt, yt, wt)
     elseif item[1] == "light" or item[1] == "tlight" then
       local state = HMenu.button_state(item[2])
@@ -1142,7 +1143,7 @@ function HMenu.init_menu(mode)
   end
 end
 function HMenu.clickable(item_type)
-  return item_type == "button" or item_type == "checkbox" or item_type == "radio" or item_type == "texture" or item_type == "light" or item_type == "dradio" or item_type == "dbutton" or item_type == "acheckbox" or item_type == "tab" or item_type == "tradio" or item_type == "tcheckbox" or item_type == "tlight"
+  return item_type == "button" or item_type == "checkbox" or item_type == "radio" or item_type == "texture" or item_type == "atexture" or item_type == "light" or item_type == "dradio" or item_type == "dbutton" or item_type == "acheckbox" or item_type == "tab" or item_type == "tradio" or item_type == "tcheckbox" or item_type == "tlight"
 end
 
 HChoose = {}
@@ -1250,7 +1251,7 @@ function HCollections.init()
           ct = HCollections.landscape_textures[j][2]
         end
         table.insert(preview,
-          { "texture", "choose_" .. cc .. "_" .. ct, 
+          { "atexture", "choose_" .. cc .. "_" .. ct, 
             xt, yt, tsize, tsize, cc .. ", " .. ct })
       end
     end
