@@ -473,31 +473,78 @@ function SMode.handle_apply(p)
           p._drag_position = {}
           p._drag_position.direction = p.direction
           p._drag_position.elevation = p.elevation
+          p._drag_position.extra_dir = 0
+          p._drag_position.extra_elev = 0
+          p.direction = 180
+          p.elevation = 0
           p._saved_surface.dragged = true
         end
         p._freeze_visual = {}
         p._freeze_visual.elevation = p._drag_position.elevation
         p._freeze_visual.direction = p._drag_position.direction
         
-        local delta_pitch = p._saved_surface.elevation - p.elevation
-        local delta_yaw = p._saved_surface.direction - p.direction
+        local nd = 180 - p.direction
+        local ne = 0 - p.elevation
+        
+        if (nd < -90) or (nd > 90) then
+          p._drag_position.extra_dir = p._drag_position.extra_dir + nd
+          p.direction = 180
+          nd = 0
+        end
+        if (ne < -20) or (ne > 20) then
+          p._drag_position.extra_elev = p._drag_position.extra_elev + ne
+          p.elevation = 0
+          ne = 0
+        end
+
+        local hscale = 90
+        local hrange = 2
+        local hhalf = hrange * hscale / 2
+        local vscale = 90
+        local vrange = 2
+        local vhalf = vrange * vscale / 2
+        
+        if (p._drag_position.extra_dir + nd) > hhalf then
+          p._drag_position.extra_dir = hhalf - nd
+        elseif (p._drag_position.extra_dir + nd) < -hhalf then
+          p._drag_position.extra_dir = -hhalf - nd
+        end
+        if (p._drag_position.extra_elev + ne) > vhalf then
+          p._drag_position.extra_elev = vhalf - ne
+        elseif (p._drag_position.extra_elev + ne) < -vhalf then
+          p._drag_position.extra_elev = -vhalf - ne
+        end
+        
+        local delta_yaw = (nd + p._drag_position.extra_dir)/hscale
+        local delta_pitch = (ne + p._drag_position.extra_elev)/vscale
+                
         if is_polygon_floor(surface) or is_polygon_ceiling(surface) then
           if is_polygon_ceiling(surface) then delta_pitch = -delta_pitch end
           
-          local x = p._saved_surface.x - delta_yaw / 180 * math.sin(math.rad(p._saved_surface.direction))
-          local y = p._saved_surface.y + delta_yaw / 180 * math.cos(math.rad(p._saved_surface.direction))
+          local xoff, yoff
+          if (p._saved_surface.direction >= 315) or (p._saved_surface.direction < 45) then
+            xoff = delta_pitch
+            yoff = delta_yaw
+          elseif p._saved_surface.direction < 135 then
+            xoff = -delta_yaw
+            yoff = delta_pitch
+          elseif p._saved_surface.direction < 225 then
+            xoff = -delta_pitch
+            yoff = -delta_yaw
+          else
+            xoff = delta_yaw
+            yoff = -delta_pitch
+          end
           
-          x = VML.quantize(p, x + delta_pitch / 60 * math.cos(math.rad(p.yaw)))
-          y = VML.quantize(p, y + delta_pitch / 60 * math.sin(math.rad(p.yaw)))
-          surface.texture_x = x
-          surface.texture_y = y
+          surface.texture_x = VML.quantize(p, p._saved_surface.x + xoff)
+          surface.texture_y = VML.quantize(p, p._saved_surface.y + yoff)
           
           if p._apply.align then
             VML.align_polygons(surface, p._saved_surface.align_table)
           end
         else
-          surface.texture_x = VML.quantize(p, p._saved_surface.x + delta_yaw / 90)
-          surface.texture_y = VML.quantize(p, p._saved_surface.y - delta_pitch / 60)
+          surface.texture_x = VML.quantize(p, p._saved_surface.x + delta_yaw)
+          surface.texture_y = VML.quantize(p, p._saved_surface.y - delta_pitch)
           
           if p._apply.align then
             VML.align_sides(surface, p._saved_surface.offset_table)
@@ -518,6 +565,7 @@ function SMode.handle_apply(p)
       if p._saved_surface.dragged then
         p.direction = p._drag_position.direction
         p.elevation = p._drag_position.elevation
+        p._saved_surface.dragged = false
       end
       
       -- are we editing control panels
@@ -1145,7 +1193,7 @@ function SStatus.update()
       if p._frozen then status = status + 1 end
       if SUndo.undo_active(p) then status = status + 2 end
       if SUndo.redo_active(p) then status = status + 4 end
-      if (p._mode == SMode.apply or p._mode == SMode.teleport) and p:find_action_key_target() then status = status + 8 end
+      if (p._mode == SMode.apply or p._mode == SMode.teleport) and (not p._saved_surface.dragged) and p:find_action_key_target() then status = status + 8 end
       p.texture_palette.slots[41].texture_index = status
       
       p.texture_palette.slots[43].texture_index = p._light
