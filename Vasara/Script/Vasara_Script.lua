@@ -16,6 +16,16 @@ max_scripts = 80  -- max: 80
 -- highlight selected destination in Teleport mode
 show_teleport_destination = true
 
+-- mouse sensitivity: degrees of movement to get from center to edge
+menu_vertical_range = 30
+menu_horizontal_range = 70
+drag_vertical_range = 80
+drag_horizontal_range = 120
+
+-- how far you can drag a texture before it stops moving (in World Units)
+drag_vertical_limit = 1
+drag_horizontal_limit = 1
+
 
 -- END PREFERENCES -- no user serviceable parts below ;)
 
@@ -858,11 +868,11 @@ SFreeze.ranges = {}
 SFreeze.ranges["menu"] = {
   xsize = 600, ysize = 325,
   xoff = 20, yoff = 75,
-  xrange = 70, yrange = 30 }
+  xrange = menu_horizontal_range, yrange = menu_vertical_range }
 SFreeze.ranges["drag"] = {
-  xsize = 2048, ysize = 2048,
-  xoff = -1024, yoff = -1024,
-  xrange = 120, yrange = 80 }
+  xsize = 2048*drag_horizontal_limit, ysize = 2048*drag_vertical_limit,
+  xoff = -1024*drag_horizontal_limit, yoff = -1024*drag_vertical_limit,
+  xrange = drag_horizontal_range, yrange = drag_vertical_range }
 function SFreeze.init()
   for _,rr in pairs(SFreeze.ranges) do
     rr.xscale = rr.xsize / (rr.xrange * 2)
