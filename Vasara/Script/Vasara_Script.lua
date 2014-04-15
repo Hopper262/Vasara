@@ -78,6 +78,7 @@ function init()
   SCollections.init()
   SPanel.init()
   SPlatforms.init()
+  SFreeze.init()
   SMode.init()
   SUndo.init()
   
@@ -90,21 +91,14 @@ function Triggers.idle()
     kill_script()
     return
   end
-
-  for p in Players() do
-    if p._restore_visual then
-      p.direction = p._restore_visual.direction
-      p.elevation = p._restore_visual.elevation
-      p._restore_visual = nil
-    end
-  end
   
   if not inited_script then init() end
-  
+    
   SKeys.update()
   SCounts.update()
   SLights.update()
   SPlatforms.update()
+  SFreeze.update()
   SMode.update()
   SUndo.update()
   SStatus.update()
@@ -117,15 +111,9 @@ function Triggers.idle()
   end
 end
 function Triggers.postidle()
+  SFreeze.postidle()
   for p in Players() do
     p.life = 409  -- signal to HUD that Vasara is active
-    
-    if p._freeze_visual then
-      p._restore_visual = { direction = p.direction, elevation = p.elevation }
-      p.direction = p._freeze_visual.direction
-      p.elevation = p._freeze_visual.elevation
-      p._freeze_visual = nil
-    end
   end
 end
 
@@ -160,7 +148,6 @@ function SMode.init()
     p._mode = SMode.apply
     p._prev_mode = SMode.apply
     p._mic_dummy = false
-    p._frozen = false
     p._target_poly = 0
     p._quantize = 0
     p._menu_button = nil
@@ -192,14 +179,6 @@ function SMode.init()
     p._panel.sides = {}
     p._panel.dinfo = nil
     
-    p._point = {}
-    p._point.x = 0
-    p._point.y = 0
-    p._point.z = 0
-    p._point.poly = 0
-    p._point.direction = 0
-    p._point.elevation = 0
-    
     p._saved_facing = {}
     p._saved_facing.direction = 0
     p._saved_facing.elevation = 0
@@ -213,8 +192,6 @@ function SMode.init()
     p._saved_surface.polygon = nil
     p._saved_surface.x = 0
     p._saved_surface.y = 0
-    p._saved_surface.direction = 0
-    p._saved_surface.elevation = 0
     p._saved_surface.dragstart = 0
     p._saved_surface.align_table = nil
     p._saved_surface.offset_table = nil
@@ -283,49 +260,41 @@ function SMode.update()
       p._menu_button = nil
       p._menu_item = 0
       local was_menu = SMode.menu_mode(p._prev_mode)
-      if in_menu and (not was_menu) then
-        -- save player position for menu mode
-        p._point.x = p.x
-        p._point.y = p.y
-        p._point.z = p.z + 1/1024.0
-        p._point.poly = p.polygon
-        p._point.direction = p.direction
-        p._saved_facing.direction = p.direction
-        p._point.elevation = p.elevation
-        p.direction = 180
-        p.elevation = 0
-      elseif (not in_menu) and was_menu then
-        -- restore player position from menu mode
-        p:position(p._point.x, p._point.y, p._point.z, p._point.poly)
-        p.external_velocity.i = 0
-        p.external_velocity.j = 0
-        p.external_velocity.k = 0
-        p.direction = p._point.direction
-        p.elevation = p._point.elevation
-      end
       
       if p._prev_mode == SMode.teleport then
         UTeleport.remove_highlight(p)
       elseif p._prev_mode == SMode.panel then
         SPanel.stop_editing(p)
       end
-    end
-    if in_menu then
-      SMenu.recenter(p)
+      
+      if in_menu then
+        SFreeze.enter_mode(p, "menu")
+      else
+        SFreeze.enter_mode(p, nil)
+      end
     end
 
-    -- handle freeze
-    if p._frozen or SMode.menu_mode(p._mode) then
-      p:position(p._point.x, p._point.y, p._point.z, p._point.poly)
-      p.external_velocity.i = 0
-      p.external_velocity.j = 0
-      p.external_velocity.k = 0
-    end
-    
     if p.local_ then
       p.texture_palette.slots[37].texture_index = p._target_poly % 128
       p.texture_palette.slots[38].texture_index = math.floor(p._target_poly/128)
       p.texture_palette.slots[40].texture_index = p._mode
+      
+      -- set cursor
+      if in_menu then
+        p._cursor_x, p._cursor_y = SFreeze.coord(p)
+      elseif p._mode == SMode.apply then
+        p._cursor_x = 320
+        p._cursor_y = 72 + 160
+        if SFreeze.in_mode(p, "drag") then
+          local delta_yaw, delta_pitch
+          delta_yaw, delta_pitch = SFreeze.coord(p)
+          p._cursor_x = p._cursor_x + math.floor(delta_yaw * 300.0/1024.0)
+          p._cursor_y = p._cursor_y + math.floor(delta_pitch * 140.0/1024.0)
+        end
+      elseif p._mode == SMode.teleport then
+        p._cursor_x = 320
+        p._cursor_y = math.floor((3*72 + 480)/4)
+      end
     end
   end
 end
@@ -345,23 +314,13 @@ function SMode.toggle(p, mode)
 end
 function SMode.handle_apply(p)
   local clear_surface = true
-  if p.local_ then
-    p._cursor_x = 320
-    p._cursor_y = 72 + 160
-  end
   
   if p._keys.mic.down then
     if p._keys.prev_weapon.held then
-      p._frozen = false
+      SFreeze.unfreeze(p)
       p:accelerate(0, 0, 0.05)
     elseif p._keys.next_weapon.pressed then
-      p._frozen = not p._frozen
-      if p._frozen then
-        p._point.x = p.x
-        p._point.y = p.y
-        p._point.z = p.z + 1/1024.0
-        p._point.poly = p.polygon
-      end
+      SFreeze.toggle_freeze(p)
     end
   else
     if p._keys.primary.down then
@@ -393,10 +352,7 @@ function SMode.handle_apply(p)
             p._saved_surface.y = 0
           end
         end
-        p._saved_surface.direction = p.direction
-        p._saved_surface.elevation = p.elevation
         p._saved_surface.dragstart = Game.ticks
-        p._saved_surface.dragged = false
         
         SUndo.add_undo(p, surface)
         UApply.apply_texture(p, surface, coll, tex, landscape)
@@ -460,81 +416,20 @@ function SMode.handle_apply(p)
           end
         end
       
-      elseif Game.ticks > p._keys.primary.first + TRIGGER_DELAY then
-        -- dragging
-        if not p._frozen then
-          if Game.ticks == p._keys.primary.first + TRIGGER_DELAY + 1 then
-            p._point.x = p.x
-            p._point.y = p.y
-            p._point.z = p.z + 1/1024.0
-            p._point.poly = p.polygon
-          else
-            p:position(p._point.x, p._point.y, p._point.z, p._point.poly)
-            p.external_velocity.i = 0
-            p.external_velocity.j = 0
-            p.external_velocity.k = 0
-          end
-        end
-        if Game.ticks == p._keys.primary.first + TRIGGER_DELAY + 1 then
-          p._drag_position = {}
-          p._drag_position.direction = p.direction
-          p._drag_position.elevation = p.elevation
-          p._drag_position.extra_dir = 0
-          p._drag_position.extra_elev = 0
-          p.direction = 180
-          p.elevation = 0
-          p._saved_surface.dragged = true
-        end
-        p._freeze_visual = {}
-        p._freeze_visual.elevation = p._drag_position.elevation
-        p._freeze_visual.direction = p._drag_position.direction
+      elseif surface and (Game.ticks > p._keys.primary.first + TRIGGER_DELAY) then
+        SFreeze.enter_mode(p, "drag")
         
-        local nd = 180 - p.direction
-        local ne = 0 - p.elevation
+        local delta_yaw, delta_pitch
+        delta_yaw, delta_pitch = SFreeze.coord(p)
+        delta_yaw = delta_yaw / 1024.0
+        delta_pitch = delta_pitch / 1024.0
         
-        if (nd < -90) or (nd > 90) then
-          p._drag_position.extra_dir = p._drag_position.extra_dir + nd
-          p.direction = 180
-          nd = 0
-        end
-        if (ne < -20) or (ne > 20) then
-          p._drag_position.extra_elev = p._drag_position.extra_elev + ne
-          p.elevation = 0
-          ne = 0
-        end
-
-        local hscale = 120
-        local hrange = 2
-        local hhalf = hrange * hscale / 2
-        local vscale = 80
-        local vrange = 2
-        local vhalf = vrange * vscale / 2
-        
-        if (p._drag_position.extra_dir + nd) > hhalf then
-          p._drag_position.extra_dir = hhalf - nd
-        elseif (p._drag_position.extra_dir + nd) < -hhalf then
-          p._drag_position.extra_dir = -hhalf - nd
-        end
-        if (p._drag_position.extra_elev + ne) > vhalf then
-          p._drag_position.extra_elev = vhalf - ne
-        elseif (p._drag_position.extra_elev + ne) < -vhalf then
-          p._drag_position.extra_elev = -vhalf - ne
-        end
-        
-        local delta_yaw = (nd + p._drag_position.extra_dir)/hscale
-        local delta_pitch = (ne + p._drag_position.extra_elev)/vscale
-        
-        if p.local_ then
-          p._cursor_x = p._cursor_x - delta_yaw * 300
-          p._cursor_y = p._cursor_y + delta_pitch * 140
-        end
-                
         if is_polygon_floor(surface) or is_polygon_ceiling(surface) then
           if is_polygon_ceiling(surface) then delta_pitch = -delta_pitch end
 
-          local orad = math.rad(p._drag_position.direction)
-          local xoff = delta_pitch * math.cos(orad) - delta_yaw * math.sin(orad)
-          local yoff = delta_pitch * math.sin(orad) + delta_yaw * math.cos(orad)
+          local orad = math.rad(SFreeze.orig_dir(p))
+          local xoff = delta_pitch * math.cos(orad) + delta_yaw * math.sin(orad)
+          local yoff = delta_pitch * math.sin(orad) - delta_yaw * math.cos(orad)
                     
           surface.texture_x = VML.quantize(p, p._saved_surface.x + xoff)
           surface.texture_y = VML.quantize(p, p._saved_surface.y + yoff)
@@ -543,7 +438,7 @@ function SMode.handle_apply(p)
             VML.align_polygons(surface, p._saved_surface.align_table)
           end
         else
-          surface.texture_x = VML.quantize(p, p._saved_surface.x + delta_yaw)
+          surface.texture_x = VML.quantize(p, p._saved_surface.x - delta_yaw)
           surface.texture_y = VML.quantize(p, p._saved_surface.y - delta_pitch)
           
           if p._apply.align then
@@ -561,12 +456,8 @@ function SMode.handle_apply(p)
         end
       end
     elseif p._keys.primary.released then
-      -- snap us to visually locked position from drag
-      if p._saved_surface.dragged then
-        p.direction = p._drag_position.direction
-        p.elevation = p._drag_position.elevation
-        p._saved_surface.dragged = false
-      end
+      -- release any drag
+      SFreeze.enter_mode(p, nil)
       
       -- are we editing control panels
       if p._apply.texture and p._apply.edit_panels and is_primary_side(p._saved_surface.surface) then
@@ -610,10 +501,6 @@ function SMode.handle_apply(p)
   if clear_surface then p._saved_surface.surface = nil end
 end
 function SMode.handle_teleport(p)
-  if p.local_ then
-    p._cursor_x = 320
-    p._cursor_y = math.floor((3*72 + 480)/4)
-  end
   if p._saved_facing.just_set then
     p._saved_facing.direction = p.direction
     p._saved_facing.elevation = p.elevation
@@ -638,16 +525,10 @@ function SMode.handle_teleport(p)
   
   if p._keys.mic.down then
     if p._keys.prev_weapon.held then
-      p._frozen = false
+      SFreeze.unfreeze(p)
       p:accelerate(0, 0, 0.05)
     elseif p._keys.next_weapon.pressed then
-      p._frozen = not p._frozen
-      if p._frozen then
-        p._point.x = p.x
-        p._point.y = p.y
-        p._point.z = p.z + 1/1024.0
-        p._point.poly = p.polygon
-      end
+      SFreeze.toggle_freeze(p)
     end
   end
 
@@ -656,7 +537,7 @@ function SMode.handle_teleport(p)
     p:position(poly.x, poly.y, poly.z, poly)
     p.monster:play_sound("teleport in")
     UTeleport.remove_highlight(p)
-    p._frozen = false
+    SFreeze.unfreeze(p)
     return
   end
   
@@ -694,8 +575,6 @@ function SMode.annotate(p)
   p._annotation.y = poly.y
 end
 function SMode.handle_choose(p)
-  if p.local_ then p._cursor_x, p._cursor_y = SMenu.coord(p) end
-  
   -- cycle textures
   if p._keys.mic.down and (p._keys.prev_weapon.held or p._keys.next_weapon.held or p._keys.primary.held) then
     local diff = 1
@@ -778,8 +657,6 @@ function SMode.handle_choose(p)
 
 end
 function SMode.handle_attribute(p)
-  if p.local_ then p._cursor_x, p._cursor_y = SMenu.coord(p) end
-  
   if p._keys.prev_weapon.pressed then
     SMenu.highlight_item(p, SMode.attribute, -1)
     SMenu.point_at_item(p, SMode.attribute, p._menu_item)
@@ -815,8 +692,6 @@ function SMode.handle_attribute(p)
   end
 end
 function SMode.handle_panel(p)
-  if p.local_ then p._cursor_x, p._cursor_y = SMenu.coord(p) end
-  
   if p._keys.prev_weapon.pressed then
     local m = SPanel.menu_name(p)
     SMenu.highlight_item(p, m, -1)
@@ -976,6 +851,157 @@ function SKeys.update()
       end
     end
   end
+end
+
+SFreeze = {}
+SFreeze.ranges = {}
+SFreeze.ranges["menu"] = {
+  xsize = 600, ysize = 325,
+  xoff = 20, yoff = 75,
+  xrange = 70, yrange = 30 }
+SFreeze.ranges["drag"] = {
+  xsize = 2048, ysize = 2048,
+  xoff = -1024, yoff = -1024,
+  xrange = 120, yrange = 80 }
+function SFreeze.init()
+  for _,rr in pairs(SFreeze.ranges) do
+    rr.xscale = rr.xsize / (rr.xrange * 2)
+    rr.yscale = rr.ysize / (rr.yrange * 2)
+  end
+  for p in Players() do
+    p._freeze = {}
+    p._freeze.frozen = false
+    p._freeze.mode = nil
+    p._freeze.point = {}
+    p._freeze.point.x = 0
+    p._freeze.point.y = 0
+    p._freeze.point.z = 0
+    p._freeze.point.poly = 0
+    p._freeze.point.direction = 0
+    p._freeze.point.elevation = 0
+    p._freeze.restore = {}
+    p._freeze.restore.direction = 0
+    p._freeze.restore.elevation = 0
+  end
+end
+function SFreeze.postidle()
+  for p in Players() do
+    if p._freeze.mode then
+      p._freeze.restore.direction = p.direction
+      p._freeze.restore.elevation = p.elevation
+      p.direction = p._freeze.point.direction
+      p.elevation = p._freeze.point.elevation
+    end
+    if p._freeze.frozen or p._freeze.mode then
+      SFreeze.reposition(p)
+    end
+  end
+end
+function SFreeze.reposition(p)
+  p:position(p._freeze.point.x, p._freeze.point.y, p._freeze.point.z, p._freeze.point.poly)
+  p.external_velocity.i = 0
+  p.external_velocity.j = 0
+  p.external_velocity.k = 0
+end
+function SFreeze.freeze(p)
+  if p._freeze.frozen then return end
+  p._freeze.frozen = true
+  if not p._freeze.mode then
+    p._freeze.point.x = p.x
+    p._freeze.point.y = p.y
+    p._freeze.point.z = math.max(p.z, p.polygon.z + 1/1024.0)
+    p._freeze.point.poly = p.polygon
+    SFreeze.reposition(p)
+  end
+end
+function SFreeze.unfreeze(p)
+  p._freeze.frozen = false
+end
+function SFreeze.toggle_freeze(p)
+  if p._freeze.frozen then
+    SFreeze.unfreeze(p)
+  else
+    SFreeze.freeze(p)
+  end
+end
+function SFreeze.frozen(p)
+  return p._freeze.frozen
+end
+function SFreeze.enter_mode(p, mode)
+  local old_mode = p._freeze.mode
+  if old_mode == mode then return end
+  if old_mode then
+    p.direction = p._freeze.point.direction
+    p.elevation = p._freeze.point.elevation
+  end
+  if mode then
+    if not p._freeze.frozen then
+      p._freeze.point.x = p.x
+      p._freeze.point.y = p.y
+      p._freeze.point.z = math.max(p.z, p.polygon.z + 1/1024.0)
+      p._freeze.point.poly = p.polygon
+      SFreeze.reposition(p)
+    end
+    p._freeze.point.direction = p.direction
+    p._freeze.point.elevation = p.elevation
+    p._freeze.extra_dir = 0
+    p._freeze.extra_elev = 0
+    p.direction = 180
+    p.elevation = 0
+  end
+  p._freeze.mode = mode
+end
+function SFreeze.in_mode(p, mode)
+  return p._freeze.mode == mode
+end
+function SFreeze.update()
+  for p in Players() do
+    if p._freeze.frozen or p._freeze.mode then
+      SFreeze.reposition(p)
+    end
+    if p._freeze.mode then  
+      p.direction = p._freeze.restore.direction
+      p.elevation = p._freeze.restore.elevation
+
+      local nd = p.direction - 180
+      local ne = 0 - p.elevation
+      
+      if (nd < -90) or (nd > 90) then
+        p._freeze.extra_dir = p._freeze.extra_dir + nd
+        p.direction = 180
+        nd = 0
+      end
+      if (ne < -20) or (ne > 20) then
+        p._freeze.extra_elev = p._freeze.extra_elev + ne
+        p.elevation = 0
+        ne = 0
+      end
+      
+      local rr = SFreeze.ranges[p._freeze.mode]
+      if (p._freeze.extra_dir + nd) > rr.xrange then
+        p._freeze.extra_dir = rr.xrange - nd
+      elseif (p._freeze.extra_dir + nd) < -rr.xrange then
+        p._freeze.extra_dir = -rr.xrange - nd
+      end
+      if (p._freeze.extra_elev + ne) > rr.yrange then
+        p._freeze.extra_elev = rr.yrange - ne
+      elseif (p._freeze.extra_elev + ne) < -rr.yrange then
+        p._freeze.extra_elev = -rr.yrange - ne
+      end
+    end
+  end
+end
+function SFreeze.coord(p)
+  local rr = SFreeze.ranges[p._freeze.mode]
+  
+  local xa = p.direction - 180 + p._freeze.extra_dir + rr.xrange
+  local ya = 0 - p.elevation + p._freeze.extra_elev + rr.yrange
+  
+  return math.floor(rr.xoff + xa*rr.xscale), math.floor(rr.yoff + ya*rr.yscale)
+end
+function SFreeze.orig_dir(p)
+  if not p._freeze.mode then return p.direction end
+  return p._freeze.point.direction
 end
 
 SPanel = {}
@@ -1204,10 +1230,10 @@ function SStatus.update()
   for p in Players() do
     if p.local_ then
       local status = 0
-      if p._frozen then status = status + 1 end
+      if SFreeze.frozen(p) then status = status + 1 end
       if SUndo.undo_active(p) then status = status + 2 end
       if SUndo.redo_active(p) then status = status + 4 end
-      if (p._mode == SMode.apply or p._mode == SMode.teleport) and (not p._saved_surface.dragged) and p:find_action_key_target() then status = status + 8 end
+      if (p._mode == SMode.apply or p._mode == SMode.teleport) and (not SFreeze.in_mode(p, "drag")) and p:find_action_key_target() then status = status + 8 end
       p.texture_palette.slots[41].texture_index = status
       
       p.texture_palette.slots[43].texture_index = p._light
@@ -1385,17 +1411,7 @@ function SMenu.selection(p, mode)
   return nil
 end
 function SMenu.coord(p)
-  local y = vert_offset + vert_size/(vert_range*2) * PIN(vert_range - p.pitch, 0, vert_range*2)
-  local x = horiz_offset + horiz_size/(horiz_range*2) * PIN(horiz_range + p.direction - 180, 0, horiz_range*2)
-  
-  return x, y
-end
-function SMenu.recenter(p)
-  if p.direction < (180 - horiz_range) then
-    p.direction = 180 - horiz_range
-  elseif p.direction > (180 + horiz_range) then
-    p.direction = 180 + horiz_range
-  end
+  return SFreeze.coord(p)
 end
 function SMenu.init_menu(mode)
   local menu = SMenu.menus[mode]
