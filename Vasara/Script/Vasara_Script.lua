@@ -29,13 +29,6 @@ drag_horizontal_limit = 1
 
 -- END PREFERENCES -- no user serviceable parts below ;)
 
-vert_range = 30   -- max: 30
-horiz_range = 70  -- max: 160
-vert_size = 325   -- max: 430
-horiz_size = 600  -- max: 640
-vert_offset = 75
-horiz_offset = 20
-
 Game.monsters_replenish = not suppress_monsters
 snap_denominators = { 4, 5, 8 }
 transfer_modes = { TransferModes["normal"], TransferModes["pulsate"], TransferModes["wobble"], TransferModes["fast wobble"], TransferModes["static"], TransferModes["landscape"], TransferModes["horizontal slide"], TransferModes["fast horizontal slide"], TransferModes["vertical slide"], TransferModes["fast vertical slide"], TransferModes["wander"], TransferModes["fast wander"] }
@@ -1009,6 +1002,16 @@ function SFreeze.coord(p)
   
   return math.floor(rr.xoff + xa*rr.xscale), math.floor(rr.yoff + ya*rr.yscale)
 end
+function SFreeze.set_coord(p, x, y)
+  local rr = SFreeze.ranges[p._freeze.mode]
+  local xa = (x - rr.xoff)/rr.xscale
+  local ya = (y - rr.yoff)/rr.yscale
+  
+  p.direction = 180
+  p.elevation = 0
+  p._freeze.extra_dir = xa - rr.xrange
+  p._freeze.extra_elev = ya - rr.yrange
+end
 function SFreeze.orig_dir(p)
   if not p._freeze.mode then return p.direction end
   return p._freeze.point.direction
@@ -1506,8 +1509,7 @@ function SMenu.point_at_item(p, mode, idx)
   local x = item[3] + math.floor(item[5]/2)
   local y = item[4] + math.floor(item[6]/2)
   
-  p.pitch = -(vert_range * 2) * (y - vert_offset - vert_size/2) / vert_size
-  p.direction = 180 - ((horiz_range * 2) * (x - horiz_offset - horiz_size/2)) / -horiz_size
+  SFreeze.set_coord(p, x, y)
 end
 function SMenu.index_for_name(mode, name)
   if not SMenu.inited[mode] then SMenu.init_menu(mode) end
