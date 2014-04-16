@@ -1204,9 +1204,17 @@ function SPanel.stop_editing(p)
           cp.repair = p._panel.repair
           
           if class == SPanel.light_switch then
-            cp.status = Lights[p._panel.permutation].active
+            if Lights[p._panel.permutation] then
+              cp.status = Lights[p._panel.permutation].active
+            else
+              cp.status = false
+            end
           elseif class == SPanel.platform_switch then
-            cp.status = Polygons[p._panel.permutation].platform.active
+            if Polygons[p._panel.permutation] and Polygons[p._panel.permutation].platform then
+              cp.status = Polygons[p._panel.permutation].platform.active
+            else
+              cp.status = false
+            end
           else
             cp.status = p._panel.status
           end
