@@ -754,17 +754,27 @@ function SMode.handle_attribute(p)
   end
 end
 function SMode.handle_panel(p)
-  if p._keys.prev_weapon.pressed then
-    local m = SPanel.menu_name(p)
-    SMenu.highlight_item(p, m, -1)
-    SMenu.point_at_item(p, m, p._menu_item)
+  if p._keys.mic.down then
+    if p._keys.prev_weapon.pressed then
+      SPanel.cycle_permutation(p, -1)
+    end
+    if p._keys.next_weapon.pressed then
+      SPanel.cycle_permutation(p, 1)
+    end
+    if p._keys.secondary.released then
+      SPanel.revert(p)
+    end
+  else
+    if p._keys.prev_weapon.pressed then
+      SPanel.cycle_class(p, -1)
+    end
+    if p._keys.next_weapon.pressed then
+      SPanel.cycle_class(p, 1)
+    end
   end
-  if p._keys.next_weapon.pressed then
-    local m = SPanel.menu_name(p)
-    SMenu.highlight_item(p, m, 1)
-    SMenu.point_at_item(p, m, p._menu_item)
-  end
-  if p._keys.primary.released then
+  
+  -- handle menu
+  if (not p._keys.mic.down) and p._keys.primary.released then
     local name = SMenu.selection(p, SPanel.menu_name(p))
     if name == nil then return end
     
@@ -1088,6 +1098,7 @@ SPanel.save = 8
 SPanel.terminal = 9
 SPanel.chip = 10
 SPanel.wires = 11
+SPanel.classorder = { 5, 6, 7, 10, 11, 1, 2, 3, 4, 8, 9, 0 }
 SPanel.device_collections = {}
 function SPanel.init()
   -- these must be hard-coded into Forge; the engine can't tell them apart
@@ -1155,6 +1166,60 @@ function SPanel.update()
         p.texture_palette.slots[52].texture_index = 0
         p.texture_palette.slots[53].texture_index = 0
       end
+    end
+  end
+end
+function SPanel.cycle_class(p, dir)
+  local cur = p._panel.classnum
+  local dinfo = p._panel.dinfo
+  local total = #SPanel.classorder
+  
+  local idx = total
+  if dir < 0 then idx = 1 end
+  for i,v in ipairs(SPanel.classorder) do
+    if cur == v then
+      idx = i
+      break
+    end
+  end
+  
+  repeat
+    idx = (((idx + dir) - 1) % total) + 1
+  until (SPanel.classorder[idx] == 0) or dinfo[SPanel.classorder[idx]]
+  
+  p._panel.classnum = SPanel.classorder[idx]
+end
+function SPanel.cycle_permutation(p, dir)
+  local cur = p._panel.classnum
+  local perm = p._panel.permutation
+  
+  if cur == SPanel.platform_switch then
+    local total = #SPlatforms.sorted_platforms
+    if total > 0 then
+      local idx = SPlatforms.index_lookup[perm]
+      if idx == nil then 
+        idx = total
+        if dir < 0 then idx = 1 end
+      end
+      idx = (((idx + dir) - 1) % total) + 1
+      p._panel.permutation = SPlatforms.sorted_platforms[idx].polygon.index
+    end
+  else
+    local total = 0
+    if cur == SPanel.light_switch then
+      total = #Lights
+    elseif cur == SPanel.terminal then
+      total = #Terminals
+      if total < 1 then total = max_scripts end
+    elseif cur == SPanel.tag_switch or cur == SPanel.chip or cur == SPanel.wires then
+      total = max_tags
+    end
+    if total > 0 then
+      if perm < 0 or perm >= total then
+        perm = total - 1
+        if dir < 0 then perm = 0 end
+      end
+      p._panel.permutation = (perm + dir) % total
     end
   end
 end
@@ -1235,6 +1300,22 @@ function SPanel.start_editing(p, surface)
       end
     end
   end
+  
+  p._panel_saved = {}
+  p._panel_saved.classnum = p._panel.classnum
+  p._panel_saved.permutation = p._panel.permutation
+  p._panel_saved.light_dependent = p._panel.light_dependent
+  p._panel_saved.only_toggled_by_weapons = p._panel.only_toggled_by_weapons
+  p._panel_saved.repair = p._panel.repair
+  p._panel_saved.status = p._panel.status
+end
+function SPanel.revert(p)
+  p._panel.classnum = p._panel_saved.classnum
+  p._panel.permutation = p._panel_saved.permutation
+  p._panel.light_dependent = p._panel_saved.light_dependent
+  p._panel.only_toggled_by_weapons = p._panel_saved.only_toggled_by_weapons
+  p._panel.repair = p._panel_saved.repair
+  p._panel.status = p._panel_saved.status
 end
 function SPanel.stop_editing(p)
   if p._panel.editing then
@@ -1543,11 +1624,11 @@ function SMenu.init_menu(mode)
         { "tradio", "pperm_" .. l, 160 + xoff, 190 + yoff, 50, 20, tostring(l) })
     end
   elseif mode == "panel_platform" then
-    for i = 1,math.min(#Platforms, 90) do
+    for i = 1,math.min(#SPlatforms.sorted_platforms, 90) do
       local l = i - 1
       local yoff = (l % 10) * 20
       local xoff = math.floor(l / 10) * 50
-      l = Platforms[l].polygon.index
+      l = SPlatforms.sorted_platforms[i].polygon.index
       table.insert(menu,
         { "tradio", "pperm_" .. l, 160 + xoff, 190 + yoff, 50, 20, tostring(l) })
     end
@@ -1932,11 +2013,15 @@ end
 
 SPlatforms = {}
 SPlatforms.sorted_platforms = {}
+SPlatforms.index_lookup = {}
 function SPlatforms.init()
   for plat in Platforms() do
     table.insert(SPlatforms.sorted_platforms, plat)
   end
   table.sort(SPlatforms.sorted_platforms, function(a, b) return a.polygon.index < b.polygon.index end)
+  for i,v in ipairs(SPlatforms.sorted_platforms) do
+    SPlatforms.index_lookup[v.polygon.index] = i
+  end
 end
 function SPlatforms.update()
   local turn = Game.ticks % #Platforms

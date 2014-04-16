@@ -184,7 +184,11 @@ function Triggers.draw()
   if HMode.changed then layout() end
 
   -- keys
-  HMenu.draw_menu("key_" .. HMode.current, true)
+  if HMode.is(HMode.panel) then
+    HMenu.draw_menu("key_" .. HPanel.menu_name(), true)
+  else
+    HMenu.draw_menu("key_" .. HMode.current, true)
+  end
   
   -- teleport notices
   if HMode.is(HMode.teleport) then
@@ -764,14 +768,14 @@ HMenu.menus["key_" .. HMode.attribute] = {
   { "ktab", "key_action", 20, 20, 130, 16, "Choose Texture" },
   { "ktab", nil, 20, 36, 130, 16, "Options" },
   { "ktab", "key_map", 20, 52, 130, 16, "Teleport" } }
-HMenu.menus["key_" .. HMode.panel] = {
+HMenu.menus["key_panel_off"] = {
   { "ktab_bg", nil, 150, 4 + menu_prefs.button_indent, 470, 64 - 2*menu_prefs.button_indent, nil },
   { "kaction", "key_primary", 235, 10, 100, 12, "Select Option" },
   { "kaction", "key_secondary", 235, 22, 100, 12, "Visual Mode" },
-  { "kaction", "key_prev_weapon", 235, 38, 100, 12, "Previous Option" },
-  { "kaction", "key_next_weapon", 235, 50, 100, 12, "Next Option" },
+  { "kaction", "key_prev_weapon", 235, 38, 100, 12, "Previous Type" },
+  { "kaction", "key_next_weapon", 235, 50, 100, 12, "Next Type" },
 --   { "kaction", "key_mic_primary", 475, 10, 100, 12, "Cycle Textures" },
---   { "kaction", "key_mic_secondary", 475, 22, 100, 12, "Cycle Collections" },
+  { "kaction", "key_mic_secondary", 475, 22, 100, 12, "Revert Changes" },
 --   { "kaction", "key_mic_prev_weapon", 475, 38, 100, 12, "Previous Texture" },
 --   { "kaction", "key_mic_next_weapon", 475, 50, 100, 12, "Next Texture" },
   { "klabel", "key_primary", 180, 10, 50, 12, "Trigger 1" },
@@ -779,13 +783,103 @@ HMenu.menus["key_" .. HMode.panel] = {
   { "klabel", "key_prev_weapon", 180, 38, 50, 12, "Prev Weapon" },
   { "klabel", "key_next_weapon", 180, 50, 50, 12, "Next Weapon" },
 --   { "klabel", "key_mic_primary", 400, 10, 70, 12, "Mic + Trigger 1" },
---   { "klabel", "key_mic_secondary", 400, 22, 70, 12, "Mic + Trigger 2" },
+  { "klabel", "key_mic_secondary", 400, 22, 70, 12, "Mic + Trigger 2" },
 --   { "klabel", "key_mic_prev_weapon", 400, 38, 70, 12, "Mic + Prev Weapon" },
 --   { "klabel", "key_mic_next_weapon", 400, 50, 70, 12, "Mic + Next Weapon" },
   { "ktab", nil, 20, 4, 130, 16, "Edit Switch / Panel" },
   { "ktab", "key_action", 20, 20, 130, 16, "Choose Texture" },
   { "ktab", "key_mic", 20, 36, 130, 16, "Options" },
   { "ktab", "key_map", 20, 52, 130, 16, "Teleport" } }
+HMenu.menus["key_panel_plain"] = HMenu.menus["key_panel_off"]
+HMenu.menus["key_panel_terminal"] = {
+  { "ktab_bg", nil, 150, 4 + menu_prefs.button_indent, 470, 64 - 2*menu_prefs.button_indent, nil },
+  { "kaction", "key_primary", 235, 10, 100, 12, "Select Option" },
+  { "kaction", "key_secondary", 235, 22, 100, 12, "Visual Mode" },
+  { "kaction", "key_prev_weapon", 235, 38, 100, 12, "Previous Type" },
+  { "kaction", "key_next_weapon", 235, 50, 100, 12, "Next Type" },
+--   { "kaction", "key_mic_primary", 475, 10, 100, 12, "Cycle Textures" },
+  { "kaction", "key_mic_secondary", 475, 22, 100, 12, "Revert Changes" },
+  { "kaction", "key_mic_prev_weapon", 475, 38, 100, 12, "Previous Script" },
+  { "kaction", "key_mic_next_weapon", 475, 50, 100, 12, "Next Script" },
+  { "klabel", "key_primary", 180, 10, 50, 12, "Trigger 1" },
+  { "klabel", "key_secondary", 180, 22, 50, 12, "Trigger 2" },
+  { "klabel", "key_prev_weapon", 180, 38, 50, 12, "Prev Weapon" },
+  { "klabel", "key_next_weapon", 180, 50, 50, 12, "Next Weapon" },
+--   { "klabel", "key_mic_primary", 400, 10, 70, 12, "Mic + Trigger 1" },
+  { "klabel", "key_mic_secondary", 400, 22, 70, 12, "Mic + Trigger 2" },
+  { "klabel", "key_mic_prev_weapon", 400, 38, 70, 12, "Mic + Prev Weapon" },
+  { "klabel", "key_mic_next_weapon", 400, 50, 70, 12, "Mic + Next Weapon" },
+  { "ktab", nil, 20, 4, 130, 16, "Edit Switch / Panel" },
+  { "ktab", "key_action", 20, 20, 130, 16, "Choose Texture" },
+  { "ktab", "key_mic", 20, 36, 130, 16, "Options" },
+  { "ktab", "key_map", 20, 52, 130, 16, "Teleport" } }
+HMenu.menus["key_panel_light"] = {
+  { "ktab_bg", nil, 150, 4 + menu_prefs.button_indent, 470, 64 - 2*menu_prefs.button_indent, nil },
+  { "kaction", "key_primary", 235, 10, 100, 12, "Select Option" },
+  { "kaction", "key_secondary", 235, 22, 100, 12, "Visual Mode" },
+  { "kaction", "key_prev_weapon", 235, 38, 100, 12, "Previous Type" },
+  { "kaction", "key_next_weapon", 235, 50, 100, 12, "Next Type" },
+--   { "kaction", "key_mic_primary", 475, 10, 100, 12, "Cycle Textures" },
+  { "kaction", "key_mic_secondary", 475, 22, 100, 12, "Revert Changes" },
+  { "kaction", "key_mic_prev_weapon", 475, 38, 100, 12, "Previous Light" },
+  { "kaction", "key_mic_next_weapon", 475, 50, 100, 12, "Next Light" },
+  { "klabel", "key_primary", 180, 10, 50, 12, "Trigger 1" },
+  { "klabel", "key_secondary", 180, 22, 50, 12, "Trigger 2" },
+  { "klabel", "key_prev_weapon", 180, 38, 50, 12, "Prev Weapon" },
+  { "klabel", "key_next_weapon", 180, 50, 50, 12, "Next Weapon" },
+--   { "klabel", "key_mic_primary", 400, 10, 70, 12, "Mic + Trigger 1" },
+  { "klabel", "key_mic_secondary", 400, 22, 70, 12, "Mic + Trigger 2" },
+  { "klabel", "key_mic_prev_weapon", 400, 38, 70, 12, "Mic + Prev Weapon" },
+  { "klabel", "key_mic_next_weapon", 400, 50, 70, 12, "Mic + Next Weapon" },
+  { "ktab", nil, 20, 4, 130, 16, "Edit Switch / Panel" },
+  { "ktab", "key_action", 20, 20, 130, 16, "Choose Texture" },
+  { "ktab", "key_mic", 20, 36, 130, 16, "Options" },
+  { "ktab", "key_map", 20, 52, 130, 16, "Teleport" } }
+HMenu.menus["key_panel_platform"] = {
+  { "ktab_bg", nil, 150, 4 + menu_prefs.button_indent, 470, 64 - 2*menu_prefs.button_indent, nil },
+  { "kaction", "key_primary", 235, 10, 100, 12, "Select Option" },
+  { "kaction", "key_secondary", 235, 22, 100, 12, "Visual Mode" },
+  { "kaction", "key_prev_weapon", 235, 38, 100, 12, "Previous Type" },
+  { "kaction", "key_next_weapon", 235, 50, 100, 12, "Next Type" },
+--   { "kaction", "key_mic_primary", 475, 10, 100, 12, "Cycle Textures" },
+  { "kaction", "key_mic_secondary", 475, 22, 100, 12, "Revert Changes" },
+  { "kaction", "key_mic_prev_weapon", 475, 38, 100, 12, "Previous Platform" },
+  { "kaction", "key_mic_next_weapon", 475, 50, 100, 12, "Next Platform" },
+  { "klabel", "key_primary", 180, 10, 50, 12, "Trigger 1" },
+  { "klabel", "key_secondary", 180, 22, 50, 12, "Trigger 2" },
+  { "klabel", "key_prev_weapon", 180, 38, 50, 12, "Prev Weapon" },
+  { "klabel", "key_next_weapon", 180, 50, 50, 12, "Next Weapon" },
+--   { "klabel", "key_mic_primary", 400, 10, 70, 12, "Mic + Trigger 1" },
+  { "klabel", "key_mic_secondary", 400, 22, 70, 12, "Mic + Trigger 2" },
+  { "klabel", "key_mic_prev_weapon", 400, 38, 70, 12, "Mic + Prev Weapon" },
+  { "klabel", "key_mic_next_weapon", 400, 50, 70, 12, "Mic + Next Weapon" },
+  { "ktab", nil, 20, 4, 130, 16, "Edit Switch / Panel" },
+  { "ktab", "key_action", 20, 20, 130, 16, "Choose Texture" },
+  { "ktab", "key_mic", 20, 36, 130, 16, "Options" },
+  { "ktab", "key_map", 20, 52, 130, 16, "Teleport" } }
+HMenu.menus["key_panel_tag"] = {
+  { "ktab_bg", nil, 150, 4 + menu_prefs.button_indent, 470, 64 - 2*menu_prefs.button_indent, nil },
+  { "kaction", "key_primary", 235, 10, 100, 12, "Select Option" },
+  { "kaction", "key_secondary", 235, 22, 100, 12, "Visual Mode" },
+  { "kaction", "key_prev_weapon", 235, 38, 100, 12, "Previous Type" },
+  { "kaction", "key_next_weapon", 235, 50, 100, 12, "Next Type" },
+--   { "kaction", "key_mic_primary", 475, 10, 100, 12, "Cycle Textures" },
+  { "kaction", "key_mic_secondary", 475, 22, 100, 12, "Revert Changes" },
+  { "kaction", "key_mic_prev_weapon", 475, 38, 100, 12, "Previous Tag" },
+  { "kaction", "key_mic_next_weapon", 475, 50, 100, 12, "Next Tag" },
+  { "klabel", "key_primary", 180, 10, 50, 12, "Trigger 1" },
+  { "klabel", "key_secondary", 180, 22, 50, 12, "Trigger 2" },
+  { "klabel", "key_prev_weapon", 180, 38, 50, 12, "Prev Weapon" },
+  { "klabel", "key_next_weapon", 180, 50, 50, 12, "Next Weapon" },
+--   { "klabel", "key_mic_primary", 400, 10, 70, 12, "Mic + Trigger 1" },
+  { "klabel", "key_mic_secondary", 400, 22, 70, 12, "Mic + Trigger 2" },
+  { "klabel", "key_mic_prev_weapon", 400, 38, 70, 12, "Mic + Prev Weapon" },
+  { "klabel", "key_mic_next_weapon", 400, 50, 70, 12, "Mic + Next Weapon" },
+  { "ktab", nil, 20, 4, 130, 16, "Edit Switch / Panel" },
+  { "ktab", "key_action", 20, 20, 130, 16, "Choose Texture" },
+  { "ktab", "key_mic", 20, 36, 130, 16, "Options" },
+  { "ktab", "key_map", 20, 52, 130, 16, "Teleport" } }
+
 HMenu.inited = {}
 function HMenu.draw_menu(mode, transparent)
   if not HMenu.inited[mode] then HMenu.init_menu(mode) end
