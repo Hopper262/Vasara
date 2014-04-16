@@ -202,7 +202,7 @@ function Triggers.draw()
     HGlobals.fontn:draw_text(HTeleport.poly, xf, yf, { 0, 1, 0, 1 })
     
     if not Screen.map_overlay_active then
-      HGlobals.fonti:draw_text("Please turn on Overlay Map mode in Graphics preferences",
+      HGlobals.fontn:draw_text("Please turn on Overlay Map mode in Graphics preferences",
         Screen.world_rect.x + 10*HGlobals.scale,
         Screen.world_rect.y + Screen.world_rect.height - 2*HGlobals.fheight,
         { 0, 1, 0, 1 })
@@ -309,7 +309,6 @@ function Triggers.resize()
   
   HGlobals.fontb = Fonts.new{file = "dejavu/DejaVuLGCSansCondensed-Bold.ttf", size = 12 * HGlobals.scale}
   HGlobals.fontn = Fonts.new{file = "dejavu/DejaVuLGCSansCondensed-Bold.ttf", size = 9 * HGlobals.scale}
-  HGlobals.fonti = Fonts.new{file = "dejavu/DejaVuLGCSansCondensed-BoldOblique.ttf", size = 9 * HGlobals.scale}
   HGlobals.fontm = Fonts.new{file = "dejavu/DejaVuLGCSansCondensed-Bold.ttf", size = 7 * HGlobals.scale}
   
   HGlobals.fwidth, HGlobals.fheight = HGlobals.fontn:measure_text("  ")
