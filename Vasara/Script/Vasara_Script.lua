@@ -10,8 +10,8 @@ landscapes = { 27, 28, 29, 30 }
 suppress_items = true
 suppress_monsters = true
 
-max_tags = 80     -- max: 80
-max_scripts = 80  -- max: 80
+max_tags = 90     -- max: 90
+max_scripts = 90  -- max: 90
 
 -- highlight selected destination in Teleport mode
 show_teleport_destination = true
@@ -859,8 +859,8 @@ end
 SFreeze = {}
 SFreeze.ranges = {}
 SFreeze.ranges["menu"] = {
-  xsize = 600, ysize = 325,
-  xoff = 20, yoff = 75,
+  xsize = 600, ysize = 320,
+  xoff = 20, yoff = 80,
   xrange = menu_horizontal_range, yrange = menu_vertical_range }
 SFreeze.ranges["drag"] = {
   xsize = 2048*drag_horizontal_limit, ysize = 2048*drag_vertical_limit,
@@ -1314,105 +1314,105 @@ SMenu.menus[SMode.attribute] = {
   { "tradio", "transfer_11", 320, 370, 120, 20, "Fast wander" },
   { "label", nil, 460, 250, 160, 20, "Preview" } }
 SMenu.menus["panel_off"] = {
-  { "tab_bg", nil, 150, 75, 470, 290, nil },
-  { "tab", "ptype_5", 20, 85, 130, 20, "Light switch" },
-  { "tab", "ptype_6", 20, 105, 130, 20, "Platform switch" },
-  { "tab", "ptype_7", 20, 125, 130, 20, "Tag switch" },
-  { "tab", "ptype_10", 20, 145, 130, 20, "Chip insertion" },
-  { "tab", "ptype_11", 20, 165, 130, 20, "Wires" },
-  { "tab", "ptype_1", 20, 195, 130, 20, "Oxygen" },
-  { "tab", "ptype_2", 20, 215, 130, 20, "1X health" },
-  { "tab", "ptype_3", 20, 235, 130, 20, "2X health" },
-  { "tab", "ptype_4", 20, 255, 130, 20, "3X health" },
-  { "tab", "ptype_8", 20, 285, 130, 20, "Pattern buffer" },
-  { "tab", "ptype_9", 20, 305, 130, 20, "Terminal" },
-  { "tab", "ptype_0", 20, 335, 130, 20, "Inactive" } }
+  { "tab_bg", nil, 150, 80, 470, 320, nil },
+  { "tab", "ptype_5", 20, 90, 130, 20, "Light switch" },
+  { "tab", "ptype_6", 20, 110, 130, 20, "Platform switch" },
+  { "tab", "ptype_7", 20, 130, 130, 20, "Tag switch" },
+  { "tab", "ptype_10", 20, 150, 130, 20, "Chip insertion" },
+  { "tab", "ptype_11", 20, 170, 130, 20, "Wires" },
+  { "tab", "ptype_1", 20, 200, 130, 20, "Oxygen" },
+  { "tab", "ptype_2", 20, 220, 130, 20, "1X health" },
+  { "tab", "ptype_3", 20, 240, 130, 20, "2X health" },
+  { "tab", "ptype_4", 20, 260, 130, 20, "3X health" },
+  { "tab", "ptype_8", 20, 290, 130, 20, "Pattern buffer" },
+  { "tab", "ptype_9", 20, 310, 130, 20, "Terminal" },
+  { "tab", "ptype_0", 20, 340, 130, 20, "Inactive" } }
 SMenu.menus["panel_plain"] = {
-  { "tab_bg", nil, 150, 75, 470, 290, nil },
-  { "tab", "ptype_5", 20, 85, 130, 20, "Light switch" },
-  { "tab", "ptype_6", 20, 105, 130, 20, "Platform switch" },
-  { "tab", "ptype_7", 20, 125, 130, 20, "Tag switch" },
-  { "tab", "ptype_10", 20, 145, 130, 20, "Chip insertion" },
-  { "tab", "ptype_11", 20, 165, 130, 20, "Wires" },
-  { "tab", "ptype_1", 20, 195, 130, 20, "Oxygen" },
-  { "tab", "ptype_2", 20, 215, 130, 20, "1X health" },
-  { "tab", "ptype_3", 20, 235, 130, 20, "2X health" },
-  { "tab", "ptype_4", 20, 255, 130, 20, "3X health" },
-  { "tab", "ptype_8", 20, 285, 130, 20, "Pattern buffer" },
-  { "tab", "ptype_9", 20, 305, 130, 20, "Terminal" },
-  { "tab", "ptype_0", 20, 335, 130, 20, "Inactive" },
-  { "tcheckbox", "panel_light", 200, 85, 125, 20, "Light dependent" } }
+  { "tab_bg", nil, 150, 80, 470, 320, nil },
+  { "tab", "ptype_5", 20, 90, 130, 20, "Light switch" },
+  { "tab", "ptype_6", 20, 110, 130, 20, "Platform switch" },
+  { "tab", "ptype_7", 20, 130, 130, 20, "Tag switch" },
+  { "tab", "ptype_10", 20, 150, 130, 20, "Chip insertion" },
+  { "tab", "ptype_11", 20, 170, 130, 20, "Wires" },
+  { "tab", "ptype_1", 20, 200, 130, 20, "Oxygen" },
+  { "tab", "ptype_2", 20, 220, 130, 20, "1X health" },
+  { "tab", "ptype_3", 20, 240, 130, 20, "2X health" },
+  { "tab", "ptype_4", 20, 260, 130, 20, "3X health" },
+  { "tab", "ptype_8", 20, 290, 130, 20, "Pattern buffer" },
+  { "tab", "ptype_9", 20, 310, 130, 20, "Terminal" },
+  { "tab", "ptype_0", 20, 340, 130, 20, "Inactive" },
+  { "tcheckbox", "panel_light", 160, 90, 150, 20, "Light dependent" } }
 SMenu.menus["panel_terminal"] = {
-  { "tab_bg", nil, 150, 75, 470, 290, nil },
-  { "tab", "ptype_5", 20, 85, 130, 20, "Light switch" },
-  { "tab", "ptype_6", 20, 105, 130, 20, "Platform switch" },
-  { "tab", "ptype_7", 20, 125, 130, 20, "Tag switch" },
-  { "tab", "ptype_10", 20, 145, 130, 20, "Chip insertion" },
-  { "tab", "ptype_11", 20, 165, 130, 20, "Wires" },
-  { "tab", "ptype_1", 20, 195, 130, 20, "Oxygen" },
-  { "tab", "ptype_2", 20, 215, 130, 20, "1X health" },
-  { "tab", "ptype_3", 20, 235, 130, 20, "2X health" },
-  { "tab", "ptype_4", 20, 255, 130, 20, "3X health" },
-  { "tab", "ptype_8", 20, 285, 130, 20, "Pattern buffer" },
-  { "tab", "ptype_9", 20, 305, 130, 20, "Terminal" },
-  { "tab", "ptype_0", 20, 335, 130, 20, "Inactive" },
-  { "tcheckbox", "panel_light", 200, 85, 155, 20, "Light dependent" },
-  { "label", nil, 200+18, 125, 155, 20, "Terminal script" } }
+  { "tab_bg", nil, 150, 80, 470, 320, nil },
+  { "tab", "ptype_5", 20, 90, 130, 20, "Light switch" },
+  { "tab", "ptype_6", 20, 110, 130, 20, "Platform switch" },
+  { "tab", "ptype_7", 20, 130, 130, 20, "Tag switch" },
+  { "tab", "ptype_10", 20, 150, 130, 20, "Chip insertion" },
+  { "tab", "ptype_11", 20, 170, 130, 20, "Wires" },
+  { "tab", "ptype_1", 20, 200, 130, 20, "Oxygen" },
+  { "tab", "ptype_2", 20, 220, 130, 20, "1X health" },
+  { "tab", "ptype_3", 20, 240, 130, 20, "2X health" },
+  { "tab", "ptype_4", 20, 260, 130, 20, "3X health" },
+  { "tab", "ptype_8", 20, 290, 130, 20, "Pattern buffer" },
+  { "tab", "ptype_9", 20, 310, 130, 20, "Terminal" },
+  { "tab", "ptype_0", 20, 340, 130, 20, "Inactive" },
+  { "tcheckbox", "panel_light", 160, 90, 150, 20, "Light dependent" },
+  { "label", nil, 160+18, 130, 150, 20, "Terminal script" } }
  SMenu.menus["panel_light"] = {
-  { "tab_bg", nil, 150, 75, 470, 290, nil },
-  { "tab", "ptype_5", 20, 85, 130, 20, "Light switch" },
-  { "tab", "ptype_6", 20, 105, 130, 20, "Platform switch" },
-  { "tab", "ptype_7", 20, 125, 130, 20, "Tag switch" },
-  { "tab", "ptype_10", 20, 145, 130, 20, "Chip insertion" },
-  { "tab", "ptype_11", 20, 165, 130, 20, "Wires" },
-  { "tab", "ptype_1", 20, 195, 130, 20, "Oxygen" },
-  { "tab", "ptype_2", 20, 215, 130, 20, "1X health" },
-  { "tab", "ptype_3", 20, 235, 130, 20, "2X health" },
-  { "tab", "ptype_4", 20, 255, 130, 20, "3X health" },
-  { "tab", "ptype_8", 20, 285, 130, 20, "Pattern buffer" },
-  { "tab", "ptype_9", 20, 305, 130, 20, "Terminal" },
-  { "tab", "ptype_0", 20, 335, 130, 20, "Inactive" },
-  { "tcheckbox", "panel_light", 200, 85, 155, 20, "Light dependent" },
-  { "tcheckbox", "panel_weapon", 200, 105, 155, 20, "Only toggled by weapons" },
-  { "tcheckbox", "panel_repair", 360, 85, 155, 20, "Repair switch" },
-  { "label", nil, 200+18, 125, 155, 20, "Light" } }
+  { "tab_bg", nil, 150, 80, 470, 320, nil },
+  { "tab", "ptype_5", 20, 90, 130, 20, "Light switch" },
+  { "tab", "ptype_6", 20, 110, 130, 20, "Platform switch" },
+  { "tab", "ptype_7", 20, 130, 130, 20, "Tag switch" },
+  { "tab", "ptype_10", 20, 150, 130, 20, "Chip insertion" },
+  { "tab", "ptype_11", 20, 170, 130, 20, "Wires" },
+  { "tab", "ptype_1", 20, 200, 130, 20, "Oxygen" },
+  { "tab", "ptype_2", 20, 220, 130, 20, "1X health" },
+  { "tab", "ptype_3", 20, 240, 130, 20, "2X health" },
+  { "tab", "ptype_4", 20, 260, 130, 20, "3X health" },
+  { "tab", "ptype_8", 20, 290, 130, 20, "Pattern buffer" },
+  { "tab", "ptype_9", 20, 310, 130, 20, "Terminal" },
+  { "tab", "ptype_0", 20, 340, 130, 20, "Inactive" },
+  { "tcheckbox", "panel_light", 160, 90, 150, 20, "Light dependent" },
+  { "tcheckbox", "panel_weapon", 160, 110, 150, 20, "Only toggled by weapons" },
+  { "tcheckbox", "panel_repair", 160, 130, 150, 20, "Repair switch" },
+  { "label", nil, 160+18, 170, 150, 20, "Light" } }
  SMenu.menus["panel_platform"] = {
-  { "tab_bg", nil, 150, 75, 470, 290, nil },
-  { "tab", "ptype_5", 20, 85, 130, 20, "Light switch" },
-  { "tab", "ptype_6", 20, 105, 130, 20, "Platform switch" },
-  { "tab", "ptype_7", 20, 125, 130, 20, "Tag switch" },
-  { "tab", "ptype_10", 20, 145, 130, 20, "Chip insertion" },
-  { "tab", "ptype_11", 20, 165, 130, 20, "Wires" },
-  { "tab", "ptype_1", 20, 195, 130, 20, "Oxygen" },
-  { "tab", "ptype_2", 20, 215, 130, 20, "1X health" },
-  { "tab", "ptype_3", 20, 235, 130, 20, "2X health" },
-  { "tab", "ptype_4", 20, 255, 130, 20, "3X health" },
-  { "tab", "ptype_8", 20, 285, 130, 20, "Pattern buffer" },
-  { "tab", "ptype_9", 20, 305, 130, 20, "Terminal" },
-  { "tab", "ptype_0", 20, 335, 130, 20, "Inactive" },
-  { "tcheckbox", "panel_light", 200, 85, 155, 20, "Light dependent" },
-  { "tcheckbox", "panel_weapon", 200, 105, 155, 20, "Only toggled by weapons" },
-  { "tcheckbox", "panel_repair", 360, 85, 155, 20, "Repair switch" },
-  { "label", nil, 200+18, 125, 155, 20, "Platform" } }
+  { "tab_bg", nil, 150, 80, 470, 320, nil },
+  { "tab", "ptype_5", 20, 90, 130, 20, "Light switch" },
+  { "tab", "ptype_6", 20, 110, 130, 20, "Platform switch" },
+  { "tab", "ptype_7", 20, 130, 130, 20, "Tag switch" },
+  { "tab", "ptype_10", 20, 150, 130, 20, "Chip insertion" },
+  { "tab", "ptype_11", 20, 170, 130, 20, "Wires" },
+  { "tab", "ptype_1", 20, 200, 130, 20, "Oxygen" },
+  { "tab", "ptype_2", 20, 220, 130, 20, "1X health" },
+  { "tab", "ptype_3", 20, 240, 130, 20, "2X health" },
+  { "tab", "ptype_4", 20, 260, 130, 20, "3X health" },
+  { "tab", "ptype_8", 20, 290, 130, 20, "Pattern buffer" },
+  { "tab", "ptype_9", 20, 310, 130, 20, "Terminal" },
+  { "tab", "ptype_0", 20, 340, 130, 20, "Inactive" },
+  { "tcheckbox", "panel_light", 160, 90, 150, 20, "Light dependent" },
+  { "tcheckbox", "panel_weapon", 160, 110, 150, 20, "Only toggled by weapons" },
+  { "tcheckbox", "panel_repair", 160, 130, 150, 20, "Repair switch" },
+  { "label", nil, 160+18, 170, 150, 20, "Platform" } }
  SMenu.menus["panel_tag"] = {
-  { "tab_bg", nil, 150, 75, 470, 290, nil },
-  { "tab", "ptype_5", 20, 85, 130, 20, "Light switch" },
-  { "tab", "ptype_6", 20, 105, 130, 20, "Platform switch" },
-  { "tab", "ptype_7", 20, 125, 130, 20, "Tag switch" },
-  { "tab", "ptype_10", 20, 145, 130, 20, "Chip insertion" },
-  { "tab", "ptype_11", 20, 165, 130, 20, "Wires" },
-  { "tab", "ptype_1", 20, 195, 130, 20, "Oxygen" },
-  { "tab", "ptype_2", 20, 215, 130, 20, "1X health" },
-  { "tab", "ptype_3", 20, 235, 130, 20, "2X health" },
-  { "tab", "ptype_4", 20, 255, 130, 20, "3X health" },
-  { "tab", "ptype_8", 20, 285, 130, 20, "Pattern buffer" },
-  { "tab", "ptype_9", 20, 305, 130, 20, "Terminal" },
-  { "tab", "ptype_0", 20, 335, 130, 20, "Inactive" },
-  { "tcheckbox", "panel_light", 200, 85, 155, 20, "Light dependent" },
-  { "tcheckbox", "panel_weapon", 200, 105, 155, 20, "Only toggled by weapons" },
-  { "tcheckbox", "panel_repair", 360, 85, 155, 20, "Repair switch" },
-  { "tcheckbox", "panel_active", 360, 105, 155, 20, "Tag is active" },
-  { "label", nil, 200+18, 125, 155, 20, "Tag" } }
+  { "tab_bg", nil, 150, 80, 470, 320, nil },
+  { "tab", "ptype_5", 20, 90, 130, 20, "Light switch" },
+  { "tab", "ptype_6", 20, 110, 130, 20, "Platform switch" },
+  { "tab", "ptype_7", 20, 130, 130, 20, "Tag switch" },
+  { "tab", "ptype_10", 20, 150, 130, 20, "Chip insertion" },
+  { "tab", "ptype_11", 20, 170, 130, 20, "Wires" },
+  { "tab", "ptype_1", 20, 200, 130, 20, "Oxygen" },
+  { "tab", "ptype_2", 20, 220, 130, 20, "1X health" },
+  { "tab", "ptype_3", 20, 240, 130, 20, "2X health" },
+  { "tab", "ptype_4", 20, 260, 130, 20, "3X health" },
+  { "tab", "ptype_8", 20, 290, 130, 20, "Pattern buffer" },
+  { "tab", "ptype_9", 20, 310, 130, 20, "Terminal" },
+  { "tab", "ptype_0", 20, 340, 130, 20, "Inactive" },
+  { "tcheckbox", "panel_light", 160, 90, 150, 20, "Light dependent" },
+  { "tcheckbox", "panel_weapon", 160, 110, 150, 20, "Only toggled by weapons" },
+  { "tcheckbox", "panel_repair", 160, 130, 150, 20, "Repair switch" },
+  { "tcheckbox", "panel_active", 210, 170, 100, 20, "Tag is active" },
+  { "label", nil, 160+18, 170, 50-18, 20, "Tag" } }
 SMenu.inited = {}
 SMenu.inited[SMode.attribute] = false
 SMenu.buttons = {}
@@ -1445,39 +1445,39 @@ function SMenu.init_menu(mode)
         { "light", "light_" .. l, 200 + xoff, 105 + yoff, 50, 20, tostring(l) })
     end
   elseif mode == "panel_light" then
-    for i = 1,math.min(#Lights, 56) do
+    for i = 1,math.min(#Lights, 63) do
       local l = i - 1
       local yoff = (l % 7) * 20
       local xoff = math.floor(l / 7) * 50
       table.insert(menu,
-        { "tlight", "pperm_" .. l, 200 + xoff, 145 + yoff, 50, 20, tostring(l) })
+        { "tlight", "pperm_" .. l, 160 + xoff, 190 + yoff, 50, 20, tostring(l) })
     end
   elseif mode == "panel_terminal" then
     local num_scripts = #Terminals
     if num_scripts < 1 then num_scripts = max_scripts end
-    for i = 1,math.min(num_scripts, 80) do
+    for i = 1,math.min(num_scripts, 90) do
       local l = i - 1
       local yoff = (l % 10) * 20
       local xoff = math.floor(l / 10) * 50
       table.insert(menu,
-        { "tradio", "pperm_" .. l, 200 + xoff, 145 + yoff, 50, 20, tostring(l) })
+        { "tradio", "pperm_" .. l, 160 + xoff, 150 + yoff, 50, 20, tostring(l) })
     end
   elseif mode == "panel_tag" then
-    for i = 1,math.min(max_tags, 80) do
+    for i = 1,math.min(max_tags, 90) do
       local l = i - 1
       local yoff = (l % 10) * 20
       local xoff = math.floor(l / 10) * 50
       table.insert(menu,
-        { "tradio", "pperm_" .. l, 200 + xoff, 145 + yoff, 50, 20, tostring(l) })
+        { "tradio", "pperm_" .. l, 160 + xoff, 190 + yoff, 50, 20, tostring(l) })
     end
   elseif mode == "panel_platform" then
-    for i = 1,math.min(#Platforms, 80) do
+    for i = 1,math.min(#Platforms, 90) do
       local l = i - 1
       local yoff = (l % 10) * 20
       local xoff = math.floor(l / 10) * 50
       l = Platforms[l].polygon.index
       table.insert(menu,
-        { "tradio", "pperm_" .. l, 200 + xoff, 145 + yoff, 50, 20, tostring(l) })
+        { "tradio", "pperm_" .. l, 160 + xoff, 190 + yoff, 50, 20, tostring(l) })
     end
   end
   
