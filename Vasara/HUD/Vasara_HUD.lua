@@ -442,7 +442,9 @@ function HApply.update()
   HApply.current_snap = Player.texture_palette.slots[45].texture_index
 
   local lbls = HMenu.menus["key_" .. HMode.apply]
+  local lbls2 = HMenu.menus["key_" .. HMode.attribute]
   
+  lbls2[5][7] = "Apply Light Only"
   if HApply.down(HApply.use_texture) then
     if HApply.down(HApply.use_light) then
       lbls[2][7] = "Apply Light + Texture"
@@ -451,10 +453,22 @@ function HApply.update()
     end
   elseif HApply.down(HApply.use_light) then
     lbls[2][7] = "Apply Light"
+    lbls2[5][7] = "Apply Texture Only"
   else
     lbls[2][7] = "Move Texture"
   end
-
+  
+  if HApply.down(HApply.align) then
+    lbls2[8][7] = "Ignore Adjacent"
+  else
+    lbls2[8][7] = "Align Adjacent"
+  end
+  if HApply.down(HApply.transparent) then
+    lbls2[9][7] = "Ignore Transparent Sides"
+  else
+    lbls2[9][7] = "Edit Transparent Sides"
+  end
+  
 end
 function HApply.down(k)
   return hasbit(HApply.bitfield, k)
@@ -732,20 +746,20 @@ HMenu.menus["key_" .. HMode.attribute] = {
   { "ktab_bg", nil, 150, 4 + menu_prefs.button_indent, 470, 64 - 2*menu_prefs.button_indent, nil },
   { "kaction", "key_primary", 235, 10, 100, 12, "Select Option" },
   { "kaction", "key_secondary", 235, 22, 100, 12, "Visual Mode" },
-  { "kaction", "key_prev_weapon", 235, 38, 100, 12, "Previous Option" },
-  { "kaction", "key_next_weapon", 235, 50, 100, 12, "Next Option" },
---   { "kaction", "key_mic_primary", 475, 10, 100, 12, "Cycle Textures" },
---   { "kaction", "key_mic_secondary", 475, 22, 100, 12, "Cycle Collections" },
---   { "kaction", "key_mic_prev_weapon", 475, 38, 100, 12, "Previous Texture" },
---   { "kaction", "key_mic_next_weapon", 475, 50, 100, 12, "Next Texture" },
+  { "kaction", "key_prev_weapon", 235, 38, 100, 12, "Apply Light + Texture" },
+  { "kaction", "key_next_weapon", 235, 50, 100, 12, "Apply Light Only" },
+  { "kaction", "key_mic_primary", 475, 10, 100, 12, "Default Settings" },
+  { "kaction", "key_mic_secondary", 475, 22, 100, 12, "Revert Changes" },
+  { "kaction", "key_mic_prev_weapon", 475, 38, 100, 12, "Ignore Adjacent" },
+  { "kaction", "key_mic_next_weapon", 475, 50, 100, 12, "Edit Transparent" },
   { "klabel", "key_primary", 180, 10, 50, 12, "Trigger 1" },
   { "klabel", "key_secondary", 180, 22, 50, 12, "Trigger 2" },
   { "klabel", "key_prev_weapon", 180, 38, 50, 12, "Prev Weapon" },
   { "klabel", "key_next_weapon", 180, 50, 50, 12, "Next Weapon" },
---   { "klabel", "key_mic_primary", 400, 10, 70, 12, "Mic + Trigger 1" },
---   { "klabel", "key_mic_secondary", 400, 22, 70, 12, "Mic + Trigger 2" },
---   { "klabel", "key_mic_prev_weapon", 400, 38, 70, 12, "Mic + Prev Weapon" },
---   { "klabel", "key_mic_next_weapon", 400, 50, 70, 12, "Mic + Next Weapon" },
+  { "klabel", "key_mic_primary", 400, 10, 70, 12, "Mic + Trigger 1" },
+  { "klabel", "key_mic_secondary", 400, 22, 70, 12, "Mic + Trigger 2" },
+  { "klabel", "key_mic_prev_weapon", 400, 38, 70, 12, "Mic + Prev Weapon" },
+  { "klabel", "key_mic_next_weapon", 400, 50, 70, 12, "Mic + Next Weapon" },
   { "ktab", "key_mic", 20, 4, 130, 16, "Visual Mode" },
   { "ktab", "key_action", 20, 20, 130, 16, "Choose Texture" },
   { "ktab", nil, 20, 36, 130, 16, "Options" },

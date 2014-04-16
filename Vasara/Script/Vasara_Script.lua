@@ -264,10 +264,16 @@ function SMode.update()
       p._menu_item = 0
       local was_menu = SMode.menu_mode(p._prev_mode)
       
+      -- special cleanup for exiting modes
       if p._prev_mode == SMode.teleport then
         UTeleport.remove_highlight(p)
       elseif p._prev_mode == SMode.panel then
         SPanel.stop_editing(p)
+      end
+      
+      -- special setup for entering modes
+      if p._mode == SMode.attribute then
+        SMode.start_attribute(p)
       end
       
       if in_menu then
@@ -659,16 +665,69 @@ function SMode.handle_choose(p)
   end
 
 end
+function SMode.start_attribute(p)
+  p._apply_saved = {}
+  p._apply_saved.light = p._apply.light
+  p._apply_saved.texture = p._apply.texture
+  p._apply_saved.align = p._apply.align
+  p._apply_saved.transparent = p._apply.transparent
+  p._apply_saved.edit_panels = p._apply.edit_panels
+  p._apply_saved.quantize = p._quantize
+  p._apply_saved.transfer_mode = p._transfer_mode
+  p._apply_saved.cur_light = p._light
+end
+function SMode.revert_attribute(p)
+  p._apply.light = p._apply_saved.light
+  p._apply.texture = p._apply_saved.texture
+  p._apply.align = p._apply_saved.align
+  p._apply.transparent = p._apply_saved.transparent
+  p._apply.edit_panels = p._apply_saved.edit_panels
+  p._quantize = p._apply_saved.quantize
+  p._transfer_mode = p._apply_saved.transfer_mode
+  p._light = p._apply_saved.cur_light
+end
+function SMode.default_attribute(p)
+  p._apply.light = true
+  p._apply.texture = true
+  p._apply.align = true
+  p._apply.transparent = false
+  p._apply.edit_panels = true
+  p._quantize = 0
+  p._transfer_mode = 0
+  p._light = 0
+end
 function SMode.handle_attribute(p)
-  if p._keys.prev_weapon.pressed then
-    SMenu.highlight_item(p, SMode.attribute, -1)
-    SMenu.point_at_item(p, SMode.attribute, p._menu_item)
+  if p._keys.mic.down then
+    if p._keys.prev_weapon.pressed then
+      p._apply.align = not p._apply.align
+    end
+    if p._keys.next_weapon.pressed then
+      p._apply.transparent = not p._apply.transparent
+    end
+    if p._keys.primary.released then
+      SMode.default_attribute(p)
+    end
+    if p._keys.secondary.released then
+      SMode.revert_attribute(p)
+    end
+  else
+    if p._keys.prev_weapon.pressed then
+      p._apply.light = true
+      p._apply.texture = true
+    end
+    if p._keys.next_weapon.pressed then
+      if p._apply.light and (not p._apply.texture) then
+        p._apply.light = false
+        p._apply.texture = true
+      else
+        p._apply.light = true
+        p._apply.texture = false
+      end
+    end
   end
-  if p._keys.next_weapon.pressed then
-    SMenu.highlight_item(p, SMode.attribute, 1)
-    SMenu.point_at_item(p, SMode.attribute, p._menu_item)
-  end
-  if p._keys.primary.released then
+  
+  -- handle menu
+  if (not p._keys.mic.down) and p._keys.primary.released then
     local name = SMenu.selection(p, SMode.attribute)
     if name == nil then return end
     
