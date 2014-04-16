@@ -1247,7 +1247,7 @@ function HCollections.init()
   local cbuttons = {}
   if #menu_colls > 0 then
     local n = #menu_colls
-    local w = math.floor(600 / n)
+    local w = 600 / n
     
     local x = 20
     local y = 380
