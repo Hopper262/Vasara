@@ -313,6 +313,9 @@ function Triggers.resize()
   
   HGlobals.fwidth, HGlobals.fheight = HGlobals.fontn:measure_text("  ")
   HGlobals.bwidth, HGlobals.bheight = HGlobals.fontb:measure_text("  ")
+  HGlobals.mwidth, HGlobals.mheight = HGlobals.fontm:measure_text("  ")
+  HGlobals.fnoff = 0 - HGlobals.fheight/2
+  HGlobals.fmoff = 0 + HGlobals.fheight/2 - HGlobals.mheight
   
   for _, i in pairs(imgs) do
     rescale(i, HGlobals.scale / 3)
@@ -901,18 +904,18 @@ function HMenu.draw_menu(mode, transparent)
     
     if item[1] == "label" then
       HGlobals.fontn:draw_text(item[7],
-                               math.floor(x), math.floor(y + h/2 - HGlobals.fheight/2),
+                               math.floor(x), math.floor(y + h/2 + HGlobals.fnoff),
                                colors.menu_label)
     elseif item[1] == "klabel" then
-      local fw, fh = HGlobals.fontn:measure_text(item[7])
+      local fw, fh = HGlobals.fontm:measure_text(item[7])
       local state = HMenu.button_state(item[2])
-      HGlobals.fontn:draw_text(item[7],
-                               math.floor(x + w - fw), math.floor(y + h/2 - HGlobals.fheight/2),
+      HGlobals.fontm:draw_text(item[7],
+                               math.floor(x + w - fw), math.floor(y + h/2 + HGlobals.fmoff),
                                colors.commands[state].label)
     elseif item[1] == "kaction" then
       local state = HMenu.button_state(item[2])
       HGlobals.fontn:draw_text(item[7],
-                               math.floor(x), math.floor(y + h/2 - HGlobals.fheight/2),
+                               math.floor(x), math.floor(y + h/2 + HGlobals.fnoff),
                                colors.commands[state].key)
     elseif item[1] == "ktab_bg" then
       Screen.fill_rect(x, y, w, h, colors.ktab.background)
@@ -922,7 +925,7 @@ function HMenu.draw_menu(mode, transparent)
       if item[2] ~= nil then
         state = HMenu.button_state(item[2])
         if item[2] == "key_action" then
-          label = "Act"
+          label = "Action"
           if state == "active" then state = "enabled" end
         elseif item[2] == "key_map" then
           label = "Map"
@@ -938,14 +941,14 @@ function HMenu.draw_menu(mode, transparent)
                        h - 2*menu_prefs.button_indent*u,
                           colors.ktab[state].background)
       HGlobals.fontn:draw_text(item[7],
-                               math.floor(x + 30*u),
-                               math.floor(y + h/2 - HGlobals.fheight/2),
+                               math.floor(x + 35*u),
+                               math.floor(y + h/2 + HGlobals.fnoff),
                                colors.ktab[state].text)
       if label then
-        local fw, fh = HGlobals.fontn:measure_text(label)
-        HGlobals.fontn:draw_text(label,
-                                 math.floor(x + 25*u - fw),
-                                 math.floor(y + h/2 - fh/2),
+        local fw, fh = HGlobals.fontm:measure_text(label)
+        HGlobals.fontm:draw_text(label,
+                                 math.floor(x + 30*u - fw),
+                                 math.floor(y + h/2 + HGlobals.fmoff),
                                  colors.ktab[state].label)
       end
     elseif item[1] == "tab_bg" then
@@ -960,7 +963,7 @@ function HMenu.draw_menu(mode, transparent)
                           colors.tab[state].background)
       HGlobals.fontn:draw_text(item[7],
                                math.floor(x + 7*u),
-                               math.floor(y + h/2 - HGlobals.fheight/2),
+                               math.floor(y + h/2 + HGlobals.fnoff),
                                colors.tab[state].text)
     elseif item[1] == "texture" or item[1] == "atexture" or item[1] == "dtexture" then
       local cc, ct = string.match(item[2], "(%d+)_(%d+)")
@@ -1156,7 +1159,7 @@ function HMenu.draw_button_text(item, state, xoff)
 
   HGlobals.fontn:draw_text(item[7],
                            math.floor(x + xoff*u),
-                           math.floor(y + h/2 - HGlobals.fheight/2),
+                           math.floor(y + h/2 + HGlobals.fnoff),
                            c.text)
 end
 
