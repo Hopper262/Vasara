@@ -16,11 +16,11 @@ max_scripts = 90  -- max: 90
 -- highlight selected destination in Teleport mode
 show_teleport_destination = true
 
--- mouse sensitivity: degrees of movement to get from center to edge
-menu_vertical_range = 30
-menu_horizontal_range = 70
-drag_vertical_range = 80
-drag_horizontal_range = 120
+-- cursor speed settings: larger numbers mean a slower mouse
+menu_vertical_range = 30      -- default: 30
+menu_horizontal_range = 70    -- default: 70
+drag_vertical_range = 80      -- default: 80
+drag_horizontal_range = 120   -- default: 120
 
 -- how far you can drag a texture before it stops moving (in World Units)
 drag_vertical_limit = 1
