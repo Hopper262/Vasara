@@ -606,7 +606,6 @@ function SMode.handle_choose(p)
         if tex >= info.offset and tex < (info.offset + info.count) then
           local ct = tex - info.offset
           SCollections.set(p, collection, ct)
-          SMenu.point_at_name(p, "choose_0", "choose_" .. collection .. "_" .. ct)
           break
         end
       end
@@ -615,7 +614,6 @@ function SMode.handle_choose(p)
       local bct = Collections[cur].bitmap_count
       local ct = (tex + diff) % bct
       SCollections.set(p, cur, ct)
-      SMenu.point_at_name(p, "choose_" .. cur, "choose_" .. cur .. "_" .. ct)
     end
   end
   
@@ -1555,9 +1553,6 @@ SMenu.menus["panel_terminal"] = {
   { "tcheckbox", "panel_active", 210, 170, 100, 20, "Tag is active" },
   { "label", nil, 160+5, 170, 50-18, 20, "Tag" } }
 SMenu.inited = {}
-SMenu.inited[SMode.attribute] = false
-SMenu.buttons = {}
-SMenu.buttons[SMode.attribute] = {}
 function SMenu.selection(p, mode)
   if not SMenu.inited[mode] then SMenu.init_menu(mode) end
   local m = SMenu.menus[mode]  
@@ -1634,55 +1629,8 @@ function SMenu.init_menu(mode)
     end
   end
   
-  local blist = SMenu.buttons[mode]
-  if blist == nil then
-    SMenu.buttons[mode] = {}
-    blist = SMenu.buttons[mode]
-  end
-  for idx, item in ipairs(menu) do
-    if SMenu.clickable(item[1]) then
-      table.insert(blist, idx)
-    end
-  end
   SMenu.inited[mode] = true
 end
-function SMenu.highlight_item(p, mode, inc)
-  if not SMenu.inited[mode] then SMenu.init_menu(mode) end
-  local bm = SMenu.buttons[mode]
-  
-  if p._menu_button == nil then
-    if inc < 0 then
-      p._menu_button = #bm
-    else
-      p._menu_button = 1
-    end
-  else
-    p._menu_button = ((p._menu_button - 1 + inc) % #bm) + 1
-  end
-  p._menu_item = bm[p._menu_button]
-end
-function SMenu.point_at_item(p, mode, idx)
-  if idx < 1 then return end
-  if not SMenu.inited[mode] then SMenu.init_menu(mode) end
-  local m = SMenu.menus[mode]
-  if idx > #m then return end
-  local item = m[idx]
-  local x = item[3] + math.floor(item[5]/2)
-  local y = item[4] + math.floor(item[6]/2)
-  
-  SFreeze.set_coord(p, x, y)
-end
-function SMenu.index_for_name(mode, name)
-  if not SMenu.inited[mode] then SMenu.init_menu(mode) end
-  local m = SMenu.menus[mode]
-  for i,v in ipairs(m) do
-    if v[2] == name then return i end
-  end
-  return -1
-end
-function SMenu.point_at_name(p, mode, name)
-  SMenu.point_at_item(p, mode, SMenu.index_for_name(mode, name))
-end  
 function SMenu.clickable(item_type)
   return item_type == "button" or item_type == "checkbox" or item_type == "radio" or item_type == "texture" or item_type == "light" or item_type == "dradio" or item_type == "dbutton" or item_type == "acheckbox" or item_type == "tab" or item_type == "tradio" or item_type == "tcheckbox" or item_type == "tlight"
 end
