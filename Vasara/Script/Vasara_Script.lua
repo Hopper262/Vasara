@@ -1287,32 +1287,33 @@ SMenu = {}
 SMenu.menus = {}
 SMenu.menus[SMode.attribute] = {
   { "tab_bg", nil, 20, 80, 600, 320, nil },
-  { "label", nil, 30+18, 85, 155-18, 20, "Attributes" },
+  { "label", nil, 30+5, 85, 155, 20, "Attributes" },
   { "tcheckbox", "apply_light", 30, 105, 155, 20, "Apply light" },
   { "tcheckbox", "apply_tex", 30, 125, 155, 20, "Apply texture" },
   { "tcheckbox", "apply_align", 30, 145, 155, 20, "Align adjacent" },
   { "tcheckbox", "apply_edit", 30, 165, 155, 20, "Edit switches and panels" },
   { "tcheckbox", "apply_xparent", 30, 185, 155, 20, "Edit transparent sides" },
-  { "label", "nil", 30+18, 250, 155-18, 20, "Snap to grid" },
+  { "label", "nil", 30+5, 250, 155, 20, "Snap to grid" },
   { "tradio", "snap_0", 30, 270, 155, 20, "Off" },
   { "tradio", "snap_1", 30, 290, 155, 20, "1/4 WU" },
   { "tradio", "snap_2", 30, 310, 155, 20, "1/5 WU" },
   { "tradio", "snap_3", 30, 330, 155, 20, "1/8 WU" },
-  { "label", nil, 200+18, 85, 240-18, 20, "Light" },
-  { "label", nil, 200+18, 250, 240-18, 20, "Texture mode" },
-  { "tradio", "transfer_0", 200, 270, 120, 20, "Normal" },
-  { "tradio", "transfer_1", 200, 290, 120, 20, "Pulsate" },
-  { "tradio", "transfer_2", 200, 310, 120, 20, "Wobble" },
-  { "tradio", "transfer_6", 200, 330, 120, 20, "Horizontal slide" },
-  { "tradio", "transfer_8", 200, 350, 120, 20, "Vertical slide" },
-  { "tradio", "transfer_10", 200, 370, 120, 20, "Wander" },
-  { "tradio", "transfer_5", 320, 270, 120, 20, "Landscape" },
-  { "tradio", "transfer_4", 320, 290, 120, 20, "Static" },
-  { "tradio", "transfer_3", 320, 310, 120, 20, "Fast wobble" },
-  { "tradio", "transfer_7", 320, 330, 120, 20, "Fast horizontal slide" },
-  { "tradio", "transfer_9", 320, 350, 120, 20, "Fast vertical slide" },
-  { "tradio", "transfer_11", 320, 370, 120, 20, "Fast wander" },
-  { "label", nil, 460, 250, 160, 20, "Preview" } }
+  { "label", nil, 200+5, 85, 240, 20, "Light" },
+  { "label", nil, 215+5, 250, 240, 20, "Texture mode" },
+  { "tradio", "transfer_0", 215, 270, 120, 20, "Normal" },
+  { "tradio", "transfer_1", 215, 290, 120, 20, "Pulsate" },
+  { "tradio", "transfer_2", 215, 310, 120, 20, "Wobble" },
+  { "tradio", "transfer_6", 215, 330, 120, 20, "Horizontal slide" },
+  { "tradio", "transfer_8", 215, 350, 120, 20, "Vertical slide" },
+  { "tradio", "transfer_10", 215, 370, 120, 20, "Wander" },
+  { "tradio", "transfer_5", 335, 270, 120, 20, "Landscape" },
+  { "tradio", "transfer_4", 335, 290, 120, 20, "Static" },
+  { "tradio", "transfer_3", 335, 310, 120, 20, "Fast wobble" },
+  { "tradio", "transfer_7", 335, 330, 120, 20, "Fast horizontal slide" },
+  { "tradio", "transfer_9", 335, 350, 120, 20, "Fast vertical slide" },
+  { "tradio", "transfer_11", 335, 370, 120, 20, "Fast wander" },
+  { "label", nil, 485, 250, 120, 20, "Preview" },
+  { "applypreview", nil, 485, 270, 120, 120, nil } }
 SMenu.menus["panel_off"] = {
   { "tab_bg", nil, 150, 80, 470, 320, nil },
   { "tab", "ptype_5", 20, 90, 130, 20, "Light switch" },
@@ -1357,7 +1358,7 @@ SMenu.menus["panel_terminal"] = {
   { "tab", "ptype_9", 20, 310, 130, 20, "Terminal" },
   { "tab", "ptype_0", 20, 340, 130, 20, "Inactive" },
   { "tcheckbox", "panel_light", 160, 90, 150, 20, "Light dependent" },
-  { "label", nil, 160+18, 130, 150, 20, "Terminal script" } }
+  { "label", nil, 160+5, 130, 150, 20, "Terminal script" } }
  SMenu.menus["panel_light"] = {
   { "tab_bg", nil, 150, 80, 470, 320, nil },
   { "tab", "ptype_5", 20, 90, 130, 20, "Light switch" },
@@ -1375,7 +1376,7 @@ SMenu.menus["panel_terminal"] = {
   { "tcheckbox", "panel_light", 160, 90, 150, 20, "Light dependent" },
   { "tcheckbox", "panel_weapon", 160, 110, 150, 20, "Only toggled by weapons" },
   { "tcheckbox", "panel_repair", 160, 130, 150, 20, "Repair switch" },
-  { "label", nil, 160+18, 170, 150, 20, "Light" } }
+  { "label", nil, 160+5, 170, 150, 20, "Light" } }
  SMenu.menus["panel_platform"] = {
   { "tab_bg", nil, 150, 80, 470, 320, nil },
   { "tab", "ptype_5", 20, 90, 130, 20, "Light switch" },
@@ -1393,7 +1394,7 @@ SMenu.menus["panel_terminal"] = {
   { "tcheckbox", "panel_light", 160, 90, 150, 20, "Light dependent" },
   { "tcheckbox", "panel_weapon", 160, 110, 150, 20, "Only toggled by weapons" },
   { "tcheckbox", "panel_repair", 160, 130, 150, 20, "Repair switch" },
-  { "label", nil, 160+18, 170, 150, 20, "Platform" } }
+  { "label", nil, 160+5, 170, 150, 20, "Platform" } }
  SMenu.menus["panel_tag"] = {
   { "tab_bg", nil, 150, 80, 470, 320, nil },
   { "tab", "ptype_5", 20, 90, 130, 20, "Light switch" },
@@ -1412,7 +1413,7 @@ SMenu.menus["panel_terminal"] = {
   { "tcheckbox", "panel_weapon", 160, 110, 150, 20, "Only toggled by weapons" },
   { "tcheckbox", "panel_repair", 160, 130, 150, 20, "Repair switch" },
   { "tcheckbox", "panel_active", 210, 170, 100, 20, "Tag is active" },
-  { "label", nil, 160+18, 170, 50-18, 20, "Tag" } }
+  { "label", nil, 160+5, 170, 50-18, 20, "Tag" } }
 SMenu.inited = {}
 SMenu.inited[SMode.attribute] = false
 SMenu.buttons = {}
@@ -1441,16 +1442,28 @@ function SMenu.init_menu(mode)
       local l = i - 1
       local yoff = (l % 7) * 20
       local xoff = math.floor(l / 7) * 50
+      local w = 50
+      if xoff == 0 then
+        w = w - 13
+      else
+        xoff = xoff - 13
+      end
       table.insert(menu, 13 + l,
-        { "light", "light_" .. l, 200 + xoff, 105 + yoff, 50, 20, tostring(l) })
+        { "light", "light_" .. l, 215 + xoff, 105 + yoff, w, 20, tostring(l) })
     end
   elseif mode == "panel_light" then
     for i = 1,math.min(#Lights, 63) do
       local l = i - 1
       local yoff = (l % 7) * 20
       local xoff = math.floor(l / 7) * 50
+      local w = 50
+      if xoff == 0 then
+        w = w - 13
+      else
+        xoff = xoff - 13
+      end
       table.insert(menu,
-        { "tlight", "pperm_" .. l, 160 + xoff, 190 + yoff, 50, 20, tostring(l) })
+        { "tlight", "pperm_" .. l, 160 + xoff, 190 + yoff, w, 20, tostring(l) })
     end
   elseif mode == "panel_terminal" then
     local num_scripts = #Terminals
