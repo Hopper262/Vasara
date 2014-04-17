@@ -525,7 +525,7 @@ function SMode.handle_teleport(p)
     p._saved_facing.x = p.x
     p._saved_facing.y = p.y
     p._saved_facing.z = p.z
-    local t,x,y,z,poly = p:find_target()
+    local o, x, y, z, poly = VML.find_target(p, false, false)
     p._target_poly = poly.index
     UTeleport.highlight(p, poly)
     
