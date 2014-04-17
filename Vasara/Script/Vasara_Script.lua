@@ -1646,6 +1646,10 @@ function SChoose.gridsize(bct)
   end
   return rows, math.ceil(bct / rows)
 end
+function SChoose.widegridsize(bct)
+  local rows = math.floor(math.sqrt(bct))
+  return rows, math.ceil(bct / rows)
+end
 
 SCollections = {}
 SCollections.wall_collections = {}
@@ -1712,20 +1716,23 @@ function SCollections.init()
     -- set up grid
     for _,cnum in ipairs(menu_colls) do
       local bct
+      local xscale = 1
       if cnum == 0 then
         bct = #landscape_textures
+        xscale = 2
       else
         bct = Collections[cnum].bitmap_count
       end
       
       local buttons = {}
       local rows, cols = SChoose.gridsize(bct)
-      local tsize = math.min(600 / cols, 300 / rows)
+      if xscale == 2 then rows, cols = SChoose.widegridsize(bct) end
+      local tsize = math.min(600 / (cols * xscale), 300 / rows)
       
       for i = 1,bct do
         local col = (i - 1) % cols
         local row = math.floor((i - 1) / cols)
-        local x = 20 + (tsize * col) + (600 - (tsize * cols))/2
+        local x = 20 + (tsize * col * xscale) + (600 - (tsize * cols * xscale))/2
         local y = 80 + (tsize * row) + (300 - (tsize * rows))/2
         
         local cc = cnum
@@ -1736,7 +1743,7 @@ function SCollections.init()
         end
         table.insert(buttons,
           { "texture", "choose_" .. cc .. "_" .. ct, 
-            x, y, tsize, tsize, cc .. ", " .. ct })
+            x, y, tsize * xscale, tsize, cc .. ", " .. ct })
       end
       for _,v in ipairs(cbuttons) do
         table.insert(buttons, v)

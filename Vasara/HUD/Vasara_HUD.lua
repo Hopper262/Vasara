@@ -989,7 +989,8 @@ function HMenu.draw_menu(mode, transparent)
       local xt = x + indent*u
       local yt = y + indent*u
       local wt = w - 2*indent*u
-      HCollections.draw(cc + 0, ct + 0, xt, yt, wt)
+      local ht = h - 2*indent*u
+      HCollections.draw(cc + 0, ct + 0, xt, yt, wt, ht)
     elseif item[1] == "applypreview" then
       HCollections.preview_current(x, y, w)
     elseif item[1] == "light" or item[1] == "tlight" then
@@ -1251,6 +1252,10 @@ function HChoose.gridsize(bct)
   end
   return rows, math.ceil(bct / rows)
 end
+function HChoose.widegridsize(bct)
+  local rows = math.floor(math.sqrt(bct))
+  return rows, math.ceil(bct / rows)
+end
 
 
 HCollections = {}
@@ -1300,8 +1305,6 @@ function HCollections.init()
         HCollections.all_shapes[collection][j] = Shapes.new{collection = Collections[collection], texture_index = j, type = ttype}
         if landscape then
           table.insert(HCollections.landscape_textures, { collection, j })
-          HCollections.all_shapes[collection][j].crop_rect.width = HCollections.all_shapes[collection][j].unscaled_width / 2
-          HCollections.all_shapes[collection][j].crop_rect.height = HCollections.all_shapes[collection][j].unscaled_height / 2
         end
       end
     end
@@ -1315,28 +1318,28 @@ function HCollections.init()
   for _,cnum in pairs(HCollections.wall_collections) do
     local bct = Collections[cnum].bitmap_count
     local rows, cols = HChoose.gridsize(bct)
-    table.insert(menu_colls, { cnum = cnum, bct = bct, rows = rows, cols = cols })
+    table.insert(menu_colls, { cnum = cnum, bct = bct, rows = rows, cols = cols, xscale = 1 })
   end
   if num_land > 0 then
-    local rows, cols = HChoose.gridsize(num_land)
-    table.insert(menu_colls, { cnum = 0, bct = num_land, rows = rows, cols = cols })
+    local rows, cols = HChoose.widegridsize(num_land)
+    table.insert(menu_colls, { cnum = 0, bct = num_land, rows = rows, cols = cols, xscale = 2 })
   end
   
   -- set up apply-mode previews
   for i = 1,#menu_colls do
     local preview = {}
     local cinfo = menu_colls[i]
-    local cnum, bct, rows, cols = cinfo.cnum, cinfo.bct, cinfo.rows, cinfo.cols
+    local cnum, bct, rows, cols, xscale = cinfo.cnum, cinfo.bct, cinfo.rows, cinfo.cols, cinfo.xscale
     if preview_collection_when_applying then
       local w = 168
       local h = 84
-      local tsize = math.min(w / cols, h / rows)
-      local x = 620 - (tsize * cols)
+      local tsize = math.min(w / (cols * xscale), h / rows)
+      local x = 620 - (tsize * cols * xscale)
       local y = 480 - 88/2 - (tsize * rows)/2
       for j = 1,bct do
         local col = (j - 1) % cols
         local row = math.floor((j - 1) / cols)
-        local xt = x + (tsize * col)
+        local xt = x + (tsize * col * xscale)
         local yt = y + (tsize * row)
         
         local cc = cnum
@@ -1347,7 +1350,7 @@ function HCollections.init()
         end
         table.insert(preview,
           { "atexture", "choose_" .. cc .. "_" .. ct, 
-            xt, yt, tsize, tsize, cc .. ", " .. ct })
+            xt, yt, tsize * xscale, tsize, cc .. ", " .. ct })
       end
     end
     HMenu.menus["preview_" .. cnum] = preview
@@ -1375,14 +1378,14 @@ function HCollections.init()
         local ww = w - 2*menu_prefs.button_indent
         local hh = 75 - 2*menu_prefs.button_indent
         
-        local bct, rows, cols = cinfo.bct, cinfo.rows, cinfo.cols
-        local tsize = math.min(ww / cols, hh / rows)
-        xx = xx + (ww - (tsize * cols))/2
+        local bct, rows, cols, xscale = cinfo.bct, cinfo.rows, cinfo.cols, cinfo.xscale
+        local tsize = math.min(ww / (cols * xscale), hh / rows)
+        xx = xx + (ww - (tsize * cols * xscale))/2
         
         for j = 1,bct do
           local col = (j - 1) % cols
           local row = math.floor((j - 1) / cols)
-          local xt = xx + (tsize * col)
+          local xt = xx + (tsize * col * xscale)
           local yt = yy + (tsize * row)
           
           local cc = cnum
@@ -1393,7 +1396,7 @@ function HCollections.init()
           end
           table.insert(cbuttons,
             { "dtexture", "display_" .. cc .. "_" .. ct, 
-              xt, yt, tsize, tsize, cc .. ", " .. ct })
+              xt, yt, tsize * xscale, tsize, cc .. ", " .. ct })
         end
       end
       
@@ -1403,15 +1406,15 @@ function HCollections.init()
   
   -- set up grid
   for _,cinfo in ipairs(menu_colls) do
-    local cnum, bct, rows, cols = cinfo.cnum, cinfo.bct, cinfo.rows, cinfo.cols
+    local cnum, bct, rows, cols, xscale = cinfo.cnum, cinfo.bct, cinfo.rows, cinfo.cols, cinfo.xscale
     
     local buttons = {}
-    local tsize = math.min(600 / cols, 300 / rows)
+    local tsize = math.min(600 / (cols * xscale), 300 / rows)
     
     for i = 1,bct do
       local col = (i - 1) % cols
       local row = math.floor((i - 1) / cols)
-      local x = 20 + (tsize * col) + (600 - (tsize * cols))/2
+      local x = 20 + (tsize * col * xscale) + (600 - (tsize * cols * xscale))/2
       local y = 80 + (tsize * row) + (300 - (tsize * rows))/2
       
       local cc = cnum
@@ -1422,7 +1425,7 @@ function HCollections.init()
       end
       table.insert(buttons,
         { "texture", "choose_" .. cc .. "_" .. ct, 
-          x, y, tsize, tsize, cc .. ", " .. ct })
+          x, y, tsize * xscale, tsize, cc .. ", " .. ct })
     end
     for _,v in ipairs(cbuttons) do
       table.insert(buttons, v)
@@ -1470,13 +1473,35 @@ function HCollections.is_landscape(coll)
   end
   return Player.texture_palette.slots[coll].type.mnemonic == "landscape"
 end
-function HCollections.draw(coll, tex, x, y, size)
-  local shp = HCollections.shape(coll, tex)
+function HCollections.predraw(coll, tex, w, h)
+  local xb, yb = 0, 0
+  local shp = HCollections.shape(coll, tex) 
   if HCollections.is_landscape(coll) then
-    size = size * 2
+    local sw = shp.unscaled_width
+    local sh = shp.unscaled_height
+    local aspect = sw / sh    
+    local scale = math.max(w / sw, h / sh)
+    
+    -- work around deep voodoo in landscape rendering
+    local nh = sh / (aspect * 540/1024)
+    shp:rescale(sw * scale, nh * scale)
+    
+    local xoff = (shp.width - w)/2
+    local yoff = (shp.height - h)/2
+    shp.crop_rect.x = math.max(0, xoff)
+    shp.crop_rect.y = math.max(0, yoff)
+    shp.crop_rect.width = math.min(w, shp.width)
+    shp.crop_rect.height = math.min(h, shp.height)
+    xb = math.max(0, -xoff)
+    yb = math.max(0, -yoff)
+  else
+    shp:rescale(w, h)
   end
-  shp:rescale(size, size)
-  shp:draw(x, y)
+  return shp, xb, yb
+end
+function HCollections.draw(coll, tex, x, y, w, h)
+  local shp, xoff, yoff = HCollections.predraw(coll, tex, w, h)
+  shp:draw(x + xoff, y + yoff)
 end
 function HCollections.preview_current(x, y, size)
   local oldx = Screen.clip_rect.x
@@ -1500,17 +1525,12 @@ function HCollections.preview_current(x, y, size)
       local xoff, yoff, sxmult, symult = HCollections.calc_transfer(HApply.current_transfer)
       xoff = xoff * size
       yoff = yoff * size
-      local xp = x + xoff
-      local yp = y + yoff
       local sx = size * sxmult
       local sy = size * symult
       
-      local shp = HCollections.shape(coll, tex)
-      if HCollections.is_landscape(coll) or HApply.current_transfer == 5 then
-        sx = sx * 2
-        sy = sy * 2
-      end
-      shp:rescale(sx, sy)
+      local shp, shpx, shpy = HCollections.predraw(coll, tex, sx, sy)
+      local xp = x + xoff + shpx
+      local yp = y + yoff + shpy
       
       local extrax = { { true, xp }, { xoff > 0, xp - sx }, { (xoff + sx) < size, xp + sx } }
       local extray = { { true, yp }, { yoff > 0, yp - sy }, { (yoff + sy) < size, yp + sy } }
