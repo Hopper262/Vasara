@@ -585,7 +585,7 @@ function SMode.annotate(p)
 end
 function SMode.handle_choose(p)
   -- cycle textures
-  if p._keys.mic.down and (p._keys.prev_weapon.held or p._keys.next_weapon.held or p._keys.primary.held) then
+  if (p._keys.mic.down and p._keys.primary.held) or ((not p._keys.mic.down) and (p._keys.prev_weapon.held or p._keys.next_weapon.held)) then
     local diff = 1
     if p._keys.prev_weapon.held then diff = -1 end
     local cur = p._collections.current_collection
@@ -617,7 +617,7 @@ function SMode.handle_choose(p)
     end
   end
   
-  if (p._keys.mic.down and p._keys.secondary.held) or ((not p._keys.mic.down) and (p._keys.next_weapon.held or p._keys.prev_weapon.held)) then
+  if (p._keys.mic.down and p._keys.secondary.held) or (p._keys.mic.down and (p._keys.next_weapon.held or p._keys.prev_weapon.held)) then
     -- cycle collections
     local diff = 1
     if p._keys.prev_weapon.held then diff = -1 end
