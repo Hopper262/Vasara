@@ -1424,7 +1424,7 @@ end
 SMenu = {}
 SMenu.menus = {}
 SMenu.menus[SMode.attribute] = {
-  { "tab_bg", nil, 20, 80, 600, 320, nil },
+  { "bg", nil, 20, 80, 600, 320, nil },
   { "label", nil, 30+5, 85, 155, 20, "Attributes" },
   { "tcheckbox", "apply_light", 30, 105, 155, 20, "Apply light" },
   { "tcheckbox", "apply_tex", 30, 125, 155, 20, "Apply texture" },
@@ -1495,8 +1495,8 @@ SMenu.menus["panel_terminal"] = {
   { "tab", "ptype_8", 20, 305, 130, 20, "Pattern buffer" },
   { "tab", "ptype_9", 20, 325, 130, 20, "Terminal" },
   { "tab", "ptype_0", 20, 355, 130, 20, "Inactive" },
-  { "tcheckbox", "panel_light", 160, 90, 150, 20, "Light dependent" },
-  { "label", nil, 160+5, 130, 150, 20, "Terminal script" } }
+  { "tcheckbox", "panel_light", 170, 90, 150-3, 20, "Light dependent" },
+  { "label", nil, 170+5, 130, 150, 20, "Terminal script" } }
 SMenu.menus["panel_light"] = {
   { "tab_bg", nil, 150, 80, 470, 320, nil },
   { "tab", "ptype_5", 20, 105, 130, 20, "Light switch" },
@@ -1511,10 +1511,10 @@ SMenu.menus["panel_light"] = {
   { "tab", "ptype_8", 20, 305, 130, 20, "Pattern buffer" },
   { "tab", "ptype_9", 20, 325, 130, 20, "Terminal" },
   { "tab", "ptype_0", 20, 355, 130, 20, "Inactive" },
-  { "tcheckbox", "panel_light", 160, 90, 150, 20, "Light dependent" },
-  { "tcheckbox", "panel_weapon", 160, 110, 150, 20, "Only toggled by weapons" },
-  { "tcheckbox", "panel_repair", 160, 130, 150, 20, "Repair switch" },
-  { "label", nil, 160+5, 170, 150, 20, "Light" } }
+  { "tcheckbox", "panel_light", 170, 90, 150-3, 20, "Light dependent" },
+  { "tcheckbox", "panel_weapon", 170, 110, 150-3, 20, "Only toggled by weapons" },
+  { "tcheckbox", "panel_repair", 170, 130, 150-3, 20, "Repair switch" },
+  { "label", nil, 170+5, 170, 150, 20, "Light" } }
 SMenu.menus["panel_platform"] = {
   { "tab_bg", nil, 150, 80, 470, 320, nil },
   { "tab", "ptype_5", 20, 105, 130, 20, "Light switch" },
@@ -1529,10 +1529,10 @@ SMenu.menus["panel_platform"] = {
   { "tab", "ptype_8", 20, 305, 130, 20, "Pattern buffer" },
   { "tab", "ptype_9", 20, 325, 130, 20, "Terminal" },
   { "tab", "ptype_0", 20, 355, 130, 20, "Inactive" },
-  { "tcheckbox", "panel_light", 160, 90, 150, 20, "Light dependent" },
-  { "tcheckbox", "panel_weapon", 160, 110, 150, 20, "Only toggled by weapons" },
-  { "tcheckbox", "panel_repair", 160, 130, 150, 20, "Repair switch" },
-  { "label", nil, 160+5, 170, 150, 20, "Platform" } }
+  { "tcheckbox", "panel_light", 170, 90, 150-3, 20, "Light dependent" },
+  { "tcheckbox", "panel_weapon", 170, 110, 150-3, 20, "Only toggled by weapons" },
+  { "tcheckbox", "panel_repair", 170, 130, 150-3, 20, "Repair switch" },
+  { "label", nil, 170+5, 170, 150-3, 20, "Platform" } }
 SMenu.menus["panel_tag"] = {
   { "tab_bg", nil, 150, 80, 470, 320, nil },
   { "tab", "ptype_5", 20, 105, 130, 20, "Light switch" },
@@ -1547,11 +1547,11 @@ SMenu.menus["panel_tag"] = {
   { "tab", "ptype_8", 20, 305, 130, 20, "Pattern buffer" },
   { "tab", "ptype_9", 20, 325, 130, 20, "Terminal" },
   { "tab", "ptype_0", 20, 355, 130, 20, "Inactive" },
-  { "tcheckbox", "panel_light", 160, 90, 150, 20, "Light dependent" },
-  { "tcheckbox", "panel_weapon", 160, 110, 150, 20, "Only toggled by weapons" },
-  { "tcheckbox", "panel_repair", 160, 130, 150, 20, "Repair switch" },
-  { "tcheckbox", "panel_active", 210, 170, 100, 20, "Tag is active" },
-  { "label", nil, 160+5, 170, 50-18, 20, "Tag" } }
+  { "tcheckbox", "panel_light", 170, 90, 150-3, 20, "Light dependent" },
+  { "tcheckbox", "panel_weapon", 170, 110, 150-3, 20, "Only toggled by weapons" },
+  { "tcheckbox", "panel_repair", 170, 130, 150-3, 20, "Repair switch" },
+  { "tcheckbox", "panel_active", 220-1, 170, 100-2, 20, "Tag is active" },
+  { "label", nil, 170+5, 170, 50-18, 20, "Tag" } }
 SMenu.inited = {}
 function SMenu.selection(p, mode)
   if not SMenu.inited[mode] then SMenu.init_menu(mode) end
@@ -1590,15 +1590,15 @@ function SMenu.init_menu(mode)
     for i = 1,math.min(#Lights, 63) do
       local l = i - 1
       local yoff = (l % 7) * 20
-      local xoff = math.floor(l / 7) * 50
-      local w = 50
+      local xoff = math.floor(l / 7) * 49
+      local w = 49
       if xoff == 0 then
         w = w - 13
       else
         xoff = xoff - 13
       end
       table.insert(menu,
-        { "tlight", "pperm_" .. l, 160 + xoff, 190 + yoff, w, 20, tostring(l) })
+        { "light", "pperm_" .. l, 170 + xoff, 190 + yoff, w, 20, tostring(l) })
     end
   elseif mode == "panel_terminal" then
     local num_scripts = #Terminals
@@ -1606,26 +1606,26 @@ function SMenu.init_menu(mode)
     for i = 1,math.min(num_scripts, 90) do
       local l = i - 1
       local yoff = (l % 10) * 20
-      local xoff = math.floor(l / 10) * 50
+      local xoff = math.floor(l / 10) * 49
       table.insert(menu,
-        { "tradio", "pperm_" .. l, 160 + xoff, 150 + yoff, 50, 20, tostring(l) })
+        { "tradio", "pperm_" .. l, 170 + xoff, 150 + yoff, 49, 20, tostring(l) })
     end
   elseif mode == "panel_tag" then
     for i = 1,math.min(max_tags, 90) do
       local l = i - 1
       local yoff = (l % 10) * 20
-      local xoff = math.floor(l / 10) * 50
+      local xoff = math.floor(l / 10) * 49
       table.insert(menu,
-        { "tradio", "pperm_" .. l, 160 + xoff, 190 + yoff, 50, 20, tostring(l) })
+        { "tradio", "pperm_" .. l, 170 + xoff, 190 + yoff, 49, 20, tostring(l) })
     end
   elseif mode == "panel_platform" then
     for i = 1,math.min(#SPlatforms.sorted_platforms, 90) do
       local l = i - 1
       local yoff = (l % 10) * 20
-      local xoff = math.floor(l / 10) * 50
+      local xoff = math.floor(l / 10) * 49
       l = SPlatforms.sorted_platforms[i].polygon.index
       table.insert(menu,
-        { "tradio", "pperm_" .. l, 160 + xoff, 190 + yoff, 50, 20, tostring(l) })
+        { "tradio", "pperm_" .. l, 170 + xoff, 190 + yoff, 49, 20, tostring(l) })
     end
   end
   

@@ -26,7 +26,7 @@ colors.current_texture = { 0, 1, 0, 1 }
 colors.light = {}
 colors.light.enabled = {}
 colors.light.enabled.frame = { 0.5, 0.5, 0.5, 1 }
-colors.light.enabled.text = { 0.5, 0.5, 0.5, 1 }
+colors.light.enabled.text = { 0.8, 0.8, 0.8, 1 }
 colors.light.active = {}
 colors.light.active.frame = { 0, 1, 0, 1 }
 colors.light.active.text = { 0.2, 1.0, 0.2, 1 }
@@ -99,7 +99,8 @@ colors.ktab.active.text = { 1, 0.15, 0.15, 1 }
 colors.ktab.active.label = { 1, 0.15, 0.15, 1 }
 
 colors.tab = {}
-colors.tab.background = { 0.15, 0.15, 0.15, 1 }
+colors.tab.background = { 0.1, 0.1, 0.1, 1 }
+colors.tab.band = { 0.15, 0.15, 0.15, 1 }
 colors.tab.enabled = {}
 colors.tab.enabled.background = { 0.1, 0.1, 0.1, 1 }
 colors.tab.enabled.text = { 0.8, 0.8, 0.8, 1 }
@@ -140,6 +141,7 @@ menu_prefs.tab_indent.top = menu_prefs.button_indent
 menu_prefs.tab_indent.bottom = menu_prefs.button_indent
 menu_prefs.tab_indent.left = 0
 menu_prefs.tab_indent.right = 2*menu_prefs.button_indent
+menu_prefs.tab_indent.band_left = 7
 
 menu_prefs.texture_choose_indent = 1
 menu_prefs.texture_apply_indent = 0.5
@@ -556,7 +558,7 @@ end
 HMenu = {}
 HMenu.menus = {}
 HMenu.menus[HMode.attribute] = {
-  { "tab_bg", nil, 20, 80, 600, 320, nil },
+  { "bg", nil, 20, 80, 600, 320, nil },
   { "label", nil, 30+5, 85, 155, 20, "Attributes" },
   { "tcheckbox", "apply_light", 30, 105, 155, 20, "Apply light" },
   { "tcheckbox", "apply_tex", 30, 125, 155, 20, "Apply texture" },
@@ -620,7 +622,7 @@ HMenu.menus["panel_plain"] = {
   { "tab", "ptype_8", 20, 305, 130, 20, "Pattern buffer" },
   { "tab", "ptype_9", 20, 325, 130, 20, "Terminal" },
   { "tab", "ptype_0", 20, 355, 130, 20, "Inactive" },
-  { "tcheckbox", "panel_light", 160, 90, 150, 20, "Light dependent" } }
+  { "tcheckbox", "panel_light", 170, 90, 150-3, 20, "Light dependent" } }
 HMenu.menus["panel_terminal"] = {
   { "tab_bg", nil, 150, 80, 470, 320, nil },
   { "tab", "ptype_5", 20, 105, 130, 20, "Light switch" },
@@ -635,8 +637,8 @@ HMenu.menus["panel_terminal"] = {
   { "tab", "ptype_8", 20, 305, 130, 20, "Pattern buffer" },
   { "tab", "ptype_9", 20, 325, 130, 20, "Terminal" },
   { "tab", "ptype_0", 20, 355, 130, 20, "Inactive" },
-  { "tcheckbox", "panel_light", 160, 90, 150, 20, "Light dependent" },
-  { "label", nil, 160+5, 130, 150, 20, "Terminal script" } }
+  { "tcheckbox", "panel_light", 170, 90, 150-3, 20, "Light dependent" },
+  { "label", nil, 170+5, 130, 150, 20, "Terminal script" } }
 HMenu.menus["panel_light"] = {
   { "tab_bg", nil, 150, 80, 470, 320, nil },
   { "tab", "ptype_5", 20, 105, 130, 20, "Light switch" },
@@ -651,10 +653,10 @@ HMenu.menus["panel_light"] = {
   { "tab", "ptype_8", 20, 305, 130, 20, "Pattern buffer" },
   { "tab", "ptype_9", 20, 325, 130, 20, "Terminal" },
   { "tab", "ptype_0", 20, 355, 130, 20, "Inactive" },
-  { "tcheckbox", "panel_light", 160, 90, 150, 20, "Light dependent" },
-  { "tcheckbox", "panel_weapon", 160, 110, 150, 20, "Only toggled by weapons" },
-  { "tcheckbox", "panel_repair", 160, 130, 150, 20, "Repair switch" },
-  { "label", nil, 160+5, 170, 150, 20, "Light" } }
+  { "tcheckbox", "panel_light", 170, 90, 150-3, 20, "Light dependent" },
+  { "tcheckbox", "panel_weapon", 170, 110, 150-3, 20, "Only toggled by weapons" },
+  { "tcheckbox", "panel_repair", 170, 130, 150-3, 20, "Repair switch" },
+  { "label", nil, 170+5, 170, 150, 20, "Light" } }
 HMenu.menus["panel_platform"] = {
   { "tab_bg", nil, 150, 80, 470, 320, nil },
   { "tab", "ptype_5", 20, 105, 130, 20, "Light switch" },
@@ -669,10 +671,10 @@ HMenu.menus["panel_platform"] = {
   { "tab", "ptype_8", 20, 305, 130, 20, "Pattern buffer" },
   { "tab", "ptype_9", 20, 325, 130, 20, "Terminal" },
   { "tab", "ptype_0", 20, 355, 130, 20, "Inactive" },
-  { "tcheckbox", "panel_light", 160, 90, 150, 20, "Light dependent" },
-  { "tcheckbox", "panel_weapon", 160, 110, 150, 20, "Only toggled by weapons" },
-  { "tcheckbox", "panel_repair", 160, 130, 150, 20, "Repair switch" },
-  { "label", nil, 160+5, 170, 150, 20, "Platform" } }
+  { "tcheckbox", "panel_light", 170, 90, 150-3, 20, "Light dependent" },
+  { "tcheckbox", "panel_weapon", 170, 110, 150-3, 20, "Only toggled by weapons" },
+  { "tcheckbox", "panel_repair", 170, 130, 150-3, 20, "Repair switch" },
+  { "label", nil, 170+5, 170, 150, 20, "Platform" } }
 HMenu.menus["panel_tag"] = {
   { "tab_bg", nil, 150, 80, 470, 320, nil },
   { "tab", "ptype_5", 20, 105, 130, 20, "Light switch" },
@@ -687,11 +689,11 @@ HMenu.menus["panel_tag"] = {
   { "tab", "ptype_8", 20, 305, 130, 20, "Pattern buffer" },
   { "tab", "ptype_9", 20, 325, 130, 20, "Terminal" },
   { "tab", "ptype_0", 20, 355, 130, 20, "Inactive" },
-  { "tcheckbox", "panel_light", 160, 90, 150, 20, "Light dependent" },
-  { "tcheckbox", "panel_weapon", 160, 110, 150, 20, "Only toggled by weapons" },
-  { "tcheckbox", "panel_repair", 160, 130, 150, 20, "Repair switch" },
-  { "tcheckbox", "panel_active", 210, 170, 100, 20, "Tag is active" },
-  { "label", nil, 160+5, 170, 50-18, 20, "Tag" } }
+  { "tcheckbox", "panel_light", 170, 90, 150-3, 20, "Light dependent" },
+  { "tcheckbox", "panel_weapon", 170, 110, 150-3, 20, "Only toggled by weapons" },
+  { "tcheckbox", "panel_repair", 170, 130, 150-3, 20, "Repair switch" },
+  { "tcheckbox", "panel_active", 220-1, 170, 100-2, 20, "Tag is active" },
+  { "label", nil, 170+5, 170, 50-18, 20, "Tag" } }
 HMenu.menus["key_" .. HMode.apply] = {
   { "ktab_bg", nil, 150, 4 + menu_prefs.button_indent, 470, 64 - 2*menu_prefs.button_indent, nil },
   { "kaction", "key_primary", 235, 10, 100, 12, "Apply Texture" },
@@ -968,6 +970,9 @@ function HMenu.draw_menu(mode, transparent)
       end
     elseif item[1] == "tab_bg" then
       Screen.fill_rect(x, y, w, h, colors.tab.background)
+      Screen.fill_rect(x, y, menu_prefs.tab_indent.band_left*u, h, colors.tab.band)
+    elseif item[1] == "bg" then
+      Screen.fill_rect(x, y, w, h, colors.tab.background)
     elseif item[1] == "tab" then
       local state = HMenu.button_state(item[2])
               
@@ -1161,7 +1166,7 @@ function HMenu.draw_button_background(item, state)
   local ts = menu_prefs.button_shadow_thickness*u
   local c = colors.button[state]
   if item[1] == "acheckbox" then c = colors.apply[state] end
-  if item[1] == "tcheckbox" or item[1] == "tradio" then c = colors.tbutton[state] end
+  if item[1] == "tcheckbox" or item[1] == "tradio" then c = colors.button[state] end
 
   Screen.fill_rect(x, y, w, h, c.background)
   Screen.fill_rect(x, y, w, th, c.highlight)
@@ -1176,7 +1181,7 @@ function HMenu.draw_button_text(item, state, xoff)
   local h = item[6]*u - 2*menu_prefs.button_indent*u
   local c = colors.button[state]
   if item[1] == "acheckbox" then c = colors.apply[state] end
-  if item[1] == "tcheckbox" or item[1] == "tradio" then c = colors.tbutton[state] end
+  if item[1] == "tcheckbox" or item[1] == "tradio" then c = colors.button[state] end
 
   HGlobals.fontn:draw_text(item[7],
                            math.floor(x + xoff*u),
@@ -1199,7 +1204,7 @@ function HMenu.init_menu(mode)
           xoff = xoff - 13
         end
         table.insert(menu, 14 + l,
-          { "tlight", "light_" .. l, 215 + xoff, 105 + yoff, w, 20, tostring(l) })
+          { "light", "light_" .. l, 215 + xoff, 105 + yoff, w, 20, tostring(l) })
       end
       HMenu.inited[mode] = true
     end
@@ -1208,15 +1213,15 @@ function HMenu.init_menu(mode)
       for i = 1,math.min(HCounts.num_lights, 63) do
         local l = i - 1
         local yoff = (l % 7) * 20
-        local xoff = math.floor(l / 7) * 50
-        local w = 50
+        local xoff = math.floor(l / 7) * 49
+        local w = 49
         if xoff == 0 then
           w = w - 13
         else
           xoff = xoff - 13
         end
         table.insert(menu,
-          { "tlight", "pperm_" .. l, 160 + xoff, 190 + yoff, w, 20, tostring(l) })
+          { "light", "pperm_" .. l, 170 + xoff, 190 + yoff, w, 20, tostring(l) })
       end
       HMenu.inited[mode] = true
     end
@@ -1225,9 +1230,9 @@ function HMenu.init_menu(mode)
       for i = 1,math.min(HCounts.num_scripts, 90) do
         local l = i - 1
         local yoff = (l % 10) * 20
-        local xoff = math.floor(l / 10) * 50
+        local xoff = math.floor(l / 10) * 49
         table.insert(menu,
-          { "tradio", "pperm_" .. l, 160 + xoff, 150 + yoff, 50, 20, tostring(l) })
+          { "tradio", "pperm_" .. l, 170 + xoff, 150 + yoff, 49, 20, tostring(l) })
       end
       HMenu.inited[mode] = true
     end
@@ -1236,9 +1241,9 @@ function HMenu.init_menu(mode)
       for i = 1,math.min(HCounts.num_tags, 90) do
         local l = i - 1
         local yoff = (l % 10) * 20
-        local xoff = math.floor(l / 10) * 50
+        local xoff = math.floor(l / 10) * 49
         table.insert(menu,
-          { "tradio", "pperm_" .. l, 160 + xoff, 190 + yoff, 50, 20, tostring(l) })
+          { "tradio", "pperm_" .. l, 170 + xoff, 190 + yoff, 49, 20, tostring(l) })
       end
       HMenu.inited[mode] = true
     end
@@ -1247,10 +1252,10 @@ function HMenu.init_menu(mode)
       for i = 1,math.min(HCounts.num_platforms, 90) do
         local l = i - 1
         local yoff = (l % 10) * 20
-        local xoff = math.floor(l / 10) * 50
+        local xoff = math.floor(l / 10) * 49
         l = HPlatforms.indexes[l]
         table.insert(menu,
-          { "tradio", "pperm_" .. l, 160 + xoff, 190 + yoff, 50, 20, tostring(l) })
+          { "tradio", "pperm_" .. l, 170 + xoff, 190 + yoff, 49, 20, tostring(l) })
       end
       HMenu.inited[mode] = true
     end
