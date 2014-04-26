@@ -130,12 +130,21 @@ colors.tbutton.active.text = { 0.2, 1.0, 0.2, 1 }
 
 -- other menu UI prefs
 menu_prefs = {}
+
 menu_prefs.button_indent = 1
 menu_prefs.button_highlight_thickness = 2
 menu_prefs.button_shadow_thickness = 2
+
+menu_prefs.tab_indent = {}
+menu_prefs.tab_indent.top = menu_prefs.button_indent
+menu_prefs.tab_indent.bottom = menu_prefs.button_indent
+menu_prefs.tab_indent.left = 0
+menu_prefs.tab_indent.right = 2*menu_prefs.button_indent
+
 menu_prefs.texture_choose_indent = 1
 menu_prefs.texture_apply_indent = 0.5
 menu_prefs.texture_preview_indent = 0
+
 menu_prefs.light_thickness = 2
 
 
@@ -584,99 +593,99 @@ HMenu.menus["apply_options"] = {
   { "applypreview", nil, 20, 394, 84, 84, nil } }
 HMenu.menus["panel_off"] = {
   { "tab_bg", nil, 150, 80, 470, 320, nil },
-  { "tab", "ptype_5", 20, 90, 130, 20, "Light switch" },
-  { "tab", "ptype_6", 20, 110, 130, 20, "Platform switch" },
-  { "tab", "ptype_7", 20, 130, 130, 20, "Tag switch" },
-  { "tab", "ptype_10", 20, 150, 130, 20, "Chip insertion" },
-  { "tab", "ptype_11", 20, 170, 130, 20, "Wires" },
-  { "tab", "ptype_1", 20, 200, 130, 20, "Oxygen" },
-  { "tab", "ptype_2", 20, 220, 130, 20, "1X health" },
-  { "tab", "ptype_3", 20, 240, 130, 20, "2X health" },
-  { "tab", "ptype_4", 20, 260, 130, 20, "3X health" },
-  { "tab", "ptype_8", 20, 290, 130, 20, "Pattern buffer" },
-  { "tab", "ptype_9", 20, 310, 130, 20, "Terminal" },
-  { "tab", "ptype_0", 20, 340, 130, 20, "Inactive" } }
+  { "tab", "ptype_5", 20, 105, 130, 20, "Light switch" },
+  { "tab", "ptype_6", 20, 125, 130, 20, "Platform switch" },
+  { "tab", "ptype_7", 20, 145, 130, 20, "Tag switch" },
+  { "tab", "ptype_10", 20, 165, 130, 20, "Chip insertion" },
+  { "tab", "ptype_11", 20, 185, 130, 20, "Wires" },
+  { "tab", "ptype_1", 20, 215, 130, 20, "Oxygen" },
+  { "tab", "ptype_2", 20, 235, 130, 20, "1X health" },
+  { "tab", "ptype_3", 20, 255, 130, 20, "2X health" },
+  { "tab", "ptype_4", 20, 275, 130, 20, "3X health" },
+  { "tab", "ptype_8", 20, 305, 130, 20, "Pattern buffer" },
+  { "tab", "ptype_9", 20, 325, 130, 20, "Terminal" },
+  { "tab", "ptype_0", 20, 355, 130, 20, "Inactive" } }
 HMenu.menus["panel_plain"] = {
   { "tab_bg", nil, 150, 80, 470, 320, nil },
-  { "tab", "ptype_5", 20, 90, 130, 20, "Light switch" },
-  { "tab", "ptype_6", 20, 110, 130, 20, "Platform switch" },
-  { "tab", "ptype_7", 20, 130, 130, 20, "Tag switch" },
-  { "tab", "ptype_10", 20, 150, 130, 20, "Chip insertion" },
-  { "tab", "ptype_11", 20, 170, 130, 20, "Wires" },
-  { "tab", "ptype_1", 20, 200, 130, 20, "Oxygen" },
-  { "tab", "ptype_2", 20, 220, 130, 20, "1X health" },
-  { "tab", "ptype_3", 20, 240, 130, 20, "2X health" },
-  { "tab", "ptype_4", 20, 260, 130, 20, "3X health" },
-  { "tab", "ptype_8", 20, 290, 130, 20, "Pattern buffer" },
-  { "tab", "ptype_9", 20, 310, 130, 20, "Terminal" },
-  { "tab", "ptype_0", 20, 340, 130, 20, "Inactive" },
+  { "tab", "ptype_5", 20, 105, 130, 20, "Light switch" },
+  { "tab", "ptype_6", 20, 125, 130, 20, "Platform switch" },
+  { "tab", "ptype_7", 20, 145, 130, 20, "Tag switch" },
+  { "tab", "ptype_10", 20, 165, 130, 20, "Chip insertion" },
+  { "tab", "ptype_11", 20, 185, 130, 20, "Wires" },
+  { "tab", "ptype_1", 20, 215, 130, 20, "Oxygen" },
+  { "tab", "ptype_2", 20, 235, 130, 20, "1X health" },
+  { "tab", "ptype_3", 20, 255, 130, 20, "2X health" },
+  { "tab", "ptype_4", 20, 275, 130, 20, "3X health" },
+  { "tab", "ptype_8", 20, 305, 130, 20, "Pattern buffer" },
+  { "tab", "ptype_9", 20, 325, 130, 20, "Terminal" },
+  { "tab", "ptype_0", 20, 355, 130, 20, "Inactive" },
   { "tcheckbox", "panel_light", 160, 90, 150, 20, "Light dependent" } }
 HMenu.menus["panel_terminal"] = {
   { "tab_bg", nil, 150, 80, 470, 320, nil },
-  { "tab", "ptype_5", 20, 90, 130, 20, "Light switch" },
-  { "tab", "ptype_6", 20, 110, 130, 20, "Platform switch" },
-  { "tab", "ptype_7", 20, 130, 130, 20, "Tag switch" },
-  { "tab", "ptype_10", 20, 150, 130, 20, "Chip insertion" },
-  { "tab", "ptype_11", 20, 170, 130, 20, "Wires" },
-  { "tab", "ptype_1", 20, 200, 130, 20, "Oxygen" },
-  { "tab", "ptype_2", 20, 220, 130, 20, "1X health" },
-  { "tab", "ptype_3", 20, 240, 130, 20, "2X health" },
-  { "tab", "ptype_4", 20, 260, 130, 20, "3X health" },
-  { "tab", "ptype_8", 20, 290, 130, 20, "Pattern buffer" },
-  { "tab", "ptype_9", 20, 310, 130, 20, "Terminal" },
-  { "tab", "ptype_0", 20, 340, 130, 20, "Inactive" },
+  { "tab", "ptype_5", 20, 105, 130, 20, "Light switch" },
+  { "tab", "ptype_6", 20, 125, 130, 20, "Platform switch" },
+  { "tab", "ptype_7", 20, 145, 130, 20, "Tag switch" },
+  { "tab", "ptype_10", 20, 165, 130, 20, "Chip insertion" },
+  { "tab", "ptype_11", 20, 185, 130, 20, "Wires" },
+  { "tab", "ptype_1", 20, 215, 130, 20, "Oxygen" },
+  { "tab", "ptype_2", 20, 235, 130, 20, "1X health" },
+  { "tab", "ptype_3", 20, 255, 130, 20, "2X health" },
+  { "tab", "ptype_4", 20, 275, 130, 20, "3X health" },
+  { "tab", "ptype_8", 20, 305, 130, 20, "Pattern buffer" },
+  { "tab", "ptype_9", 20, 325, 130, 20, "Terminal" },
+  { "tab", "ptype_0", 20, 355, 130, 20, "Inactive" },
   { "tcheckbox", "panel_light", 160, 90, 150, 20, "Light dependent" },
   { "label", nil, 160+5, 130, 150, 20, "Terminal script" } }
- HMenu.menus["panel_light"] = {
+HMenu.menus["panel_light"] = {
   { "tab_bg", nil, 150, 80, 470, 320, nil },
-  { "tab", "ptype_5", 20, 90, 130, 20, "Light switch" },
-  { "tab", "ptype_6", 20, 110, 130, 20, "Platform switch" },
-  { "tab", "ptype_7", 20, 130, 130, 20, "Tag switch" },
-  { "tab", "ptype_10", 20, 150, 130, 20, "Chip insertion" },
-  { "tab", "ptype_11", 20, 170, 130, 20, "Wires" },
-  { "tab", "ptype_1", 20, 200, 130, 20, "Oxygen" },
-  { "tab", "ptype_2", 20, 220, 130, 20, "1X health" },
-  { "tab", "ptype_3", 20, 240, 130, 20, "2X health" },
-  { "tab", "ptype_4", 20, 260, 130, 20, "3X health" },
-  { "tab", "ptype_8", 20, 290, 130, 20, "Pattern buffer" },
-  { "tab", "ptype_9", 20, 310, 130, 20, "Terminal" },
-  { "tab", "ptype_0", 20, 340, 130, 20, "Inactive" },
+  { "tab", "ptype_5", 20, 105, 130, 20, "Light switch" },
+  { "tab", "ptype_6", 20, 125, 130, 20, "Platform switch" },
+  { "tab", "ptype_7", 20, 145, 130, 20, "Tag switch" },
+  { "tab", "ptype_10", 20, 165, 130, 20, "Chip insertion" },
+  { "tab", "ptype_11", 20, 185, 130, 20, "Wires" },
+  { "tab", "ptype_1", 20, 215, 130, 20, "Oxygen" },
+  { "tab", "ptype_2", 20, 235, 130, 20, "1X health" },
+  { "tab", "ptype_3", 20, 255, 130, 20, "2X health" },
+  { "tab", "ptype_4", 20, 275, 130, 20, "3X health" },
+  { "tab", "ptype_8", 20, 305, 130, 20, "Pattern buffer" },
+  { "tab", "ptype_9", 20, 325, 130, 20, "Terminal" },
+  { "tab", "ptype_0", 20, 355, 130, 20, "Inactive" },
   { "tcheckbox", "panel_light", 160, 90, 150, 20, "Light dependent" },
   { "tcheckbox", "panel_weapon", 160, 110, 150, 20, "Only toggled by weapons" },
   { "tcheckbox", "panel_repair", 160, 130, 150, 20, "Repair switch" },
   { "label", nil, 160+5, 170, 150, 20, "Light" } }
- HMenu.menus["panel_platform"] = {
+HMenu.menus["panel_platform"] = {
   { "tab_bg", nil, 150, 80, 470, 320, nil },
-  { "tab", "ptype_5", 20, 90, 130, 20, "Light switch" },
-  { "tab", "ptype_6", 20, 110, 130, 20, "Platform switch" },
-  { "tab", "ptype_7", 20, 130, 130, 20, "Tag switch" },
-  { "tab", "ptype_10", 20, 150, 130, 20, "Chip insertion" },
-  { "tab", "ptype_11", 20, 170, 130, 20, "Wires" },
-  { "tab", "ptype_1", 20, 200, 130, 20, "Oxygen" },
-  { "tab", "ptype_2", 20, 220, 130, 20, "1X health" },
-  { "tab", "ptype_3", 20, 240, 130, 20, "2X health" },
-  { "tab", "ptype_4", 20, 260, 130, 20, "3X health" },
-  { "tab", "ptype_8", 20, 290, 130, 20, "Pattern buffer" },
-  { "tab", "ptype_9", 20, 310, 130, 20, "Terminal" },
-  { "tab", "ptype_0", 20, 340, 130, 20, "Inactive" },
+  { "tab", "ptype_5", 20, 105, 130, 20, "Light switch" },
+  { "tab", "ptype_6", 20, 125, 130, 20, "Platform switch" },
+  { "tab", "ptype_7", 20, 145, 130, 20, "Tag switch" },
+  { "tab", "ptype_10", 20, 165, 130, 20, "Chip insertion" },
+  { "tab", "ptype_11", 20, 185, 130, 20, "Wires" },
+  { "tab", "ptype_1", 20, 215, 130, 20, "Oxygen" },
+  { "tab", "ptype_2", 20, 235, 130, 20, "1X health" },
+  { "tab", "ptype_3", 20, 255, 130, 20, "2X health" },
+  { "tab", "ptype_4", 20, 275, 130, 20, "3X health" },
+  { "tab", "ptype_8", 20, 305, 130, 20, "Pattern buffer" },
+  { "tab", "ptype_9", 20, 325, 130, 20, "Terminal" },
+  { "tab", "ptype_0", 20, 355, 130, 20, "Inactive" },
   { "tcheckbox", "panel_light", 160, 90, 150, 20, "Light dependent" },
   { "tcheckbox", "panel_weapon", 160, 110, 150, 20, "Only toggled by weapons" },
   { "tcheckbox", "panel_repair", 160, 130, 150, 20, "Repair switch" },
   { "label", nil, 160+5, 170, 150, 20, "Platform" } }
- HMenu.menus["panel_tag"] = {
+HMenu.menus["panel_tag"] = {
   { "tab_bg", nil, 150, 80, 470, 320, nil },
-  { "tab", "ptype_5", 20, 90, 130, 20, "Light switch" },
-  { "tab", "ptype_6", 20, 110, 130, 20, "Platform switch" },
-  { "tab", "ptype_7", 20, 130, 130, 20, "Tag switch" },
-  { "tab", "ptype_10", 20, 150, 130, 20, "Chip insertion" },
-  { "tab", "ptype_11", 20, 170, 130, 20, "Wires" },
-  { "tab", "ptype_1", 20, 200, 130, 20, "Oxygen" },
-  { "tab", "ptype_2", 20, 220, 130, 20, "1X health" },
-  { "tab", "ptype_3", 20, 240, 130, 20, "2X health" },
-  { "tab", "ptype_4", 20, 260, 130, 20, "3X health" },
-  { "tab", "ptype_8", 20, 290, 130, 20, "Pattern buffer" },
-  { "tab", "ptype_9", 20, 310, 130, 20, "Terminal" },
-  { "tab", "ptype_0", 20, 340, 130, 20, "Inactive" },
+  { "tab", "ptype_5", 20, 105, 130, 20, "Light switch" },
+  { "tab", "ptype_6", 20, 125, 130, 20, "Platform switch" },
+  { "tab", "ptype_7", 20, 145, 130, 20, "Tag switch" },
+  { "tab", "ptype_10", 20, 165, 130, 20, "Chip insertion" },
+  { "tab", "ptype_11", 20, 185, 130, 20, "Wires" },
+  { "tab", "ptype_1", 20, 215, 130, 20, "Oxygen" },
+  { "tab", "ptype_2", 20, 235, 130, 20, "1X health" },
+  { "tab", "ptype_3", 20, 255, 130, 20, "2X health" },
+  { "tab", "ptype_4", 20, 275, 130, 20, "3X health" },
+  { "tab", "ptype_8", 20, 305, 130, 20, "Pattern buffer" },
+  { "tab", "ptype_9", 20, 325, 130, 20, "Terminal" },
+  { "tab", "ptype_0", 20, 355, 130, 20, "Inactive" },
   { "tcheckbox", "panel_light", 160, 90, 150, 20, "Light dependent" },
   { "tcheckbox", "panel_weapon", 160, 110, 150, 20, "Only toggled by weapons" },
   { "tcheckbox", "panel_repair", 160, 130, 150, 20, "Repair switch" },
@@ -934,12 +943,17 @@ function HMenu.draw_menu(mode, transparent)
           label = "Mic"
         end
       end
-              
-      Screen.fill_rect(x + menu_prefs.button_indent*u,
-                       y + menu_prefs.button_indent*u,
-                       w - 1*menu_prefs.button_indent*u,
-                       h - 2*menu_prefs.button_indent*u,
-                          colors.ktab[state].background)
+      
+      local li = menu_prefs.tab_indent.left
+      local ri = menu_prefs.tab_indent.right
+      local ti = menu_prefs.tab_indent.top
+      local bi = menu_prefs.tab_indent.bottom
+      if state == "current" then ri = 0 end
+      Screen.fill_rect(x + li*u,
+                       y + ti*u,
+                       w - li*u - ri*u,
+                       h - ti*u - bi*u,
+                       colors.ktab[state].background)
       HGlobals.fontn:draw_text(item[7],
                                math.floor(x + 35*u),
                                math.floor(y + h/2 + HGlobals.fnoff),
@@ -956,11 +970,16 @@ function HMenu.draw_menu(mode, transparent)
     elseif item[1] == "tab" then
       local state = HMenu.button_state(item[2])
               
-      Screen.fill_rect(x + menu_prefs.button_indent*u,
-                       y + menu_prefs.button_indent*u,
-                       w - 1*menu_prefs.button_indent*u,
-                       h - 2*menu_prefs.button_indent*u,
-                          colors.tab[state].background)
+      local li = menu_prefs.tab_indent.left
+      local ri = menu_prefs.tab_indent.right
+      local ti = menu_prefs.tab_indent.top
+      local bi = menu_prefs.tab_indent.bottom
+      if state == "active" then ri = 0 end
+      Screen.fill_rect(x + li*u,
+                       y + ti*u,
+                       w - li*u - ri*u,
+                       h - ti*u - bi*u,
+                       colors.tab[state].background)
       HGlobals.fontn:draw_text(item[7],
                                math.floor(x + 7*u),
                                math.floor(y + h/2 + HGlobals.fnoff),
