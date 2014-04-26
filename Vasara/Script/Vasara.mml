@@ -1,3 +1,8 @@
 <marathon>
-  <overhead_map mode="2"/>
+  <overhead_map mode="2">
+    <color index="20" red="1" green="0.8" blue="0.2"/>
+  </overhead_map>
+  <faders>
+    <fader index="19" initial_opacity="0" final_opacity="0" period="0"/>
+  </faders>
 </marathon>

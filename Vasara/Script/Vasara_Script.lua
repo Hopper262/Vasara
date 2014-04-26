@@ -202,7 +202,7 @@ function SMode.init()
     p._saved_surface.opposite_offsets = nil
     p._saved_surface.opposite_rem = 0
     
-    p._annotation = Annotations.new(Polygons[0], "")
+--     p._annotation = Annotations.new(Polygons[0], "")
     
     if p.local_ then
       p.texture_palette.slots[40].texture_index = p._mode
@@ -578,10 +578,10 @@ function SMode.handle_teleport(p)
 end
 function SMode.annotate(p)
   local poly = Polygons[p._target_poly]
-  p._annotation.polygon = poly
-  p._annotation.text = poly.index
-  p._annotation.x = poly.x
-  p._annotation.y = poly.y
+--   p._annotation.polygon = poly
+--   p._annotation.text = poly.index
+--   p._annotation.x = poly.x
+--   p._annotation.y = poly.y
 end
 function SMode.handle_choose(p)
   -- cycle textures
@@ -1997,7 +1997,9 @@ function UTeleport.highlight(p, poly)
     UTeleport.remove_highlight(p)
     p._teleport.last_target = poly
     p._teleport.last_target_mode = poly.floor.transfer_mode
+    p._teleport.last_target_type = poly.type
     poly.floor.transfer_mode = "static"
+    poly.type = PolygonTypes["major ouch"]
   end
 end
 function UTeleport.remove_highlight(p)
@@ -2005,6 +2007,7 @@ function UTeleport.remove_highlight(p)
   if p._teleport.last_target ~= nil then
     -- restore last selected poly
     p._teleport.last_target.floor.transfer_mode = p._teleport.last_target_mode
+    p._teleport.last_target.type = p._teleport.last_target_type
     p._teleport.last_target = nil
   end
 end
