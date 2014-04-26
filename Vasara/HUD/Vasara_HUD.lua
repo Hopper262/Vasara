@@ -146,6 +146,7 @@ menu_prefs.texture_apply_indent = 0.5
 menu_prefs.texture_preview_indent = 0
 
 menu_prefs.light_thickness = 2
+menu_prefs.light_preview_thickness = 0.07
 
 
 -- END PREFERENCES -- no user serviceable parts below ;)
@@ -1570,7 +1571,11 @@ function HCollections.preview_current(x, y, size)
     end
   elseif HApply.down(HApply.use_light) then 
     local val = HLights.val(HApply.current_light)
-    Screen.fill_rect(x, y, size, size, { val, val, val, 1 })
+    local border = size * menu_prefs.light_preview_thickness
+    Screen.fill_rect(x, y, size, size, { 0.5, 0.5, 0.5, 1 })
+    Screen.fill_rect(x + border, y + border,
+                     size - 2*border, size - 2*border,
+                     { val, val, val, 1 })
   end
   
   Screen.clip_rect.x = oldx
