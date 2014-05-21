@@ -697,19 +697,6 @@ end
 function SMode.handle_attribute(p)
   if p._keys.mic.down then
     if p._keys.prev_weapon.pressed then
-      p._apply.align = not p._apply.align
-    end
-    if p._keys.next_weapon.pressed then
-      p._apply.transparent = not p._apply.transparent
-    end
-    if p._keys.primary.released then
-      SMode.default_attribute(p)
-    end
-    if p._keys.secondary.released then
-      SMode.revert_attribute(p)
-    end
-  else
-    if p._keys.prev_weapon.pressed then
       p._apply.light = true
       p._apply.texture = true
     end
@@ -721,6 +708,18 @@ function SMode.handle_attribute(p)
         p._apply.light = true
         p._apply.texture = false
       end
+    end
+    if p._keys.primary.released then
+      SMode.default_attribute(p)
+    end
+    if p._keys.secondary.released then
+      SMode.revert_attribute(p)
+    end
+  else
+    if p._keys.prev_weapon.pressed then
+      p._light = (p._light - 1) % #Lights
+    elseif p._keys.next_weapon.pressed then
+      p._light = (p._light + 1) % #Lights
     end
   end
   
@@ -754,7 +753,7 @@ function SMode.handle_attribute(p)
   end
 end
 function SMode.handle_panel(p)
-  if p._keys.mic.down then
+  if not p._keys.mic.down then
     if p._keys.prev_weapon.pressed then
       SPanel.cycle_permutation(p, -1)
     end

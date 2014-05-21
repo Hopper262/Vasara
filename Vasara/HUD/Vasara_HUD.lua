@@ -445,7 +445,7 @@ function HApply.update()
   local lbls = HMenu.menus["key_" .. HMode.apply]
   local lbls2 = HMenu.menus["key_" .. HMode.attribute]
   
-  lbls2[5][7] = "Apply Light Only"
+  lbls2[9][7] = "Apply Light Only"
   if HApply.down(HApply.use_texture) then
     if HApply.down(HApply.use_light) then
       lbls[2][7] = "Apply Light + Texture"
@@ -454,20 +454,9 @@ function HApply.update()
     end
   elseif HApply.down(HApply.use_light) then
     lbls[2][7] = "Apply Light"
-    lbls2[5][7] = "Apply Texture Only"
+    lbls2[9][7] = "Apply Texture Only"
   else
     lbls[2][7] = "Move Texture"
-  end
-  
-  if HApply.down(HApply.align) then
-    lbls2[8][7] = "Ignore Adjacent"
-  else
-    lbls2[8][7] = "Align Adjacent"
-  end
-  if HApply.down(HApply.transparent) then
-    lbls2[9][7] = "Ignore Transparent Sides"
-  else
-    lbls2[9][7] = "Edit Transparent Sides"
   end
   
 end
@@ -747,12 +736,12 @@ HMenu.menus["key_" .. HMode.attribute] = {
   { "ktab_bg", nil, 150, 4 + menu_prefs.button_indent, 470, 64 - 2*menu_prefs.button_indent, nil },
   { "kaction", "key_primary", 235, 10, 100, 12, "Select Option" },
   { "kaction", "key_secondary", 235, 22, 100, 12, "Visual Mode" },
-  { "kaction", "key_prev_weapon", 235, 38, 100, 12, "Apply Light + Texture" },
-  { "kaction", "key_next_weapon", 235, 50, 100, 12, "Apply Light Only" },
+  { "kaction", "key_prev_weapon", 235, 38, 100, 12, "Previous Light" },
+  { "kaction", "key_next_weapon", 235, 50, 100, 12, "Next Light" },
   { "kaction", "key_mic_primary", 475, 10, 100, 12, "Default Settings" },
   { "kaction", "key_mic_secondary", 475, 22, 100, 12, "Revert Changes" },
-  { "kaction", "key_mic_prev_weapon", 475, 38, 100, 12, "Ignore Adjacent" },
-  { "kaction", "key_mic_next_weapon", 475, 50, 100, 12, "Edit Transparent" },
+  { "kaction", "key_mic_prev_weapon", 475, 38, 100, 12, "Apply Light + Texture" },
+  { "kaction", "key_mic_next_weapon", 475, 50, 100, 12, "Apply Light Only" },
   { "klabel", "key_primary", 180, 10, 50, 12, "Trigger 1" },
   { "klabel", "key_secondary", 180, 22, 50, 12, "Trigger 2" },
   { "klabel", "key_prev_weapon", 180, 38, 50, 12, "Prev Weapon" },
@@ -769,20 +758,20 @@ HMenu.menus["key_panel_off"] = {
   { "ktab_bg", nil, 150, 4 + menu_prefs.button_indent, 470, 64 - 2*menu_prefs.button_indent, nil },
   { "kaction", "key_primary", 235, 10, 100, 12, "Select Option" },
   { "kaction", "key_secondary", 235, 22, 100, 12, "Visual Mode" },
-  { "kaction", "key_prev_weapon", 235, 38, 100, 12, "Previous Type" },
-  { "kaction", "key_next_weapon", 235, 50, 100, 12, "Next Type" },
+--   { "kaction", "key_prev_weapon", 235, 38, 100, 12, "Previous Type" },
+--   { "kaction", "key_next_weapon", 235, 50, 100, 12, "Next Type" },
 --   { "kaction", "key_mic_primary", 475, 10, 100, 12, "Cycle Textures" },
   { "kaction", "key_mic_secondary", 475, 22, 100, 12, "Revert Changes" },
---   { "kaction", "key_mic_prev_weapon", 475, 38, 100, 12, "Previous Texture" },
---   { "kaction", "key_mic_next_weapon", 475, 50, 100, 12, "Next Texture" },
+  { "kaction", "key_mic_prev_weapon", 475, 38, 100, 12, "Previous Type" },
+  { "kaction", "key_mic_next_weapon", 475, 50, 100, 12, "Next Type" },
   { "klabel", "key_primary", 180, 10, 50, 12, "Trigger 1" },
   { "klabel", "key_secondary", 180, 22, 50, 12, "Trigger 2" },
-  { "klabel", "key_prev_weapon", 180, 38, 50, 12, "Prev Weapon" },
-  { "klabel", "key_next_weapon", 180, 50, 50, 12, "Next Weapon" },
+--   { "klabel", "key_prev_weapon", 180, 38, 50, 12, "Prev Weapon" },
+--   { "klabel", "key_next_weapon", 180, 50, 50, 12, "Next Weapon" },
 --   { "klabel", "key_mic_primary", 400, 10, 70, 12, "Mic + Trigger 1" },
   { "klabel", "key_mic_secondary", 400, 22, 70, 12, "Mic + Trigger 2" },
---   { "klabel", "key_mic_prev_weapon", 400, 38, 70, 12, "Mic + Prev Weapon" },
---   { "klabel", "key_mic_next_weapon", 400, 50, 70, 12, "Mic + Next Weapon" },
+  { "klabel", "key_mic_prev_weapon", 400, 38, 70, 12, "Mic + Prev Weapon" },
+  { "klabel", "key_mic_next_weapon", 400, 50, 70, 12, "Mic + Next Weapon" },
   { "ktab", nil, 20, 4, 130, 16, "Edit Switch / Panel" },
   { "ktab", "key_action", 20, 20, 130, 16, "Choose Texture" },
   { "ktab", "key_mic", 20, 36, 130, 16, "Options" },
@@ -792,12 +781,12 @@ HMenu.menus["key_panel_terminal"] = {
   { "ktab_bg", nil, 150, 4 + menu_prefs.button_indent, 470, 64 - 2*menu_prefs.button_indent, nil },
   { "kaction", "key_primary", 235, 10, 100, 12, "Select Option" },
   { "kaction", "key_secondary", 235, 22, 100, 12, "Visual Mode" },
-  { "kaction", "key_prev_weapon", 235, 38, 100, 12, "Previous Type" },
-  { "kaction", "key_next_weapon", 235, 50, 100, 12, "Next Type" },
+  { "kaction", "key_prev_weapon", 235, 38, 100, 12, "Previous Script" },
+  { "kaction", "key_next_weapon", 235, 50, 100, 12, "Next Script" },
 --   { "kaction", "key_mic_primary", 475, 10, 100, 12, "Cycle Textures" },
   { "kaction", "key_mic_secondary", 475, 22, 100, 12, "Revert Changes" },
-  { "kaction", "key_mic_prev_weapon", 475, 38, 100, 12, "Previous Script" },
-  { "kaction", "key_mic_next_weapon", 475, 50, 100, 12, "Next Script" },
+  { "kaction", "key_mic_prev_weapon", 475, 38, 100, 12, "Previous Type" },
+  { "kaction", "key_mic_next_weapon", 475, 50, 100, 12, "Next Type" },
   { "klabel", "key_primary", 180, 10, 50, 12, "Trigger 1" },
   { "klabel", "key_secondary", 180, 22, 50, 12, "Trigger 2" },
   { "klabel", "key_prev_weapon", 180, 38, 50, 12, "Prev Weapon" },
@@ -814,12 +803,12 @@ HMenu.menus["key_panel_light"] = {
   { "ktab_bg", nil, 150, 4 + menu_prefs.button_indent, 470, 64 - 2*menu_prefs.button_indent, nil },
   { "kaction", "key_primary", 235, 10, 100, 12, "Select Option" },
   { "kaction", "key_secondary", 235, 22, 100, 12, "Visual Mode" },
-  { "kaction", "key_prev_weapon", 235, 38, 100, 12, "Previous Type" },
-  { "kaction", "key_next_weapon", 235, 50, 100, 12, "Next Type" },
+  { "kaction", "key_prev_weapon", 235, 38, 100, 12, "Previous Light" },
+  { "kaction", "key_next_weapon", 235, 50, 100, 12, "Next Light" },
 --   { "kaction", "key_mic_primary", 475, 10, 100, 12, "Cycle Textures" },
   { "kaction", "key_mic_secondary", 475, 22, 100, 12, "Revert Changes" },
-  { "kaction", "key_mic_prev_weapon", 475, 38, 100, 12, "Previous Light" },
-  { "kaction", "key_mic_next_weapon", 475, 50, 100, 12, "Next Light" },
+  { "kaction", "key_mic_prev_weapon", 475, 38, 100, 12, "Previous Type" },
+  { "kaction", "key_mic_next_weapon", 475, 50, 100, 12, "Next Type" },
   { "klabel", "key_primary", 180, 10, 50, 12, "Trigger 1" },
   { "klabel", "key_secondary", 180, 22, 50, 12, "Trigger 2" },
   { "klabel", "key_prev_weapon", 180, 38, 50, 12, "Prev Weapon" },
@@ -836,12 +825,12 @@ HMenu.menus["key_panel_platform"] = {
   { "ktab_bg", nil, 150, 4 + menu_prefs.button_indent, 470, 64 - 2*menu_prefs.button_indent, nil },
   { "kaction", "key_primary", 235, 10, 100, 12, "Select Option" },
   { "kaction", "key_secondary", 235, 22, 100, 12, "Visual Mode" },
-  { "kaction", "key_prev_weapon", 235, 38, 100, 12, "Previous Type" },
-  { "kaction", "key_next_weapon", 235, 50, 100, 12, "Next Type" },
+  { "kaction", "key_prev_weapon", 235, 38, 100, 12, "Previous Platform" },
+  { "kaction", "key_next_weapon", 235, 50, 100, 12, "Next Platform" },
 --   { "kaction", "key_mic_primary", 475, 10, 100, 12, "Cycle Textures" },
   { "kaction", "key_mic_secondary", 475, 22, 100, 12, "Revert Changes" },
-  { "kaction", "key_mic_prev_weapon", 475, 38, 100, 12, "Previous Platform" },
-  { "kaction", "key_mic_next_weapon", 475, 50, 100, 12, "Next Platform" },
+  { "kaction", "key_mic_prev_weapon", 475, 38, 100, 12, "Previous Type" },
+  { "kaction", "key_mic_next_weapon", 475, 50, 100, 12, "Next Type" },
   { "klabel", "key_primary", 180, 10, 50, 12, "Trigger 1" },
   { "klabel", "key_secondary", 180, 22, 50, 12, "Trigger 2" },
   { "klabel", "key_prev_weapon", 180, 38, 50, 12, "Prev Weapon" },
@@ -858,12 +847,12 @@ HMenu.menus["key_panel_tag"] = {
   { "ktab_bg", nil, 150, 4 + menu_prefs.button_indent, 470, 64 - 2*menu_prefs.button_indent, nil },
   { "kaction", "key_primary", 235, 10, 100, 12, "Select Option" },
   { "kaction", "key_secondary", 235, 22, 100, 12, "Visual Mode" },
-  { "kaction", "key_prev_weapon", 235, 38, 100, 12, "Previous Type" },
-  { "kaction", "key_next_weapon", 235, 50, 100, 12, "Next Type" },
+  { "kaction", "key_prev_weapon", 235, 38, 100, 12, "Previous Tag" },
+  { "kaction", "key_next_weapon", 235, 50, 100, 12, "Next Tag" },
 --   { "kaction", "key_mic_primary", 475, 10, 100, 12, "Cycle Textures" },
   { "kaction", "key_mic_secondary", 475, 22, 100, 12, "Revert Changes" },
-  { "kaction", "key_mic_prev_weapon", 475, 38, 100, 12, "Previous Tag" },
-  { "kaction", "key_mic_next_weapon", 475, 50, 100, 12, "Next Tag" },
+  { "kaction", "key_mic_prev_weapon", 475, 38, 100, 12, "Previous Type" },
+  { "kaction", "key_mic_next_weapon", 475, 50, 100, 12, "Next Type" },
   { "klabel", "key_primary", 180, 10, 50, 12, "Trigger 1" },
   { "klabel", "key_secondary", 180, 22, 50, 12, "Trigger 2" },
   { "klabel", "key_prev_weapon", 180, 38, 50, 12, "Prev Weapon" },
@@ -953,7 +942,6 @@ function HMenu.draw_menu(mode, transparent)
       end
     elseif item[1] == "tab_bg" then
       Screen.fill_rect(x, y, w, h, colors.tab.background)
-      Screen.fill_rect(x, y, menu_prefs.tab_indent.band_left*u, h, colors.tab.band)
     elseif item[1] == "bg" then
       Screen.fill_rect(x, y, w, h, colors.tab.background)
     elseif item[1] == "tab" then
