@@ -22,7 +22,7 @@ collection_names = {
 colors = {}
 colors.menu_label = { 0.7, 0.7, 0.3, 1 }
 colors.current_texture = { 0, 1, 0, 1 }
-colors.snap_grid = { 0, 1, 0, 0.8 }
+colors.snap_grid = { 0, 1, 0, 0.6 }
 
 colors.light = {}
 colors.light.enabled = {}
@@ -40,8 +40,8 @@ colors.commands.disabled = {}
 colors.commands.disabled.label = { 0.4, 0.4, 0.2, 1 }
 colors.commands.disabled.key = { 0.5, 0.5, 0.5, 1 }
 colors.commands.active = {}
-colors.commands.active.label = { 1, 0.15, 0.15, 1 }
-colors.commands.active.key = { 1, 0.15, 0.15, 1 }
+colors.commands.active.label = { 0.2, 1.0, 0.2, 1 }
+colors.commands.active.key = { 0.2, 1.0, 0.2, 1 }
 
 colors.button = {}
 colors.button.enabled = {}
@@ -88,8 +88,8 @@ colors.ktab.disabled.text = { 0.4, 0.4, 0.4, 1 }
 colors.ktab.disabled.label = { 0.4, 0.4, 0.2, 1 }
 colors.ktab.active = {}
 colors.ktab.active.background = { 0.1, 0.1, 0.1, 1 }
-colors.ktab.active.text = { 1, 0.15, 0.15, 1 }
-colors.ktab.active.label = { 1, 0.15, 0.15, 1 }
+colors.ktab.active.text = { 0.2, 1.0, 0.2, 1 }
+colors.ktab.active.label = { 0.2, 1.0, 0.2, 1 }
 
 colors.tab = {}
 colors.tab.background = { 0.1, 0.1, 0.1, 1 }
@@ -126,10 +126,10 @@ menu_prefs.light_thickness = 2
 
 menu_prefs.preview = {}
 menu_prefs.preview.apply = {}
-menu_prefs.preview.apply.light_border = 3
+menu_prefs.preview.apply.light_border = 2
 menu_prefs.preview.apply.snap_grid = 0
 menu_prefs.preview.attribute = {}
-menu_prefs.preview.attribute.light_border = 5
+menu_prefs.preview.attribute.light_border = 4
 menu_prefs.preview.attribute.snap_grid = 1
 
 
@@ -435,6 +435,7 @@ HApply.current_transfer = 0
 HApply.current_snap = 0
 HApply.transfer_modes = { "Normal", "Pulsate", "Wobble", "Fast wobble", "Static", "Landscape", "Horizontal slide", "Fast horizontal slide", "Vertical slide", "Fast vertical slide", "Wander", "Fast wander" }
 HApply.snap_modes = { "Off", "1/4 WU", "1/5 WU", "1/8 WU" }
+HApply.snap_denominators = { 1, 4, 5, 8 }
 function HApply.update()
   HApply.bitfield = Player.texture_palette.slots[46].texture_index
   HApply.current_light = Player.texture_palette.slots[43].texture_index
@@ -1559,11 +1560,7 @@ function HCollections.preview_current(x, y, size)
       if pref.snap_grid > 0 and HApply.current_snap > 0 then
         local border = u * pref.snap_grid
         Screen.frame_rect(x, y, size, size, colors.snap_grid, border)
-        local grids = 0
-        if HApply.current_snap == 1 then grids = 4
-        elseif HApply.current_snap == 2 then grids = 5
-        elseif HApply.current_snap == 3 then grids = 8
-        end
+        local grids = HApply.snap_denominators[HApply.current_snap + 1]
         for i = 1,grids-1 do
           local off = size * i / grids
           Screen.fill_rect(x + off - border/2, y + border,
