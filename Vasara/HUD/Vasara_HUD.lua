@@ -22,6 +22,7 @@ collection_names = {
 colors = {}
 colors.menu_label = { 0.7, 0.7, 0.3, 1 }
 colors.current_texture = { 0, 1, 0, 1 }
+colors.snap_grid = { 0, 1, 0, 0.8 }
 
 colors.light = {}
 colors.light.enabled = {}
@@ -30,14 +31,6 @@ colors.light.enabled.text = { 0.8, 0.8, 0.8, 1 }
 colors.light.active = {}
 colors.light.active.frame = { 0, 1, 0, 1 }
 colors.light.active.text = { 0.2, 1.0, 0.2, 1 }
-
-colors.tlight = {}
-colors.tlight.enabled = {}
-colors.tlight.enabled.frame = { 0.5, 0.5, 0.5, 1 }
-colors.tlight.enabled.text = { 1, 1, 1, 1 }
-colors.tlight.active = {}
-colors.tlight.active.frame = { 0, 1, 0, 1 }
-colors.tlight.active.text = { 0.2, 1.0, 0.2, 1 }
 
 colors.commands = {}
 colors.commands.enabled = {}
@@ -57,10 +50,10 @@ colors.button.enabled.highlight = { 0.08, 0.08, 0.08, 1 }
 colors.button.enabled.shadow = { 0.12, 0.12, 0.12, 1 }
 colors.button.enabled.text = { 0.8, 0.8, 0.8, 1 }
 colors.button.disabled = {}
-colors.button.disabled.background = { 0.0, 0.0, 0.0, 1 }
-colors.button.disabled.highlight = { 0.0, 0.0, 0.0, 1 }
-colors.button.disabled.shadow = { 0.0, 0.0, 0.0, 1 }
-colors.button.disabled.text = { 0.5, 0.5, 0.5, 1 }
+colors.button.disabled.background = { 0.1, 0.1, 0.1, 1 }
+colors.button.disabled.highlight = { 0.08, 0.08, 0.08, 1 }
+colors.button.disabled.shadow = { 0.12, 0.12, 0.12, 1 }
+colors.button.disabled.text = { 0.4, 0.4, 0.4, 1 }
 colors.button.active = {}
 colors.button.active.background = { 0.2, 0.2, 0.2, 1 }
 colors.button.active.highlight = { 0.25, 0.25, 0.25, 1 }
@@ -100,33 +93,15 @@ colors.ktab.active.label = { 1, 0.15, 0.15, 1 }
 
 colors.tab = {}
 colors.tab.background = { 0.1, 0.1, 0.1, 1 }
-colors.tab.band = { 0.15, 0.15, 0.15, 1 }
 colors.tab.enabled = {}
-colors.tab.enabled.background = { 0.1, 0.1, 0.1, 1 }
+colors.tab.enabled.background = { 0.06, 0.06, 0.06, 1 }
 colors.tab.enabled.text = { 0.8, 0.8, 0.8, 1 }
 colors.tab.disabled = {}
-colors.tab.disabled.background = { 0.1, 0.1, 0.1, 1 }
+colors.tab.disabled.background = { 0.06, 0.06, 0.06, 1 }
 colors.tab.disabled.text = { 0.4, 0.4, 0.4, 1 }
 colors.tab.active = {}
-colors.tab.active.background = { 0.15, 0.15, 0.15, 1 }
+colors.tab.active.background = { 0.1, 0.1, 0.1, 1 }
 colors.tab.active.text = { 0.2, 1.0, 0.2, 1 }
-
-colors.tbutton = {}
-colors.tbutton.enabled = {}
-colors.tbutton.enabled.background = { 0.15, 0.15, 0.15, 1 }
-colors.tbutton.enabled.highlight = { 0.13, 0.13, 0.13, 1 }
-colors.tbutton.enabled.shadow = { 0.17, 0.17, 0.17, 1 }
-colors.tbutton.enabled.text = { 0.8, 0.8, 0.8, 1 }
-colors.tbutton.disabled = {}
-colors.tbutton.disabled.background = { 0.0, 0.0, 0.0, 0 }
-colors.tbutton.disabled.highlight = { 0.0, 0.0, 0.0, 0 }
-colors.tbutton.disabled.shadow = { 0.0, 0.0, 0.0, 0 }
-colors.tbutton.disabled.text = { 0.5, 0.5, 0.5, 1 }
-colors.tbutton.active = {}
-colors.tbutton.active.background = { 0.3, 0.3, 0.3, 1 }
-colors.tbutton.active.highlight = { 0.35, 0.35, 0.35, 1 }
-colors.tbutton.active.shadow = { 0.25, 0.25, 0.25, 1 }
-colors.tbutton.active.text = { 0.2, 1.0, 0.2, 1 }
 
 
 -- other menu UI prefs
@@ -148,7 +123,14 @@ menu_prefs.texture_apply_indent = 0.5
 menu_prefs.texture_preview_indent = 0
 
 menu_prefs.light_thickness = 2
-menu_prefs.light_preview_thickness = 0.07
+
+menu_prefs.preview = {}
+menu_prefs.preview.apply = {}
+menu_prefs.preview.apply.light_border = 3
+menu_prefs.preview.apply.snap_grid = 0
+menu_prefs.preview.attribute = {}
+menu_prefs.preview.attribute.light_border = 5
+menu_prefs.preview.attribute.snap_grid = 1
 
 
 -- END PREFERENCES -- no user serviceable parts below ;)
@@ -560,30 +542,30 @@ HMenu.menus = {}
 HMenu.menus[HMode.attribute] = {
   { "bg", nil, 20, 80, 600, 320, nil },
   { "label", nil, 30+5, 85, 155, 20, "Attributes" },
-  { "tcheckbox", "apply_light", 30, 105, 155, 20, "Apply light" },
-  { "tcheckbox", "apply_tex", 30, 125, 155, 20, "Apply texture" },
-  { "tcheckbox", "apply_align", 30, 145, 155, 20, "Align adjacent" },
-  { "tcheckbox", "apply_edit", 30, 165, 155, 20, "Edit switches and panels" },
-  { "tcheckbox", "apply_xparent", 30, 185, 155, 20, "Edit transparent sides" },
+  { "checkbox", "apply_light", 30, 105, 155, 20, "Apply light" },
+  { "checkbox", "apply_tex", 30, 125, 155, 20, "Apply texture" },
+  { "checkbox", "apply_align", 30, 145, 155, 20, "Align adjacent" },
+  { "checkbox", "apply_edit", 30, 165, 155, 20, "Edit switches and panels" },
+  { "checkbox", "apply_xparent", 30, 185, 155, 20, "Edit transparent sides" },
   { "label", "nil", 30+5, 250, 155, 20, "Snap to grid" },
-  { "tradio", "snap_0", 30, 270, 155, 20, "Off" },
-  { "tradio", "snap_1", 30, 290, 155, 20, "1/4 WU" },
-  { "tradio", "snap_2", 30, 310, 155, 20, "1/5 WU" },
-  { "tradio", "snap_3", 30, 330, 155, 20, "1/8 WU" },
+  { "radio", "snap_0", 30, 270, 155, 20, "Off" },
+  { "radio", "snap_1", 30, 290, 155, 20, "1/4 WU" },
+  { "radio", "snap_2", 30, 310, 155, 20, "1/5 WU" },
+  { "radio", "snap_3", 30, 330, 155, 20, "1/8 WU" },
   { "label", nil, 215+5, 85, 240, 20, "Light" },
   { "label", nil, 215+5, 250, 240, 20, "Texture mode" },
-  { "tradio", "transfer_0", 215, 270, 120, 20, "Normal" },
-  { "tradio", "transfer_1", 215, 290, 120, 20, "Pulsate" },
-  { "tradio", "transfer_2", 215, 310, 120, 20, "Wobble" },
-  { "tradio", "transfer_6", 215, 330, 120, 20, "Horizontal slide" },
-  { "tradio", "transfer_8", 215, 350, 120, 20, "Vertical slide" },
-  { "tradio", "transfer_10", 215, 370, 120, 20, "Wander" },
-  { "tradio", "transfer_5", 335, 270, 120, 20, "Landscape" },
-  { "tradio", "transfer_4", 335, 290, 120, 20, "Static" },
-  { "tradio", "transfer_3", 335, 310, 120, 20, "Fast wobble" },
-  { "tradio", "transfer_7", 335, 330, 120, 20, "Fast horizontal slide" },
-  { "tradio", "transfer_9", 335, 350, 120, 20, "Fast vertical slide" },
-  { "tradio", "transfer_11", 335, 370, 120, 20, "Fast wander" },
+  { "radio", "transfer_0", 215, 270, 120, 20, "Normal" },
+  { "radio", "transfer_1", 215, 290, 120, 20, "Pulsate" },
+  { "radio", "transfer_2", 215, 310, 120, 20, "Wobble" },
+  { "radio", "transfer_6", 215, 330, 120, 20, "Horizontal slide" },
+  { "radio", "transfer_8", 215, 350, 120, 20, "Vertical slide" },
+  { "radio", "transfer_10", 215, 370, 120, 20, "Wander" },
+  { "radio", "transfer_5", 335, 270, 120, 20, "Landscape" },
+  { "radio", "transfer_4", 335, 290, 120, 20, "Static" },
+  { "radio", "transfer_3", 335, 310, 120, 20, "Fast wobble" },
+  { "radio", "transfer_7", 335, 330, 120, 20, "Fast horizontal slide" },
+  { "radio", "transfer_9", 335, 350, 120, 20, "Fast vertical slide" },
+  { "radio", "transfer_11", 335, 370, 120, 20, "Fast wander" },
   { "label", nil, 485, 250, 120, 20, "Preview" },
   { "applypreview", nil, 485, 270, 120, 120, nil } }
 HMenu.menus["apply_options"] = {
@@ -622,7 +604,7 @@ HMenu.menus["panel_plain"] = {
   { "tab", "ptype_8", 20, 305, 130, 20, "Pattern buffer" },
   { "tab", "ptype_9", 20, 325, 130, 20, "Terminal" },
   { "tab", "ptype_0", 20, 355, 130, 20, "Inactive" },
-  { "tcheckbox", "panel_light", 170, 90, 150-3, 20, "Light dependent" } }
+  { "checkbox", "panel_light", 170, 90, 150-3, 20, "Light dependent" } }
 HMenu.menus["panel_terminal"] = {
   { "tab_bg", nil, 150, 80, 470, 320, nil },
   { "tab", "ptype_5", 20, 105, 130, 20, "Light switch" },
@@ -637,7 +619,7 @@ HMenu.menus["panel_terminal"] = {
   { "tab", "ptype_8", 20, 305, 130, 20, "Pattern buffer" },
   { "tab", "ptype_9", 20, 325, 130, 20, "Terminal" },
   { "tab", "ptype_0", 20, 355, 130, 20, "Inactive" },
-  { "tcheckbox", "panel_light", 170, 90, 150-3, 20, "Light dependent" },
+  { "checkbox", "panel_light", 170, 90, 150-3, 20, "Light dependent" },
   { "label", nil, 170+5, 130, 150, 20, "Terminal script" } }
 HMenu.menus["panel_light"] = {
   { "tab_bg", nil, 150, 80, 470, 320, nil },
@@ -653,9 +635,9 @@ HMenu.menus["panel_light"] = {
   { "tab", "ptype_8", 20, 305, 130, 20, "Pattern buffer" },
   { "tab", "ptype_9", 20, 325, 130, 20, "Terminal" },
   { "tab", "ptype_0", 20, 355, 130, 20, "Inactive" },
-  { "tcheckbox", "panel_light", 170, 90, 150-3, 20, "Light dependent" },
-  { "tcheckbox", "panel_weapon", 170, 110, 150-3, 20, "Only toggled by weapons" },
-  { "tcheckbox", "panel_repair", 170, 130, 150-3, 20, "Repair switch" },
+  { "checkbox", "panel_light", 170, 90, 150-3, 20, "Light dependent" },
+  { "checkbox", "panel_weapon", 170, 110, 150-3, 20, "Only toggled by weapons" },
+  { "checkbox", "panel_repair", 170, 130, 150-3, 20, "Repair switch" },
   { "label", nil, 170+5, 170, 150, 20, "Light" } }
 HMenu.menus["panel_platform"] = {
   { "tab_bg", nil, 150, 80, 470, 320, nil },
@@ -671,9 +653,9 @@ HMenu.menus["panel_platform"] = {
   { "tab", "ptype_8", 20, 305, 130, 20, "Pattern buffer" },
   { "tab", "ptype_9", 20, 325, 130, 20, "Terminal" },
   { "tab", "ptype_0", 20, 355, 130, 20, "Inactive" },
-  { "tcheckbox", "panel_light", 170, 90, 150-3, 20, "Light dependent" },
-  { "tcheckbox", "panel_weapon", 170, 110, 150-3, 20, "Only toggled by weapons" },
-  { "tcheckbox", "panel_repair", 170, 130, 150-3, 20, "Repair switch" },
+  { "checkbox", "panel_light", 170, 90, 150-3, 20, "Light dependent" },
+  { "checkbox", "panel_weapon", 170, 110, 150-3, 20, "Only toggled by weapons" },
+  { "checkbox", "panel_repair", 170, 130, 150-3, 20, "Repair switch" },
   { "label", nil, 170+5, 170, 150, 20, "Platform" } }
 HMenu.menus["panel_tag"] = {
   { "tab_bg", nil, 150, 80, 470, 320, nil },
@@ -689,10 +671,10 @@ HMenu.menus["panel_tag"] = {
   { "tab", "ptype_8", 20, 305, 130, 20, "Pattern buffer" },
   { "tab", "ptype_9", 20, 325, 130, 20, "Terminal" },
   { "tab", "ptype_0", 20, 355, 130, 20, "Inactive" },
-  { "tcheckbox", "panel_light", 170, 90, 150-3, 20, "Light dependent" },
-  { "tcheckbox", "panel_weapon", 170, 110, 150-3, 20, "Only toggled by weapons" },
-  { "tcheckbox", "panel_repair", 170, 130, 150-3, 20, "Repair switch" },
-  { "tcheckbox", "panel_active", 220-1, 170, 100-2, 20, "Tag is active" },
+  { "checkbox", "panel_light", 170, 90, 150-3, 20, "Light dependent" },
+  { "checkbox", "panel_weapon", 170, 110, 150-3, 20, "Only toggled by weapons" },
+  { "checkbox", "panel_repair", 170, 130, 150-3, 20, "Repair switch" },
+  { "checkbox", "panel_active", 220-1, 170, 100-2, 20, "Tag is active" },
   { "label", nil, 170+5, 170, 50-18, 20, "Tag" } }
 HMenu.menus["key_" .. HMode.apply] = {
   { "ktab_bg", nil, 150, 4 + menu_prefs.button_indent, 470, 64 - 2*menu_prefs.button_indent, nil },
@@ -1018,7 +1000,7 @@ function HMenu.draw_menu(mode, transparent)
       HCollections.draw(cc + 0, ct + 0, xt, yt, wt, ht)
     elseif item[1] == "applypreview" then
       HCollections.preview_current(x, y, w)
-    elseif item[1] == "light" or item[1] == "tlight" then
+    elseif item[1] == "light" then
       local state = HMenu.button_state(item[2])
     
       local xt = x + menu_prefs.button_indent*u
@@ -1027,7 +1009,6 @@ function HMenu.draw_menu(mode, transparent)
       local ht = h - 2*menu_prefs.button_indent*u
       
       local c = colors.light[state]
-      if item[1] == "tlight" then c = colors.tlight[state] end
       Screen.frame_rect(xt + wt - ht, yt, ht, ht, c.frame, menu_prefs.light_thickness*u)
       
       local val = HLights.val(tonumber(string.sub(item[2], 7)))
@@ -1046,9 +1027,9 @@ function HMenu.draw_menu(mode, transparent)
       HMenu.draw_button_background(item, state)
       
       local xo = 7
-      if item[1] == "checkbox" or item[1] == "acheckbox" or item[1] == "tcheckbox" or item[1] == "radio" or item[1] == "tradio" then
+      if item[1] == "checkbox" or item[1] == "acheckbox" or item[1] == "radio" then
         xo = 17
-      elseif item[1] == "light" or item[1] == "tlight" then
+      elseif item[1] == "light" then
         local fw, fh = HGlobals.fontn:measure_text(item[7])
         xo = item[5] - 7 - fw/u
       elseif item[1] == "dbutton" then
@@ -1057,9 +1038,9 @@ function HMenu.draw_menu(mode, transparent)
       end
       HMenu.draw_button_text(item, state, xo)
         
-      if item[1] == "checkbox" or item[1] == "acheckbox" or item[1] == "tcheckbox" or item[1] == "radio" or item[1] == "tradio" then
+      if item[1] == "checkbox" or item[1] == "acheckbox" or item[1] == "radio" then
         local nm = "dcheck"
-        if item[1] == "radio" or item[1] == "tradio" then
+        if item[1] == "radio" then
           nm = "dradio"
         elseif item[1] == "acheckbox" then
           nm = "fcheck"
@@ -1079,7 +1060,7 @@ function HMenu.draw_menu(mode, transparent)
           local h = item[6]*u - 2*menu_prefs.button_indent*u
           img:draw(x + 4*u, y + h/2 - img.height/2)
         end
-      elseif item[1] == "light" or item[1] == "tlight" then
+      elseif item[1] == "light" then
         local val = HLights.val(tonumber(string.sub(item[2], 7)))
         Screen.fill_rect(x + 2*u, y + 2*u, h - 4*u, h - 4*u, { val, val, val, 1 })
       end
@@ -1166,7 +1147,6 @@ function HMenu.draw_button_background(item, state)
   local ts = menu_prefs.button_shadow_thickness*u
   local c = colors.button[state]
   if item[1] == "acheckbox" then c = colors.apply[state] end
-  if item[1] == "tcheckbox" or item[1] == "tradio" then c = colors.button[state] end
 
   Screen.fill_rect(x, y, w, h, c.background)
   Screen.fill_rect(x, y, w, th, c.highlight)
@@ -1181,7 +1161,6 @@ function HMenu.draw_button_text(item, state, xoff)
   local h = item[6]*u - 2*menu_prefs.button_indent*u
   local c = colors.button[state]
   if item[1] == "acheckbox" then c = colors.apply[state] end
-  if item[1] == "tcheckbox" or item[1] == "tradio" then c = colors.button[state] end
 
   HGlobals.fontn:draw_text(item[7],
                            math.floor(x + xoff*u),
@@ -1232,7 +1211,7 @@ function HMenu.init_menu(mode)
         local yoff = (l % 10) * 20
         local xoff = math.floor(l / 10) * 49
         table.insert(menu,
-          { "tradio", "pperm_" .. l, 170 + xoff, 150 + yoff, 49, 20, tostring(l) })
+          { "radio", "pperm_" .. l, 170 + xoff, 150 + yoff, 49, 20, tostring(l) })
       end
       HMenu.inited[mode] = true
     end
@@ -1243,7 +1222,7 @@ function HMenu.init_menu(mode)
         local yoff = (l % 10) * 20
         local xoff = math.floor(l / 10) * 49
         table.insert(menu,
-          { "tradio", "pperm_" .. l, 170 + xoff, 190 + yoff, 49, 20, tostring(l) })
+          { "radio", "pperm_" .. l, 170 + xoff, 190 + yoff, 49, 20, tostring(l) })
       end
       HMenu.inited[mode] = true
     end
@@ -1255,7 +1234,7 @@ function HMenu.init_menu(mode)
         local xoff = math.floor(l / 10) * 49
         l = HPlatforms.indexes[l]
         table.insert(menu,
-          { "tradio", "pperm_" .. l, 170 + xoff, 190 + yoff, 49, 20, tostring(l) })
+          { "radio", "pperm_" .. l, 170 + xoff, 190 + yoff, 49, 20, tostring(l) })
       end
       HMenu.inited[mode] = true
     end
@@ -1264,7 +1243,7 @@ function HMenu.init_menu(mode)
   end
 end
 function HMenu.clickable(item_type)
-  return item_type == "button" or item_type == "checkbox" or item_type == "radio" or item_type == "texture" or item_type == "atexture" or item_type == "light" or item_type == "dradio" or item_type == "dbutton" or item_type == "acheckbox" or item_type == "tab" or item_type == "tradio" or item_type == "tcheckbox" or item_type == "tlight"
+  return item_type == "button" or item_type == "checkbox" or item_type == "radio" or item_type == "texture" or item_type == "light" or item_type == "dbutton" or item_type == "acheckbox" or item_type == "tab"
 end
 
 HChoose = {}
@@ -1529,6 +1508,9 @@ function HCollections.draw(coll, tex, x, y, w, h)
   shp:draw(x + xoff, y + yoff)
 end
 function HCollections.preview_current(x, y, size)
+  local pref = menu_prefs.preview.apply
+  if HMode.is(HMode.attribute) then pref = menu_prefs.preview.attribute end
+  local u = HGlobals.scale
   local oldx = Screen.clip_rect.x
   local oldy = Screen.clip_rect.y
   local oldw = Screen.clip_rect.width
@@ -1573,11 +1555,30 @@ function HCollections.preview_current(x, y, size)
         local val = HLights.adj(HApply.current_light)
         Screen.fill_rect(x, y, size, size, { 0, 0, 0, 1 - val })
       end
+      
+      if pref.snap_grid > 0 and HApply.current_snap > 0 then
+        local border = u * pref.snap_grid
+        Screen.frame_rect(x, y, size, size, colors.snap_grid, border)
+        local grids = 0
+        if HApply.current_snap == 1 then grids = 4
+        elseif HApply.current_snap == 2 then grids = 5
+        elseif HApply.current_snap == 3 then grids = 8
+        end
+        for i = 1,grids-1 do
+          local off = size * i / grids
+          Screen.fill_rect(x + off - border/2, y + border,
+                           border, size - 2*border, colors.snap_grid)
+          Screen.fill_rect(x + border, y + off - border/2,
+                           size - 2*border, border, colors.snap_grid)
+        end
+      end
+        
+        
     end
   elseif HApply.down(HApply.use_light) then 
     local val = HLights.val(HApply.current_light)
-    local border = size * menu_prefs.light_preview_thickness
-    Screen.fill_rect(x, y, size, size, { 0.5, 0.5, 0.5, 1 })
+    local border = u * pref.light_border
+    Screen.fill_rect(x, y, size, size, colors.light.enabled.frame)
     Screen.fill_rect(x + border, y + border,
                      size - 2*border, size - 2*border,
                      { val, val, val, 1 })

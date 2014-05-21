@@ -743,8 +743,10 @@ function SMode.handle_attribute(p)
       local mode = tonumber(string.sub(name, 6))
       p._quantize = mode
     elseif string.sub(name, 1, 9) == "transfer_" then
-      local mode = tonumber(string.sub(name, 10))
-      p._transfer_mode = mode
+      if p._apply.texture then
+        local mode = tonumber(string.sub(name, 10))
+        p._transfer_mode = mode
+      end
     elseif string.sub(name, 1, 6) == "light_" then
       local mode = tonumber(string.sub(name, 7))
       p._light = mode
@@ -1426,30 +1428,30 @@ SMenu.menus = {}
 SMenu.menus[SMode.attribute] = {
   { "bg", nil, 20, 80, 600, 320, nil },
   { "label", nil, 30+5, 85, 155, 20, "Attributes" },
-  { "tcheckbox", "apply_light", 30, 105, 155, 20, "Apply light" },
-  { "tcheckbox", "apply_tex", 30, 125, 155, 20, "Apply texture" },
-  { "tcheckbox", "apply_align", 30, 145, 155, 20, "Align adjacent" },
-  { "tcheckbox", "apply_edit", 30, 165, 155, 20, "Edit switches and panels" },
-  { "tcheckbox", "apply_xparent", 30, 185, 155, 20, "Edit transparent sides" },
+  { "checkbox", "apply_light", 30, 105, 155, 20, "Apply light" },
+  { "checkbox", "apply_tex", 30, 125, 155, 20, "Apply texture" },
+  { "checkbox", "apply_align", 30, 145, 155, 20, "Align adjacent" },
+  { "checkbox", "apply_edit", 30, 165, 155, 20, "Edit switches and panels" },
+  { "checkbox", "apply_xparent", 30, 185, 155, 20, "Edit transparent sides" },
   { "label", "nil", 30+5, 250, 155, 20, "Snap to grid" },
-  { "tradio", "snap_0", 30, 270, 155, 20, "Off" },
-  { "tradio", "snap_1", 30, 290, 155, 20, "1/4 WU" },
-  { "tradio", "snap_2", 30, 310, 155, 20, "1/5 WU" },
-  { "tradio", "snap_3", 30, 330, 155, 20, "1/8 WU" },
-  { "label", nil, 200+5, 85, 240, 20, "Light" },
+  { "radio", "snap_0", 30, 270, 155, 20, "Off" },
+  { "radio", "snap_1", 30, 290, 155, 20, "1/4 WU" },
+  { "radio", "snap_2", 30, 310, 155, 20, "1/5 WU" },
+  { "radio", "snap_3", 30, 330, 155, 20, "1/8 WU" },
+  { "label", nil, 215+5, 85, 240, 20, "Light" },
   { "label", nil, 215+5, 250, 240, 20, "Texture mode" },
-  { "tradio", "transfer_0", 215, 270, 120, 20, "Normal" },
-  { "tradio", "transfer_1", 215, 290, 120, 20, "Pulsate" },
-  { "tradio", "transfer_2", 215, 310, 120, 20, "Wobble" },
-  { "tradio", "transfer_6", 215, 330, 120, 20, "Horizontal slide" },
-  { "tradio", "transfer_8", 215, 350, 120, 20, "Vertical slide" },
-  { "tradio", "transfer_10", 215, 370, 120, 20, "Wander" },
-  { "tradio", "transfer_5", 335, 270, 120, 20, "Landscape" },
-  { "tradio", "transfer_4", 335, 290, 120, 20, "Static" },
-  { "tradio", "transfer_3", 335, 310, 120, 20, "Fast wobble" },
-  { "tradio", "transfer_7", 335, 330, 120, 20, "Fast horizontal slide" },
-  { "tradio", "transfer_9", 335, 350, 120, 20, "Fast vertical slide" },
-  { "tradio", "transfer_11", 335, 370, 120, 20, "Fast wander" },
+  { "radio", "transfer_0", 215, 270, 120, 20, "Normal" },
+  { "radio", "transfer_1", 215, 290, 120, 20, "Pulsate" },
+  { "radio", "transfer_2", 215, 310, 120, 20, "Wobble" },
+  { "radio", "transfer_6", 215, 330, 120, 20, "Horizontal slide" },
+  { "radio", "transfer_8", 215, 350, 120, 20, "Vertical slide" },
+  { "radio", "transfer_10", 215, 370, 120, 20, "Wander" },
+  { "radio", "transfer_5", 335, 270, 120, 20, "Landscape" },
+  { "radio", "transfer_4", 335, 290, 120, 20, "Static" },
+  { "radio", "transfer_3", 335, 310, 120, 20, "Fast wobble" },
+  { "radio", "transfer_7", 335, 330, 120, 20, "Fast horizontal slide" },
+  { "radio", "transfer_9", 335, 350, 120, 20, "Fast vertical slide" },
+  { "radio", "transfer_11", 335, 370, 120, 20, "Fast wander" },
   { "label", nil, 485, 250, 120, 20, "Preview" },
   { "applypreview", nil, 485, 270, 120, 120, nil } }
 SMenu.menus["panel_off"] = {
@@ -1480,7 +1482,7 @@ SMenu.menus["panel_plain"] = {
   { "tab", "ptype_8", 20, 305, 130, 20, "Pattern buffer" },
   { "tab", "ptype_9", 20, 325, 130, 20, "Terminal" },
   { "tab", "ptype_0", 20, 355, 130, 20, "Inactive" },
-  { "tcheckbox", "panel_light", 160, 90, 150, 20, "Light dependent" } }
+  { "checkbox", "panel_light", 170, 90, 150-3, 20, "Light dependent" } }
 SMenu.menus["panel_terminal"] = {
   { "tab_bg", nil, 150, 80, 470, 320, nil },
   { "tab", "ptype_5", 20, 105, 130, 20, "Light switch" },
@@ -1495,7 +1497,7 @@ SMenu.menus["panel_terminal"] = {
   { "tab", "ptype_8", 20, 305, 130, 20, "Pattern buffer" },
   { "tab", "ptype_9", 20, 325, 130, 20, "Terminal" },
   { "tab", "ptype_0", 20, 355, 130, 20, "Inactive" },
-  { "tcheckbox", "panel_light", 170, 90, 150-3, 20, "Light dependent" },
+  { "checkbox", "panel_light", 170, 90, 150-3, 20, "Light dependent" },
   { "label", nil, 170+5, 130, 150, 20, "Terminal script" } }
 SMenu.menus["panel_light"] = {
   { "tab_bg", nil, 150, 80, 470, 320, nil },
@@ -1511,9 +1513,9 @@ SMenu.menus["panel_light"] = {
   { "tab", "ptype_8", 20, 305, 130, 20, "Pattern buffer" },
   { "tab", "ptype_9", 20, 325, 130, 20, "Terminal" },
   { "tab", "ptype_0", 20, 355, 130, 20, "Inactive" },
-  { "tcheckbox", "panel_light", 170, 90, 150-3, 20, "Light dependent" },
-  { "tcheckbox", "panel_weapon", 170, 110, 150-3, 20, "Only toggled by weapons" },
-  { "tcheckbox", "panel_repair", 170, 130, 150-3, 20, "Repair switch" },
+  { "checkbox", "panel_light", 170, 90, 150-3, 20, "Light dependent" },
+  { "checkbox", "panel_weapon", 170, 110, 150-3, 20, "Only toggled by weapons" },
+  { "checkbox", "panel_repair", 170, 130, 150-3, 20, "Repair switch" },
   { "label", nil, 170+5, 170, 150, 20, "Light" } }
 SMenu.menus["panel_platform"] = {
   { "tab_bg", nil, 150, 80, 470, 320, nil },
@@ -1529,10 +1531,10 @@ SMenu.menus["panel_platform"] = {
   { "tab", "ptype_8", 20, 305, 130, 20, "Pattern buffer" },
   { "tab", "ptype_9", 20, 325, 130, 20, "Terminal" },
   { "tab", "ptype_0", 20, 355, 130, 20, "Inactive" },
-  { "tcheckbox", "panel_light", 170, 90, 150-3, 20, "Light dependent" },
-  { "tcheckbox", "panel_weapon", 170, 110, 150-3, 20, "Only toggled by weapons" },
-  { "tcheckbox", "panel_repair", 170, 130, 150-3, 20, "Repair switch" },
-  { "label", nil, 170+5, 170, 150-3, 20, "Platform" } }
+  { "checkbox", "panel_light", 170, 90, 150-3, 20, "Light dependent" },
+  { "checkbox", "panel_weapon", 170, 110, 150-3, 20, "Only toggled by weapons" },
+  { "checkbox", "panel_repair", 170, 130, 150-3, 20, "Repair switch" },
+  { "label", nil, 170+5, 170, 150, 20, "Platform" } }
 SMenu.menus["panel_tag"] = {
   { "tab_bg", nil, 150, 80, 470, 320, nil },
   { "tab", "ptype_5", 20, 105, 130, 20, "Light switch" },
@@ -1547,10 +1549,10 @@ SMenu.menus["panel_tag"] = {
   { "tab", "ptype_8", 20, 305, 130, 20, "Pattern buffer" },
   { "tab", "ptype_9", 20, 325, 130, 20, "Terminal" },
   { "tab", "ptype_0", 20, 355, 130, 20, "Inactive" },
-  { "tcheckbox", "panel_light", 170, 90, 150-3, 20, "Light dependent" },
-  { "tcheckbox", "panel_weapon", 170, 110, 150-3, 20, "Only toggled by weapons" },
-  { "tcheckbox", "panel_repair", 170, 130, 150-3, 20, "Repair switch" },
-  { "tcheckbox", "panel_active", 220-1, 170, 100-2, 20, "Tag is active" },
+  { "checkbox", "panel_light", 170, 90, 150-3, 20, "Light dependent" },
+  { "checkbox", "panel_weapon", 170, 110, 150-3, 20, "Only toggled by weapons" },
+  { "checkbox", "panel_repair", 170, 130, 150-3, 20, "Repair switch" },
+  { "checkbox", "panel_active", 220-1, 170, 100-2, 20, "Tag is active" },
   { "label", nil, 170+5, 170, 50-18, 20, "Tag" } }
 SMenu.inited = {}
 function SMenu.selection(p, mode)
@@ -1608,7 +1610,7 @@ function SMenu.init_menu(mode)
       local yoff = (l % 10) * 20
       local xoff = math.floor(l / 10) * 49
       table.insert(menu,
-        { "tradio", "pperm_" .. l, 170 + xoff, 150 + yoff, 49, 20, tostring(l) })
+        { "radio", "pperm_" .. l, 170 + xoff, 150 + yoff, 49, 20, tostring(l) })
     end
   elseif mode == "panel_tag" then
     for i = 1,math.min(max_tags, 90) do
@@ -1616,7 +1618,7 @@ function SMenu.init_menu(mode)
       local yoff = (l % 10) * 20
       local xoff = math.floor(l / 10) * 49
       table.insert(menu,
-        { "tradio", "pperm_" .. l, 170 + xoff, 190 + yoff, 49, 20, tostring(l) })
+        { "radio", "pperm_" .. l, 170 + xoff, 190 + yoff, 49, 20, tostring(l) })
     end
   elseif mode == "panel_platform" then
     for i = 1,math.min(#SPlatforms.sorted_platforms, 90) do
@@ -1625,14 +1627,14 @@ function SMenu.init_menu(mode)
       local xoff = math.floor(l / 10) * 49
       l = SPlatforms.sorted_platforms[i].polygon.index
       table.insert(menu,
-        { "tradio", "pperm_" .. l, 170 + xoff, 190 + yoff, 49, 20, tostring(l) })
+        { "radio", "pperm_" .. l, 170 + xoff, 190 + yoff, 49, 20, tostring(l) })
     end
   end
   
   SMenu.inited[mode] = true
 end
 function SMenu.clickable(item_type)
-  return item_type == "button" or item_type == "checkbox" or item_type == "radio" or item_type == "texture" or item_type == "light" or item_type == "dradio" or item_type == "dbutton" or item_type == "acheckbox" or item_type == "tab" or item_type == "tradio" or item_type == "tcheckbox" or item_type == "tlight"
+  return item_type == "button" or item_type == "checkbox" or item_type == "radio" or item_type == "texture" or item_type == "light" or item_type == "dbutton" or item_type == "acheckbox" or item_type == "tab"
 end
 
 
