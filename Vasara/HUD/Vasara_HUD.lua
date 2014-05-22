@@ -285,6 +285,7 @@ function Triggers.init()
   for _, nm in pairs({ "cursor_menu", "cursor_menu_down",
                        "cursor_apply", "cursor_apply_down",
                        "cursor_teleport", "cursor_teleport_down",
+                       "bracket_on", "bracket_off", "bracket_dis",
                        "dcheck_on", "dcheck_off", "dcheck_dis",
                        "dradio_on", "dradio_off", "dradio_dis",
                        "fcheck_on", "fcheck_off" }) do
@@ -406,18 +407,34 @@ function HKeys.dummy(k)
   return hasbit(HKeys.dummyfield, k)
 end
 function HKeys.button_state(keyname, mic_modifier)
-  local k = HKeys[keyname]
   local state = "enabled"
-  if HKeys.down(k) then state = "active" end
   
-  if k == HKeys.mic then
-    if HKeys.dummy(HKeys.mic) then state = "disabled" end
-  elseif mic_modifier then
-    if not HKeys.down(HKeys.mic) then state = "disabled" end
-  elseif HKeys.down(HKeys.mic) then
-    state = "disabled"
-  elseif k == HKeys.action and (HMode.is(HMode.apply) or HMode.is(HMode.teleport)) and HStatus.down(HStatus.action_active) then
-    state = "disabled"
+  if keyname == "any" then
+    if mic_modifier then
+      if not HKeys.down(HKeys.mic) then
+        state = "disabled"
+      elseif HKeys.down(HKeys.prev_weapon) or
+             HKeys.down(HKeys.next_weapon) or
+             HKeys.down(HKeys.primary) or
+             HKeys.down(HKeys.secondary) then
+        state = "active"
+      end
+    elseif HKeys.down(HKeys.mic) then
+      state = "disabled"
+    end
+  else
+    local k = HKeys[keyname]
+    if HKeys.down(k) then state = "active" end
+    
+    if k == HKeys.mic then
+      if HKeys.dummy(HKeys.mic) then state = "disabled" end
+    elseif mic_modifier then
+      if not HKeys.down(HKeys.mic) then state = "disabled" end
+    elseif HKeys.down(HKeys.mic) then
+      state = "disabled"
+    elseif k == HKeys.action and (HMode.is(HMode.apply) or HMode.is(HMode.teleport)) and HStatus.down(HStatus.action_active) then
+      state = "disabled"
+    end
   end
   
   return state
@@ -680,10 +697,12 @@ HMenu.menus["key_" .. HMode.apply] = {
   { "klabel", "key_secondary", 180, 22, 50, 12, "Trigger 2" },
   { "klabel", "key_prev_weapon", 180, 38, 50, 12, "Prev Weapon" },
   { "klabel", "key_next_weapon", 180, 50, 50, 12, "Next Weapon" },
-  { "klabel", "key_mic_primary", 400, 10, 70, 12, "Mic + Trigger 1" },
-  { "klabel", "key_mic_secondary", 400, 22, 70, 12, "Mic + Trigger 2" },
-  { "klabel", "key_mic_prev_weapon", 400, 38, 70, 12, "Mic + Prev Weapon" },
-  { "klabel", "key_mic_next_weapon", 400, 50, 70, 12, "Mic + Next Weapon" },
+  { "kmod", "key_mic_any", 380, 4, 44, 64, nil },
+  { "klabel", "key_mic_any", 350, 30, 50, 12, "Mic +" },
+  { "klabel", "key_mic_primary", 400, 10, 70, 12, "Trigger 1" },
+  { "klabel", "key_mic_secondary", 400, 22, 70, 12, "Trigger 2" },
+  { "klabel", "key_mic_prev_weapon", 400, 38, 70, 12, "Prev Weapon" },
+  { "klabel", "key_mic_next_weapon", 400, 50, 70, 12, "Next Weapon" },
   { "ktab", nil, 20, 4, 130, 16, "Visual Mode" },
   { "ktab", "key_action", 20, 20, 130, 16, "Choose Texture" },
   { "ktab", "key_mic", 20, 36, 130, 16, "Options" },
@@ -702,10 +721,12 @@ HMenu.menus["key_" .. HMode.teleport] = {
   { "klabel", "key_secondary", 180, 22, 50, 12, "Trigger 2" },
   { "klabel", "key_prev_weapon", 180, 38, 50, 12, "Prev Weapon" },
   { "klabel", "key_next_weapon", 180, 50, 50, 12, "Next Weapon" },
-  { "klabel", "key_mic_primary", 400, 10, 70, 12, "Mic + Trigger 1" },
-  { "klabel", "key_mic_secondary", 400, 22, 70, 12, "Mic + Trigger 2" },
-  { "klabel", "key_mic_prev_weapon", 400, 38, 70, 12, "Mic + Prev Weapon" },
-  { "klabel", "key_mic_next_weapon", 400, 50, 70, 12, "Mic + Next Weapon" },
+  { "kmod", "key_mic_any", 380, 4, 44, 64, nil },
+  { "klabel", "key_mic_any", 350, 30, 50, 12, "Mic +" },
+  { "klabel", "key_mic_primary", 400, 10, 70, 12, "Trigger 1" },
+  { "klabel", "key_mic_secondary", 400, 22, 70, 12, "Trigger 2" },
+  { "klabel", "key_mic_prev_weapon", 400, 38, 70, 12, "Prev Weapon" },
+  { "klabel", "key_mic_next_weapon", 400, 50, 70, 12, "Next Weapon" },
   { "ktab", "key_map", 20, 4, 130, 16, "Visual Mode" },
   { "ktab", "key_action", 20, 20, 130, 16, "Choose Texture" },
   { "ktab", "key_mic", 20, 36, 130, 16, "Options" },
@@ -724,10 +745,12 @@ HMenu.menus["key_" .. HMode.choose] = {
   { "klabel", "key_secondary", 180, 22, 50, 12, "Trigger 2" },
   { "klabel", "key_prev_weapon", 180, 38, 50, 12, "Prev Weapon" },
   { "klabel", "key_next_weapon", 180, 50, 50, 12, "Next Weapon" },
-  { "klabel", "key_mic_primary", 400, 10, 70, 12, "Mic + Trigger 1" },
-  { "klabel", "key_mic_secondary", 400, 22, 70, 12, "Mic + Trigger 2" },
-  { "klabel", "key_mic_prev_weapon", 400, 38, 70, 12, "Mic + Prev Weapon" },
-  { "klabel", "key_mic_next_weapon", 400, 50, 70, 12, "Mic + Next Weapon" },
+  { "kmod", "key_mic_any", 380, 4, 44, 64, nil },
+  { "klabel", "key_mic_any", 350, 30, 50, 12, "Mic +" },
+  { "klabel", "key_mic_primary", 400, 10, 70, 12, "Trigger 1" },
+  { "klabel", "key_mic_secondary", 400, 22, 70, 12, "Trigger 2" },
+  { "klabel", "key_mic_prev_weapon", 400, 38, 70, 12, "Prev Weapon" },
+  { "klabel", "key_mic_next_weapon", 400, 50, 70, 12, "Next Weapon" },
   { "ktab", "key_action", 20, 4, 130, 16, "Visual Mode" },
   { "ktab", nil, 20, 20, 130, 16, "Choose Texture" },
   { "ktab", "key_mic", 20, 36, 130, 16, "Options" },
@@ -746,10 +769,12 @@ HMenu.menus["key_" .. HMode.attribute] = {
   { "klabel", "key_secondary", 180, 22, 50, 12, "Trigger 2" },
   { "klabel", "key_prev_weapon", 180, 38, 50, 12, "Prev Weapon" },
   { "klabel", "key_next_weapon", 180, 50, 50, 12, "Next Weapon" },
-  { "klabel", "key_mic_primary", 400, 10, 70, 12, "Mic + Trigger 1" },
-  { "klabel", "key_mic_secondary", 400, 22, 70, 12, "Mic + Trigger 2" },
-  { "klabel", "key_mic_prev_weapon", 400, 38, 70, 12, "Mic + Prev Weapon" },
-  { "klabel", "key_mic_next_weapon", 400, 50, 70, 12, "Mic + Next Weapon" },
+  { "kmod", "key_mic_any", 380, 4, 44, 64, nil },
+  { "klabel", "key_mic_any", 350, 30, 50, 12, "Mic +" },
+  { "klabel", "key_mic_primary", 400, 10, 70, 12, "Trigger 1" },
+  { "klabel", "key_mic_secondary", 400, 22, 70, 12, "Trigger 2" },
+  { "klabel", "key_mic_prev_weapon", 400, 38, 70, 12, "Prev Weapon" },
+  { "klabel", "key_mic_next_weapon", 400, 50, 70, 12, "Next Weapon" },
   { "ktab", "key_mic", 20, 4, 130, 16, "Visual Mode" },
   { "ktab", "key_action", 20, 20, 130, 16, "Choose Texture" },
   { "ktab", nil, 20, 36, 130, 16, "Options" },
@@ -768,10 +793,12 @@ HMenu.menus["key_panel_off"] = {
   { "klabel", "key_secondary", 180, 22, 50, 12, "Trigger 2" },
 --   { "klabel", "key_prev_weapon", 180, 38, 50, 12, "Prev Weapon" },
 --   { "klabel", "key_next_weapon", 180, 50, 50, 12, "Next Weapon" },
---   { "klabel", "key_mic_primary", 400, 10, 70, 12, "Mic + Trigger 1" },
-  { "klabel", "key_mic_secondary", 400, 22, 70, 12, "Mic + Trigger 2" },
-  { "klabel", "key_mic_prev_weapon", 400, 38, 70, 12, "Mic + Prev Weapon" },
-  { "klabel", "key_mic_next_weapon", 400, 50, 70, 12, "Mic + Next Weapon" },
+  { "kmod", "key_mic_any", 380, 4, 44, 64, nil },
+  { "klabel", "key_mic_any", 350, 30, 50, 12, "Mic +" },
+--   { "klabel", "key_mic_primary", 400, 10, 70, 12, "Trigger 1" },
+  { "klabel", "key_mic_secondary", 400, 22, 70, 12, "Trigger 2" },
+  { "klabel", "key_mic_prev_weapon", 400, 38, 70, 12, "Prev Weapon" },
+  { "klabel", "key_mic_next_weapon", 400, 50, 70, 12, "Next Weapon" },
   { "ktab", nil, 20, 4, 130, 16, "Edit Switch / Panel" },
   { "ktab", "key_action", 20, 20, 130, 16, "Choose Texture" },
   { "ktab", "key_mic", 20, 36, 130, 16, "Options" },
@@ -791,10 +818,12 @@ HMenu.menus["key_panel_terminal"] = {
   { "klabel", "key_secondary", 180, 22, 50, 12, "Trigger 2" },
   { "klabel", "key_prev_weapon", 180, 38, 50, 12, "Prev Weapon" },
   { "klabel", "key_next_weapon", 180, 50, 50, 12, "Next Weapon" },
---   { "klabel", "key_mic_primary", 400, 10, 70, 12, "Mic + Trigger 1" },
-  { "klabel", "key_mic_secondary", 400, 22, 70, 12, "Mic + Trigger 2" },
-  { "klabel", "key_mic_prev_weapon", 400, 38, 70, 12, "Mic + Prev Weapon" },
-  { "klabel", "key_mic_next_weapon", 400, 50, 70, 12, "Mic + Next Weapon" },
+  { "kmod", "key_mic_any", 380, 4, 44, 64, nil },
+  { "klabel", "key_mic_any", 350, 30, 50, 12, "Mic +" },
+--   { "klabel", "key_mic_primary", 400, 10, 70, 12, "Trigger 1" },
+  { "klabel", "key_mic_secondary", 400, 22, 70, 12, "Trigger 2" },
+  { "klabel", "key_mic_prev_weapon", 400, 38, 70, 12, "Prev Weapon" },
+  { "klabel", "key_mic_next_weapon", 400, 50, 70, 12, "Next Weapon" },
   { "ktab", nil, 20, 4, 130, 16, "Edit Switch / Panel" },
   { "ktab", "key_action", 20, 20, 130, 16, "Choose Texture" },
   { "ktab", "key_mic", 20, 36, 130, 16, "Options" },
@@ -813,10 +842,12 @@ HMenu.menus["key_panel_light"] = {
   { "klabel", "key_secondary", 180, 22, 50, 12, "Trigger 2" },
   { "klabel", "key_prev_weapon", 180, 38, 50, 12, "Prev Weapon" },
   { "klabel", "key_next_weapon", 180, 50, 50, 12, "Next Weapon" },
---   { "klabel", "key_mic_primary", 400, 10, 70, 12, "Mic + Trigger 1" },
-  { "klabel", "key_mic_secondary", 400, 22, 70, 12, "Mic + Trigger 2" },
-  { "klabel", "key_mic_prev_weapon", 400, 38, 70, 12, "Mic + Prev Weapon" },
-  { "klabel", "key_mic_next_weapon", 400, 50, 70, 12, "Mic + Next Weapon" },
+  { "kmod", "key_mic_any", 380, 4, 44, 64, nil },
+  { "klabel", "key_mic_any", 350, 30, 50, 12, "Mic +" },
+--   { "klabel", "key_mic_primary", 400, 10, 70, 12, "Trigger 1" },
+  { "klabel", "key_mic_secondary", 400, 22, 70, 12, "Trigger 2" },
+  { "klabel", "key_mic_prev_weapon", 400, 38, 70, 12, "Prev Weapon" },
+  { "klabel", "key_mic_next_weapon", 400, 50, 70, 12, "Next Weapon" },
   { "ktab", nil, 20, 4, 130, 16, "Edit Switch / Panel" },
   { "ktab", "key_action", 20, 20, 130, 16, "Choose Texture" },
   { "ktab", "key_mic", 20, 36, 130, 16, "Options" },
@@ -835,10 +866,12 @@ HMenu.menus["key_panel_platform"] = {
   { "klabel", "key_secondary", 180, 22, 50, 12, "Trigger 2" },
   { "klabel", "key_prev_weapon", 180, 38, 50, 12, "Prev Weapon" },
   { "klabel", "key_next_weapon", 180, 50, 50, 12, "Next Weapon" },
---   { "klabel", "key_mic_primary", 400, 10, 70, 12, "Mic + Trigger 1" },
-  { "klabel", "key_mic_secondary", 400, 22, 70, 12, "Mic + Trigger 2" },
-  { "klabel", "key_mic_prev_weapon", 400, 38, 70, 12, "Mic + Prev Weapon" },
-  { "klabel", "key_mic_next_weapon", 400, 50, 70, 12, "Mic + Next Weapon" },
+  { "kmod", "key_mic_any", 380, 4, 44, 64, nil },
+  { "klabel", "key_mic_any", 350, 30, 50, 12, "Mic +" },
+--   { "klabel", "key_mic_primary", 400, 10, 70, 12, "Trigger 1" },
+  { "klabel", "key_mic_secondary", 400, 22, 70, 12, "Trigger 2" },
+  { "klabel", "key_mic_prev_weapon", 400, 38, 70, 12, "Prev Weapon" },
+  { "klabel", "key_mic_next_weapon", 400, 50, 70, 12, "Next Weapon" },
   { "ktab", nil, 20, 4, 130, 16, "Edit Switch / Panel" },
   { "ktab", "key_action", 20, 20, 130, 16, "Choose Texture" },
   { "ktab", "key_mic", 20, 36, 130, 16, "Options" },
@@ -857,10 +890,12 @@ HMenu.menus["key_panel_tag"] = {
   { "klabel", "key_secondary", 180, 22, 50, 12, "Trigger 2" },
   { "klabel", "key_prev_weapon", 180, 38, 50, 12, "Prev Weapon" },
   { "klabel", "key_next_weapon", 180, 50, 50, 12, "Next Weapon" },
---   { "klabel", "key_mic_primary", 400, 10, 70, 12, "Mic + Trigger 1" },
-  { "klabel", "key_mic_secondary", 400, 22, 70, 12, "Mic + Trigger 2" },
-  { "klabel", "key_mic_prev_weapon", 400, 38, 70, 12, "Mic + Prev Weapon" },
-  { "klabel", "key_mic_next_weapon", 400, 50, 70, 12, "Mic + Next Weapon" },
+  { "kmod", "key_mic_any", 380, 4, 44, 64, nil },
+  { "klabel", "key_mic_any", 350, 30, 50, 12, "Mic +" },
+--   { "klabel", "key_mic_primary", 400, 10, 70, 12, "Trigger 1" },
+  { "klabel", "key_mic_secondary", 400, 22, 70, 12, "Trigger 2" },
+  { "klabel", "key_mic_prev_weapon", 400, 38, 70, 12, "Prev Weapon" },
+  { "klabel", "key_mic_next_weapon", 400, 50, 70, 12, "Next Weapon" },
   { "ktab", nil, 20, 4, 130, 16, "Edit Switch / Panel" },
   { "ktab", "key_action", 20, 20, 130, 16, "Choose Texture" },
   { "ktab", "key_mic", 20, 36, 130, 16, "Options" },
@@ -901,6 +936,21 @@ function HMenu.draw_menu(mode, transparent)
       HGlobals.fontn:draw_text(item[7],
                                math.floor(x), math.floor(y + h/2 + HGlobals.fnoff),
                                colors.commands[state].key)
+    elseif item[1] == "kmod" then
+      local state = HMenu.button_state(item[2])
+      local nm = "bracket"
+      if state == "enabled" then
+        nm = nm .. "_off"
+      elseif state == "disabled" then
+        nm = nm .. "_dis"
+      elseif state == "active" then
+        nm = nm .. "_on"
+      end
+      
+      local img = imgs[nm]
+      if img then
+        img:draw(x + w/2 - img.width/2, y + h/2 - img.height/2)
+      end
     elseif item[1] == "ktab_bg" then
       Screen.fill_rect(x, y, w, h, colors.ktab.background)
     elseif item[1] == "ktab" then
