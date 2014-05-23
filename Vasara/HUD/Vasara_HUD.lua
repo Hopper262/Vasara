@@ -72,6 +72,11 @@ colors.apply.active.highlight = { 0.0, 0.0, 0.0, 1 }
 colors.apply.active.shadow = { 0.0, 0.0, 0.0, 1 }
 colors.apply.active.text = { 1, 1, 1, 1 }
 
+colors.teleport = {}
+colors.teleport.poly_background = { 0.0, 0.0, 0.0, 0.6 }
+colors.teleport.poly_text = { 1, 1, 1, 1 }
+colors.teleport.poly_text_active = { 0.2, 1, 0.2, 1 }
+
 colors.ktab = {}
 colors.ktab.background = { 0.15, 0.15, 0.15, 1 }
 colors.ktab.current = {}
@@ -192,8 +197,12 @@ function Triggers.draw()
     local fw, fh = HGlobals.fontn:measure_text(HTeleport.poly)
     local xf = xp - fw/2
     local yf = yp - fh - 15*HGlobals.scale
-    Screen.fill_rect(xf - 5*HGlobals.scale, yf, fw + 10*HGlobals.scale, fh, { 0, 0, 0, 0.6 })
-    HGlobals.fontn:draw_text(HTeleport.poly, xf, yf, { 0, 1, 0, 1 })
+    Screen.fill_rect(xf - 5*HGlobals.scale, yf, fw + 10*HGlobals.scale, fh, colors.teleport.poly_background)
+    local clr = colors.teleport.poly_text
+    if (not HKeys.down(HKeys.mic)) and HKeys.down(HKeys.primary) then
+      clr = colors.teleport.poly_text_active
+    end
+    HGlobals.fontn:draw_text(HTeleport.poly, xf, yf, clr)
     
     if not Screen.map_overlay_active then
       HGlobals.fontn:draw_text("Please turn on Overlay Map mode in Graphics preferences",
