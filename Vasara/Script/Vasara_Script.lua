@@ -30,7 +30,11 @@ drag_horizontal_limit = 1
 -- END PREFERENCES -- no user serviceable parts below ;)
 
 Game.monsters_replenish = not suppress_monsters
-snap_denominators = { 4, 5, 8 }
+snap_denominators = { 2, 3, 4, 5, 8 }
+snap_modes = { "Off" }
+for _,d in ipairs(snap_denominators) do
+  table.insert(snap_modes, "1/" .. d .. " WU")
+end
 transfer_modes = { TransferModes["normal"], TransferModes["pulsate"], TransferModes["wobble"], TransferModes["fast wobble"], TransferModes["static"], TransferModes["landscape"], TransferModes["horizontal slide"], TransferModes["fast horizontal slide"], TransferModes["vertical slide"], TransferModes["fast vertical slide"], TransferModes["wander"], TransferModes["fast wander"] }
 transfer_mode_lookup = {}
 for k, v in pairs(transfer_modes) do transfer_mode_lookup[v] = k - 1 end
@@ -1433,10 +1437,12 @@ SMenu.menus[SMode.attribute] = {
   { "checkbox", "apply_edit", 30, 165, 155, 20, "Edit switches and panels" },
   { "checkbox", "apply_xparent", 30, 185, 155, 20, "Edit transparent sides" },
   { "label", "nil", 30+5, 250, 155, 20, "Snap to grid" },
-  { "radio", "snap_0", 30, 270, 155, 20, "Off" },
-  { "radio", "snap_1", 30, 290, 155, 20, "1/4 WU" },
-  { "radio", "snap_2", 30, 310, 155, 20, "1/5 WU" },
-  { "radio", "snap_3", 30, 330, 155, 20, "1/8 WU" },
+  { "radio", "snap_0", 30, 270, 155, 20, snap_modes[1] },
+  { "radio", "snap_1", 30, 290, 155, 20, snap_modes[2] },
+  { "radio", "snap_2", 30, 310, 155, 20, snap_modes[3] },
+  { "radio", "snap_3", 30, 330, 155, 20, snap_modes[4] },
+  { "radio", "snap_4", 30, 350, 155, 20, snap_modes[5] },
+  { "radio", "snap_5", 30, 370, 155, 20, snap_modes[6] },
   { "label", nil, 215+5, 85, 240, 20, "Light" },
   { "label", nil, 215+5, 250, 240, 20, "Texture mode" },
   { "radio", "transfer_0", 215, 270, 120, 20, "Normal" },

@@ -145,6 +145,12 @@ Triggers = {}
 g_scriptChecked = false
 g_initMode = 0
 
+snap_denominators = { 2, 3, 4, 5, 8 }
+snap_modes = { "Off" }
+for _,d in ipairs(snap_denominators) do
+  table.insert(snap_modes, "1/" .. d .. " WU")
+end
+
 function Triggers.draw()
   if Player.life ~= 409 then
     if not g_scriptChecked then
@@ -246,7 +252,7 @@ function Triggers.draw()
     end
     lbls[2][7] = att
 
-    lbls[6][7] = "Snap to grid: " .. HApply.snap_modes[HApply.current_snap + 1]
+    lbls[6][7] = "Snap to grid: " .. snap_modes[HApply.current_snap + 1]
 
     HMenu.draw_menu("apply_options", true)
     
@@ -460,8 +466,6 @@ HApply.current_light = 0
 HApply.current_transfer = 0
 HApply.current_snap = 0
 HApply.transfer_modes = { "Normal", "Pulsate", "Wobble", "Fast wobble", "Static", "Landscape", "Horizontal slide", "Fast horizontal slide", "Vertical slide", "Fast vertical slide", "Wander", "Fast wander" }
-HApply.snap_modes = { "Off", "1/4 WU", "1/5 WU", "1/8 WU" }
-HApply.snap_denominators = { 1, 4, 5, 8 }
 function HApply.update()
   HApply.bitfield = Player.texture_palette.slots[46].texture_index
   HApply.current_light = Player.texture_palette.slots[43].texture_index
@@ -564,10 +568,12 @@ HMenu.menus[HMode.attribute] = {
   { "checkbox", "apply_edit", 30, 165, 155, 20, "Edit switches and panels" },
   { "checkbox", "apply_xparent", 30, 185, 155, 20, "Edit transparent sides" },
   { "label", "nil", 30+5, 250, 155, 20, "Snap to grid" },
-  { "radio", "snap_0", 30, 270, 155, 20, "Off" },
-  { "radio", "snap_1", 30, 290, 155, 20, "1/4 WU" },
-  { "radio", "snap_2", 30, 310, 155, 20, "1/5 WU" },
-  { "radio", "snap_3", 30, 330, 155, 20, "1/8 WU" },
+  { "radio", "snap_0", 30, 270, 155, 20, snap_modes[1] },
+  { "radio", "snap_1", 30, 290, 155, 20, snap_modes[2] },
+  { "radio", "snap_2", 30, 310, 155, 20, snap_modes[3] },
+  { "radio", "snap_3", 30, 330, 155, 20, snap_modes[4] },
+  { "radio", "snap_4", 30, 350, 155, 20, snap_modes[5] },
+  { "radio", "snap_5", 30, 370, 155, 20, snap_modes[6] },
   { "label", nil, 215+5, 85, 240, 20, "Light" },
   { "label", nil, 215+5, 250, 240, 20, "Texture mode" },
   { "radio", "transfer_0", 215, 270, 120, 20, "Normal" },
@@ -1607,7 +1613,7 @@ function HCollections.preview_current(x, y, size)
       if pref.snap_grid > 0 and HApply.current_snap > 0 then
         local border = u * pref.snap_grid
         Screen.frame_rect(x, y, size, size, colors.snap_grid, border)
-        local grids = HApply.snap_denominators[HApply.current_snap + 1]
+        local grids = snap_denominators[HApply.current_snap]
         for i = 1,grids-1 do
           local off = size * i / grids
           Screen.fill_rect(x + off - border/2, y + border,
