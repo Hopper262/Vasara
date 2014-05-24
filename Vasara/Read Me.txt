@@ -1,22 +1,62 @@
-Vasara 1.0 ALPHA
+Vasara 1.0 rc1
 ----------
 by Hopper and Ares Ex Machina
 from work by Irons and Smith
 
 ----------------------------------------------------------------
 DESCRIPTION:
+
 Vasara is a Lua script and dedicated HUD for use in texturing Aleph One maps. The new HUD provides more explanation for new users, and features a new GUI-style interface for choosing textures and options.
 
 To get the most out of Vasara, be sure to turn on "Use Mouse" and "Overlay Map" in your preferences.
 
 ----------------------------------------------------------------
 INSTALLATION:
+
 - Drag the downloaded .zip file, or the unzipped "Vasara" folder, into the "Plugins" folder inside your Marathon Infinity or custom scenario folder. (Create a "Plugins" folder if you don't already have one.)
 - Launch Aleph One, and go to "Preferences", then "Environment", then "Plugins" to enable or disable Vasara.
 
 IMPORTANT 1: turn off any other HUD or solo Lua plugins while using Vasara.
 
 IMPORTANT 2: both "Vasara Lua" and "Vasara HUD" must be enabled at the same time. If you turn on only one, you WILL have serious problems.
+
+----------------------------------------------------------------
+GETTING STARTED:
+
+Vasara has four modes. The tabs at the top left of the screen show which mode you're in, and the area to the right shows what your keys do. For some commands, you need to hold the Microphone key down and then press the other key shown.
+
+Vasara will feel most natural if you have "Use Mouse" turned on, and have the primary trigger mapped to your left mouse button. That way, the most common actions can be done by pointing and clicking.
+
+1. You start in Visual Mode, where you apply lights and textures to your level. Click to "paint", and hold the trigger down to drag textures into position.
+
+2. Press the Action key to switch to Choose Textures mode. Click a texture to select it for use in Visual Mode. Click on the buttons at the bottom to switch to a different collection. Or, use the key shortcuts to switch textures and collections.
+
+3. Press the Microphone key to switch to Options mode. You can toggle lesser-used settings here, like snap-to-grid or transfer modes.
+
+4. Press the Map key to switch to Teleport mode. Point at a polygon and click to teleport there. With the key shortcuts, you can cycle through polygons to reach faraway areas. The currently selected polygon is highlighted in first-person view and on the overhead map.
+
+You can get back to Visual Mode from any other mode by hitting the secondary trigger (the "grenade" button). Always check the top of the screen to see what your options are.
+
+To save your work, press the "Chat/Console" key (default is backslash: \ ) and then type:
+
+  .save level my-fabulous-level.sceA
+
+The period at the start is important! You can replace "my-fabulous-level.sceA" with whatever filename you like. Your level will be saved in Aleph One's standard location for your platform; see:
+
+  http://sourceforge.net/p/marathon/wiki/File%20Locations/
+
+----------------------------------------------------------------
+TIPS AND TRICKS:
+
+Vasara's functionality is based on Visual Mode.lua, which in turn is based on Forge's Visual Mode. If you're confused about what something in Vasara does, check the Forge manual or existing discussions about VML.
+
+Having trouble navigating menu screens with the mouse? Try the keyboard. Your key bindings for turning and looking up/down will move the cursor. Moving or sidestepping will move the cursor slowly, for more precise aiming.
+
+When selecting lights, the clickable area is larger than you might think. You can click on either the number or the square.
+
+For VML veterans, the key combo Mic+Action acts as an Undo/Redo toggle just like in Visual Mode.lua.
+
+The two Lua scripts have various preferences at the top. You can change the mouse cursor sensitivity, the color scheme, the collection names, and more. Poke around there if you're interested.
 
 ----------------------------------------------------------------
 CHANGELOG:
@@ -26,11 +66,13 @@ v1.0:
 
 ----------------------------------------------------------------
 SPECIAL THANKS:
+
 TychoVII, Kurinn - For pushing the boundaries of the Lua HUD
 Bitstream, Tavmjong Bah - For fonts used in the HUD
 Treellama, Irons - For Visual Mode.lua
 
 ----------------------------------------------------------------
 CONTACT:
-If you have any questions, comments, or bugs to report, you can email me:
+
+If you have any questions, comments, or bugs to report, you can email Hopper:
 - hopper@whpress.com
