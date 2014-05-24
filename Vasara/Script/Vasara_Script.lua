@@ -22,6 +22,10 @@ menu_horizontal_range = 70    -- default: 70
 drag_vertical_range = 80      -- default: 80
 drag_horizontal_range = 120   -- default: 120
 
+-- translate forward/sidestep movement to menu cursor movement
+menu_forward_speed = 5 * menu_vertical_range/320
+menu_sidestep_speed = 5 * menu_horizontal_range/600
+
 -- how far you can drag a texture before it stops moving (in World Units)
 drag_vertical_limit = 1
 drag_horizontal_limit = 1
@@ -973,7 +977,9 @@ function SFreeze.postidle()
   end
 end
 function SFreeze.reposition(p)
-  p:position(p._freeze.point.x, p._freeze.point.y, p._freeze.point.z, p._freeze.point.poly)
+  local z = p._freeze.point.z
+  if p._freeze.mode == "menu" then z = p.polygon.z end
+  p:position(p._freeze.point.x, p._freeze.point.y, z, p._freeze.point.poly)
   p.external_velocity.i = 0
   p.external_velocity.j = 0
   p.external_velocity.k = 0
@@ -1021,6 +1027,8 @@ function SFreeze.enter_mode(p, mode)
     p._freeze.point.elevation = p.elevation
     p._freeze.extra_dir = 0
     p._freeze.extra_elev = 0
+    p._freeze.last_forward = p.internal_velocity.forward
+    p._freeze.last_perpendicular = p.internal_velocity.perpendicular
     p.direction = 180
     p.elevation = 0
   end
@@ -1029,12 +1037,38 @@ end
 function SFreeze.in_mode(p, mode)
   return p._freeze.mode == mode
 end
+function SFreeze.detect_motion(p, which)
+  if not p._freeze.mode then return 0 end
+  
+  local last = p._freeze["last_" .. which]
+  if last == nil then last = 0 end
+  local cur = p.internal_velocity[which]
+  p._freeze["last_" .. which] = cur
+  
+  local exp = 0
+  if last < 0 then
+    exp = math.min(0, last + 0.02)
+  elseif last > 0 then
+    exp = math.max(0, last - 0.02)
+  end
+  
+  local res = tonumber(string.format("%.4f", cur - exp))
+  if (cur - exp) < -0.001 then
+    return -1
+  elseif (cur + exp) > 0.001 then
+    return 1
+  end
+  return 0
+end
 function SFreeze.update()
   for p in Players() do
     if p._freeze.frozen or p._freeze.mode then
       SFreeze.reposition(p)
     end
     if p._freeze.mode then  
+      p._freeze.extra_elev = p._freeze.extra_elev - menu_forward_speed * SFreeze.detect_motion(p, "forward")
+      p._freeze.extra_dir = p._freeze.extra_dir + menu_sidestep_speed * SFreeze.detect_motion(p, "perpendicular")
+      
       p.direction = p._freeze.restore.direction
       p.elevation = p._freeze.restore.elevation
 
