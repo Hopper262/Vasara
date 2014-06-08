@@ -349,10 +349,10 @@ function SMode.handle_apply(p)
   local clear_surface = true
   
   if p._keys.mic.down then
-    if p._keys.prev_weapon.held then
+    if p._keys.next_weapon.held then
       SFreeze.unfreeze(p)
       p:accelerate(0, 0, 0.05)
-    elseif p._keys.next_weapon.pressed then
+    elseif p._keys.prev_weapon.pressed then
       SFreeze.toggle_freeze(p)
     end
   else
@@ -559,10 +559,10 @@ function SMode.handle_teleport(p)
   end
   
   if p._keys.mic.down then
-    if p._keys.prev_weapon.held then
+    if p._keys.next_weapon.held then
       SFreeze.unfreeze(p)
       p:accelerate(0, 0, 0.05)
-    elseif p._keys.next_weapon.pressed then
+    elseif p._keys.prev_weapon.pressed then
       SFreeze.toggle_freeze(p)
     end
   end

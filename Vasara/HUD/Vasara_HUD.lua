@@ -513,11 +513,11 @@ function HStatus.update()
   local lbls2 = HMenu.menus["key_" .. HMode.teleport]
   
   if HStatus.down(HStatus.frozen) then
-    lbls[9][7] = "Unfreeze"
-    lbls2[9][7] = "Unfreeze"
+    lbls[8][7] = "Unfreeze"
+    lbls[8][7] = "Unfreeze"
   else
-    lbls[9][7] = "Freeze"
-    lbls2[9][7] = "Freeze"
+    lbls[8][7] = "Freeze"
+    lbls2[8][7] = "Freeze"
   end
   
   if HStatus.down(HStatus.undo_active) then
@@ -706,8 +706,8 @@ HMenu.menus["key_" .. HMode.apply] = {
   { "kaction", "key_next_weapon", 235, 50, 100, 12, "Next Light" },
   { "kaction", "key_mic_primary", 475, 10, 100, 12, "Undo" },
   { "kaction", "key_mic_secondary", 475, 22, 100, 12, "Redo" },
-  { "kaction", "key_mic_prev_weapon", 475, 38, 100, 12, "Jump" },
-  { "kaction", "key_mic_next_weapon", 475, 50, 100, 12, "Freeze" },
+  { "kaction", "key_mic_prev_weapon", 475, 38, 100, 12, "Freeze" },
+  { "kaction", "key_mic_next_weapon", 475, 50, 100, 12, "Jump" },
   { "klabel", "key_primary", 180, 10, 50, 12, "Trigger 1" },
   { "klabel", "key_secondary", 180, 22, 50, 12, "Trigger 2" },
   { "klabel", "key_prev_weapon", 180, 38, 50, 12, "Prev Weapon" },
@@ -730,8 +730,8 @@ HMenu.menus["key_" .. HMode.teleport] = {
   { "kaction", "key_next_weapon", 235, 50, 100, 12, "Next Polygon" },
   { "kaction", "key_mic_primary", 475, 10, 100, 12, "Fast Forward Polygon" },
   { "kaction", "key_mic_secondary", 475, 22, 100, 12, "Rewind Polygon" },
-  { "kaction", "key_mic_prev_weapon", 475, 38, 100, 12, "Jump" },
-  { "kaction", "key_mic_next_weapon", 475, 50, 100, 12, "Freeze" },
+  { "kaction", "key_mic_prev_weapon", 475, 38, 100, 12, "Freeze" },
+  { "kaction", "key_mic_next_weapon", 475, 50, 100, 12, "Jump" },
   { "klabel", "key_primary", 180, 10, 50, 12, "Trigger 1" },
   { "klabel", "key_secondary", 180, 22, 50, 12, "Trigger 2" },
   { "klabel", "key_prev_weapon", 180, 38, 50, 12, "Prev Weapon" },
