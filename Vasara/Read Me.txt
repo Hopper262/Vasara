@@ -16,9 +16,9 @@ INSTALLATION:
 - Drag the downloaded .zip file, or the unzipped "Vasara" folder, into the "Plugins" folder inside your Marathon Infinity or custom scenario folder. (Create a "Plugins" folder if you don't already have one.)
 - Launch Aleph One, and go to "Preferences", then "Environment", then "Plugins" to enable or disable Vasara.
 
-IMPORTANT 1: turn off any other HUD or solo Lua plugins while using Vasara.
+IMPORTANT 1: other HUD or solo Lua plugins can interfere with Vasara. You should be all right as long as anything listed after Vasara in your plugins list is turned off.
 
-IMPORTANT 2: both "Vasara Lua" and "Vasara HUD" must be enabled at the same time. If you turn on only one, you WILL have serious problems.
+IMPORTANT 2: both "Vasara HUD" and "Vasara Script" must be enabled at the same time. If you turn on only one, you WILL have serious problems.
 
 ----------------------------------------------------------------
 GETTING STARTED:
@@ -50,7 +50,7 @@ TIPS AND TRICKS:
 
 Vasara's functionality is based on Visual Mode.lua, which in turn is based on Forge's Visual Mode. If you're confused about what something in Vasara does, check the Forge manual or existing discussions about VML.
 
-Having trouble navigating menu screens with the mouse? Try the keyboard. Your key bindings for turning and looking up/down will move the cursor. Moving or sidestepping will move the cursor slowly, for more precise aiming.
+Having trouble navigating menu screens with the mouse? Try the keyboard. Your key bindings for turning and looking up/down will move the cursor. Moving or sidestepping will snap the cursor to the closest item in the pressed direction.
 
 When selecting lights, the clickable area is larger than you might think. You can click on either the number or the square.
 
