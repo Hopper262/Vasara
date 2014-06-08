@@ -1,4 +1,4 @@
-Vasara 1.0 rc1
+Vasara 1.0 rc2
 ----------
 by Hopper and Ares Ex Machina
 from work by Irons and Smith
