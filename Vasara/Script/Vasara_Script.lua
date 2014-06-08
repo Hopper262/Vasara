@@ -577,18 +577,23 @@ function SMode.handle_teleport(p)
   end
   
   if ((not p._keys.mic.down) and (p._keys.prev_weapon.held or p._keys.next_weapon.held)) or (p._keys.mic.down and (p._keys.primary.held or p._keys.secondary.held)) then
+    local diff = 1
     if p._keys.prev_weapon.held and (not p._keys.mic.down) then
-      p._target_poly = (p._target_poly - 1) % #Polygons
-    elseif p._keys.next_weapon.held and (not p._keys.mic.down) then
-      p._target_poly = (p._target_poly + 1) % #Polygons
+      diff = -1
     elseif p._keys.primary.held and p._keys.mic.down then
-      local diff = 1
-      if p._keys.primary.repeated then diff = 1 + ffw_teleport_scrub_speed end
-      p._target_poly = (p._target_poly + diff) % #Polygons
+      if p._keys.primary.repeated then
+        diff = 1 + ffw_teleport_scrub_speed
+      else
+        diff = 1
+      end
     elseif p._keys.secondary.held and p._keys.mic.down then
-      if p._keys.secondary.repeated then diff = 1 + ffw_teleport_scrub_speed end
-      p._target_poly = (p._target_poly - diff) % #Polygons
+      if p._keys.secondary.repeated then
+        diff = -1 - ffw_teleport_scrub_speed
+      else
+        diff = -1
+      end
     end
+    p._target_poly = (p._target_poly + diff) % #Polygons
     SMode.annotate(p)
     
     local poly = Polygons[p._target_poly]
@@ -734,17 +739,10 @@ end
 function SMode.handle_attribute(p)
   if p._keys.mic.down then
     if p._keys.prev_weapon.pressed then
-      p._apply.light = true
-      p._apply.texture = true
+      p._apply.align = not p._apply.align
     end
     if p._keys.next_weapon.pressed then
-      if p._apply.light and (not p._apply.texture) then
-        p._apply.light = false
-        p._apply.texture = true
-      else
-        p._apply.light = true
-        p._apply.texture = false
-      end
+      p._apply.transparent = not p._apply.transparent
     end
     if p._keys.primary.released then
       SMode.default_attribute(p)
