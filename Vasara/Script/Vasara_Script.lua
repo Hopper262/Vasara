@@ -22,13 +22,21 @@ menu_horizontal_range = 70    -- default: 70
 drag_vertical_range = 80      -- default: 80
 drag_horizontal_range = 120   -- default: 120
 
--- translate forward/sidestep movement to menu cursor movement
-menu_forward_speed = 5 * menu_vertical_range/320
-menu_sidestep_speed = 5 * menu_horizontal_range/600
-
 -- how far you can drag a texture before it stops moving (in World Units)
 drag_vertical_limit = 1
 drag_horizontal_limit = 1
+
+-- how many ticks before you start dragging a texture
+drag_initial_delay = 3
+
+-- how many ticks between fast forward/rewind steps
+ffw_initial_delay = 5
+ffw_repeat_delay = 0
+ffw_texture_scrub_speed = 0
+ffw_teleport_scrub_speed = 1
+
+-- how many ticks to highlight a latched keypress in HUD
+key_highlight_delay = 4
 
 
 -- END PREFERENCES -- no user serviceable parts below ;)
@@ -50,8 +58,6 @@ end
 for _, collection in pairs(landscapes) do
   table.insert(CollectionsUsed, collection)
 end
-
-TRIGGER_DELAY = 4
 
 Triggers = {}
 function init()
@@ -443,7 +449,7 @@ function SMode.handle_apply(p)
           end
         end
       
-      elseif surface and (Game.ticks > p._keys.primary.first + TRIGGER_DELAY) then
+      elseif surface and (Game.ticks > p._keys.primary.first + drag_initial_delay) then
         SFreeze.enter_mode(p, "drag")
         
         local delta_yaw, delta_pitch
@@ -544,8 +550,10 @@ function SMode.handle_teleport(p)
     p._saved_facing.y = p.y
     p._saved_facing.z = p.z
     local o, x, y, z, poly = VML.find_target(p, false, false)
-    p._target_poly = poly.index
-    UTeleport.highlight(p, poly)
+    if poly then
+      p._target_poly = poly.index
+      UTeleport.highlight(p, poly)
+    end
     
     SMode.annotate(p)
   end
@@ -574,9 +582,12 @@ function SMode.handle_teleport(p)
     elseif p._keys.next_weapon.held and (not p._keys.mic.down) then
       p._target_poly = (p._target_poly + 1) % #Polygons
     elseif p._keys.primary.held and p._keys.mic.down then
-      p._target_poly = (p._target_poly - 10) % #Polygons
+      local diff = 1
+      if p._keys.primary.repeated then diff = 1 + ffw_teleport_scrub_speed end
+      p._target_poly = (p._target_poly + diff) % #Polygons
     elseif p._keys.secondary.held and p._keys.mic.down then
-      p._target_poly = (p._target_poly + 10) % #Polygons
+      if p._keys.secondary.repeated then diff = 1 + ffw_teleport_scrub_speed end
+      p._target_poly = (p._target_poly - diff) % #Polygons
     end
     SMode.annotate(p)
     
@@ -603,9 +614,17 @@ function SMode.annotate(p)
 end
 function SMode.handle_choose(p)
   -- cycle textures
-  if (p._keys.mic.down and p._keys.primary.held) or ((not p._keys.mic.down) and (p._keys.prev_weapon.held or p._keys.next_weapon.held)) then
+  if (p._keys.mic.down and (p._keys.primary.held or p._keys.secondary.held)) or ((not p._keys.mic.down) and (p._keys.prev_weapon.held or p._keys.next_weapon.held)) then
     local diff = 1
-    if p._keys.prev_weapon.held then diff = -1 end
+    if p._keys.prev_weapon.held then
+      diff = -1
+    elseif p._keys.mic.down and p._keys.primary.repeated then
+      diff = 1 + ffw_texture_scrub_speed
+    elseif p._keys.mic.down and p._keys.secondary.repeated then
+      diff = 0 - (1 + ffw_texture_scrub_speed)
+    elseif p._keys.mic.down and p._keys.secondary.held then
+      diff = -1
+    end
     local cur = p._collections.current_collection
     if cur == 0 then
       local bct = 0
@@ -635,7 +654,7 @@ function SMode.handle_choose(p)
     end
   end
   
-  if (p._keys.mic.down and p._keys.secondary.held) or (p._keys.mic.down and (p._keys.next_weapon.held or p._keys.prev_weapon.held)) then
+  if p._keys.mic.down and (p._keys.next_weapon.held or p._keys.prev_weapon.held) then
     -- cycle collections
     local diff = 1
     if p._keys.prev_weapon.held then diff = -1 end
@@ -876,14 +895,20 @@ function SKeys.track_key(p, flag, key, disable)
   
   k.highlight = false
   k.held = false
+  k.repeated = false
   local passed = ticks - k.first
   
   if k.down then
     k.highlight = true
-    if (passed % (TRIGGER_DELAY + 1)) == 0 then
+    if passed == 0 then
       k.held = true
+    elseif passed >= ffw_initial_delay then
+      if ((passed - ffw_initial_delay) % (ffw_repeat_delay + 1)) == 0 then
+        k.held = true
+        k.repeated = true
+      end
     end
-  elseif passed < (TRIGGER_DELAY + 1) then
+  elseif passed < (key_highlight_delay + 1) then
     k.highlight = true
   end
 end
