@@ -217,6 +217,16 @@ function SMode.init()
     end
   end
 end
+function SMode.current_menu_name(p)
+  if p._mode == SMode.attribute then
+    return SMode.attribute
+  elseif p._mode == SMode.choose then
+    return "choose_" .. p._collections.current_collection
+  elseif p._mode == SMode.panel then
+    return SPanel.menu_name(p)
+  end
+  return nil
+end
 function SMode.update()
   for p in Players() do
     
@@ -648,7 +658,7 @@ function SMode.handle_choose(p)
     
   -- handle menu
   if (not p._keys.mic.down) and p._keys.primary.released then
-    local name = SMenu.selection(p, "choose_" .. p._collections.current_collection)
+    local name = SMenu.selection(p)
     if name == nil then return end
     
     if string.sub(name, 1, 7) == "choose_" then
@@ -733,7 +743,7 @@ function SMode.handle_attribute(p)
   
   -- handle menu
   if (not p._keys.mic.down) and p._keys.primary.released then
-    local name = SMenu.selection(p, SMode.attribute)
+    local name = SMenu.selection(p)
     if name == nil then return end
     
     if name == "apply_tex" then
@@ -782,7 +792,7 @@ function SMode.handle_panel(p)
   
   -- handle menu
   if (not p._keys.mic.down) and p._keys.primary.released then
-    local name = SMenu.selection(p, SPanel.menu_name(p))
+    local name = SMenu.selection(p)
     if name == nil then return end
     
     if name == "panel_light" then
@@ -1029,6 +1039,9 @@ function SFreeze.enter_mode(p, mode)
     p._freeze.extra_elev = 0
     p._freeze.last_forward = p.internal_velocity.forward
     p._freeze.last_perpendicular = p.internal_velocity.perpendicular
+    p._freeze.last_motion = {}
+    p._freeze.last_motion["forward"] = 0
+    p._freeze.last_motion["perpendicular"] = 0
     p.direction = 180
     p.elevation = 0
   end
@@ -1065,13 +1078,43 @@ function SFreeze.update()
     if p._freeze.frozen or p._freeze.mode then
       SFreeze.reposition(p)
     end
-    if p._freeze.mode then  
-      p._freeze.extra_elev = p._freeze.extra_elev - menu_forward_speed * SFreeze.detect_motion(p, "forward")
-      p._freeze.extra_dir = p._freeze.extra_dir + menu_sidestep_speed * SFreeze.detect_motion(p, "perpendicular")
-      
+    if p._freeze.mode then
       p.direction = p._freeze.restore.direction
       p.elevation = p._freeze.restore.elevation
-
+      local check_direction = true
+      
+      if p._freeze.mode == "menu" then
+        -- check for movement keys
+        local last_mov = {}
+        local cur_mov = {}
+        local any_move = false
+        for _,dir in pairs({ "forward", "perpendicular" }) do
+          last_mov[dir] = p._freeze.last_motion[dir]
+          cur_mov[dir] = SFreeze.detect_motion(p, dir)
+          p._freeze.last_motion[dir] = cur_mov[dir]
+          if cur_mov[dir] ~= 0 and cur_mov[dir] ~= last_mov[dir] then
+            any_move = true
+          end
+        end
+        if any_move then
+          -- position cursor to closest menu item
+          local item
+          if cur_mov["forward"] == 1 then
+            item = SMenu.find_next(p, "up")
+          elseif cur_mov["forward"] == -1 then
+            item = SMenu.find_next(p, "down")
+          elseif cur_mov["perpendicular"] == 1 then
+            item = SMenu.find_next(p, "right")
+          elseif cur_mov["perpendicular"] == -1 then
+            item = SMenu.find_next(p, "left")
+          end
+          if item then
+            SFreeze.set_coord(p, item[3] + item[5]/2,
+                                 item[4] + item[6]/2)
+          end
+        end
+      end
+      
       local nd = p.direction - 180
       local ne = 0 - p.elevation
       
@@ -1594,7 +1637,8 @@ SMenu.menus["panel_tag"] = {
   { "checkbox", "panel_active", 220-1, 170, 100-2, 20, "Tag is active" },
   { "label", nil, 170+5, 170, 50-18, 20, "Tag" } }
 SMenu.inited = {}
-function SMenu.selection(p, mode)
+function SMenu.selection(p)
+  local mode = SMode.current_menu_name(p)
   if not SMenu.inited[mode] then SMenu.init_menu(mode) end
   local m = SMenu.menus[mode]  
   local x, y = SMenu.coord(p)
@@ -1608,6 +1652,48 @@ function SMenu.selection(p, mode)
   end
   return nil
 end
+function SMenu.find_next(p, direction)
+  local mode = SMode.current_menu_name(p)
+  if not SMenu.inited[mode] then SMenu.init_menu(mode) end
+  local m = SMenu.menus[mode]  
+  local x, y = SMenu.coord(p)
+  
+  local closest = nil
+  local distance = 999
+  for idx, item in ipairs(m) do
+    if SMenu.clickable(item[1]) then
+      if (direction == "down" or direction == "up") and
+         (x >= item[3] and x <= (item[3] + item[5])) then
+        if direction == "down" and y < item[4] then
+          if distance > (item[4] - y) then
+            distance = item[4] - y
+            closest = item
+          end
+        elseif direction == "up" and y > (item[4] + item[6]) then
+          if distance > (y - (item[4] + item[6])) then
+            distance = y - (item[4] + item[6])
+            closest = item
+          end
+        end
+      elseif (direction == "left" or direction == "right") and
+             (y >= item[4] and y <= (item[4] + item[6])) then
+        if direction == "right" and x < item[3] then
+          if distance > (item[3] - x) then
+            distance = item[3] - x
+            closest = item
+          end
+        elseif direction == "left" and x > (item[3] + item[5]) then
+          if distance > (x - (item[3] + item[5])) then
+            distance = x - (item[3] + item[5])
+            closest = item
+          end
+        end
+      end
+    end
+  end
+  return closest
+end
+
 function SMenu.coord(p)
   return SFreeze.coord(p)
 end
