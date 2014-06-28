@@ -263,10 +263,10 @@ function SMode.update()
         -- only allow default action trigger in apply and teleport
         if (p._mode ~= SMode.teleport and p._mode ~= SMode.apply) or (not p:find_action_key_target()) then
           p.action_flags.action_trigger = false
-          SMode.toggle(p, SMode.choose)
+          SMode.toggle(p, SMode.attribute)
         end
       elseif p._keys.mic.released and (not p._mic_dummy) then
-        SMode.toggle(p, SMode.attribute)
+        SMode.toggle(p, SMode.choose)
       elseif p._keys.secondary.released and p._mode ~= SMode.apply then
         SMode.toggle(p, p._mode)
       end

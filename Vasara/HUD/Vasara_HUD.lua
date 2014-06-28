@@ -731,8 +731,8 @@ HMenu.menus["key_" .. HMode.apply] = {
   { "klabel", "key_mic_prev_weapon", 400, 38, 70, 12, "Prev Weapon" },
   { "klabel", "key_mic_next_weapon", 400, 50, 70, 12, "Next Weapon" },
   { "ktab", nil, 20, 4, 130, 16, "Visual Mode" },
-  { "ktab", "key_action", 20, 20, 130, 16, "Choose Texture" },
-  { "ktab", "key_mic", 20, 36, 130, 16, "Options" },
+  { "ktab", "key_mic", 20, 20, 130, 16, "Choose Texture" },
+  { "ktab", "key_action", 20, 36, 130, 16, "Options" },
   { "ktab", "key_map", 20, 52, 130, 16, "Teleport" } }
 HMenu.menus["key_" .. HMode.teleport] = {
   { "ktab_bg", nil, 150, 4 + menu_prefs.button_indent, 470, 64 - 2*menu_prefs.button_indent, nil },
@@ -755,8 +755,8 @@ HMenu.menus["key_" .. HMode.teleport] = {
   { "klabel", "key_mic_prev_weapon", 400, 38, 70, 12, "Prev Weapon" },
   { "klabel", "key_mic_next_weapon", 400, 50, 70, 12, "Next Weapon" },
   { "ktab", "key_map", 20, 4, 130, 16, "Visual Mode" },
-  { "ktab", "key_action", 20, 20, 130, 16, "Choose Texture" },
-  { "ktab", "key_mic", 20, 36, 130, 16, "Options" },
+  { "ktab", "key_mic", 20, 20, 130, 16, "Choose Texture" },
+  { "ktab", "key_action", 20, 36, 130, 16, "Options" },
   { "ktab", nil, 20, 52, 130, 16, "Teleport" } }
 HMenu.menus["key_" .. HMode.choose] = {
   { "ktab_bg", nil, 150, 4 + menu_prefs.button_indent, 470, 64 - 2*menu_prefs.button_indent, nil },
@@ -778,9 +778,9 @@ HMenu.menus["key_" .. HMode.choose] = {
   { "klabel", "key_mic_secondary", 400, 22, 70, 12, "Trigger 2" },
   { "klabel", "key_mic_prev_weapon", 400, 38, 70, 12, "Prev Weapon" },
   { "klabel", "key_mic_next_weapon", 400, 50, 70, 12, "Next Weapon" },
-  { "ktab", "key_action", 20, 4, 130, 16, "Visual Mode" },
+  { "ktab", "key_mic", 20, 4, 130, 16, "Visual Mode" },
   { "ktab", nil, 20, 20, 130, 16, "Choose Texture" },
-  { "ktab", "key_mic", 20, 36, 130, 16, "Options" },
+  { "ktab", "key_action", 20, 36, 130, 16, "Options" },
   { "ktab", "key_map", 20, 52, 130, 16, "Teleport" } }
 HMenu.menus["key_" .. HMode.attribute] = {
   { "ktab_bg", nil, 150, 4 + menu_prefs.button_indent, 470, 64 - 2*menu_prefs.button_indent, nil },
@@ -802,8 +802,8 @@ HMenu.menus["key_" .. HMode.attribute] = {
   { "klabel", "key_mic_secondary", 400, 22, 70, 12, "Trigger 2" },
   { "klabel", "key_mic_prev_weapon", 400, 38, 70, 12, "Prev Weapon" },
   { "klabel", "key_mic_next_weapon", 400, 50, 70, 12, "Next Weapon" },
-  { "ktab", "key_mic", 20, 4, 130, 16, "Visual Mode" },
-  { "ktab", "key_action", 20, 20, 130, 16, "Choose Texture" },
+  { "ktab", "key_action", 20, 4, 130, 16, "Visual Mode" },
+  { "ktab", "key_mic", 20, 20, 130, 16, "Choose Texture" },
   { "ktab", nil, 20, 36, 130, 16, "Options" },
   { "ktab", "key_map", 20, 52, 130, 16, "Teleport" } }
 HMenu.menus["key_panel_off"] = {
@@ -827,8 +827,8 @@ HMenu.menus["key_panel_off"] = {
   { "klabel", "key_mic_prev_weapon", 400, 38, 70, 12, "Prev Weapon" },
   { "klabel", "key_mic_next_weapon", 400, 50, 70, 12, "Next Weapon" },
   { "ktab", nil, 20, 4, 130, 16, "Edit Switch / Panel" },
-  { "ktab", "key_action", 20, 20, 130, 16, "Choose Texture" },
-  { "ktab", "key_mic", 20, 36, 130, 16, "Options" },
+  { "ktab", "key_mic", 20, 20, 130, 16, "Choose Texture" },
+  { "ktab", "key_action", 20, 36, 130, 16, "Options" },
   { "ktab", "key_map", 20, 52, 130, 16, "Teleport" } }
 HMenu.menus["key_panel_plain"] = HMenu.menus["key_panel_off"]
 HMenu.menus["key_panel_terminal"] = {
@@ -852,8 +852,8 @@ HMenu.menus["key_panel_terminal"] = {
   { "klabel", "key_mic_prev_weapon", 400, 38, 70, 12, "Prev Weapon" },
   { "klabel", "key_mic_next_weapon", 400, 50, 70, 12, "Next Weapon" },
   { "ktab", nil, 20, 4, 130, 16, "Edit Switch / Panel" },
-  { "ktab", "key_action", 20, 20, 130, 16, "Choose Texture" },
-  { "ktab", "key_mic", 20, 36, 130, 16, "Options" },
+  { "ktab", "key_mic", 20, 20, 130, 16, "Choose Texture" },
+  { "ktab", "key_action", 20, 36, 130, 16, "Options" },
   { "ktab", "key_map", 20, 52, 130, 16, "Teleport" } }
 HMenu.menus["key_panel_light"] = {
   { "ktab_bg", nil, 150, 4 + menu_prefs.button_indent, 470, 64 - 2*menu_prefs.button_indent, nil },
@@ -876,8 +876,8 @@ HMenu.menus["key_panel_light"] = {
   { "klabel", "key_mic_prev_weapon", 400, 38, 70, 12, "Prev Weapon" },
   { "klabel", "key_mic_next_weapon", 400, 50, 70, 12, "Next Weapon" },
   { "ktab", nil, 20, 4, 130, 16, "Edit Switch / Panel" },
-  { "ktab", "key_action", 20, 20, 130, 16, "Choose Texture" },
-  { "ktab", "key_mic", 20, 36, 130, 16, "Options" },
+  { "ktab", "key_mic", 20, 20, 130, 16, "Choose Texture" },
+  { "ktab", "key_action", 20, 36, 130, 16, "Options" },
   { "ktab", "key_map", 20, 52, 130, 16, "Teleport" } }
 HMenu.menus["key_panel_platform"] = {
   { "ktab_bg", nil, 150, 4 + menu_prefs.button_indent, 470, 64 - 2*menu_prefs.button_indent, nil },
@@ -900,8 +900,8 @@ HMenu.menus["key_panel_platform"] = {
   { "klabel", "key_mic_prev_weapon", 400, 38, 70, 12, "Prev Weapon" },
   { "klabel", "key_mic_next_weapon", 400, 50, 70, 12, "Next Weapon" },
   { "ktab", nil, 20, 4, 130, 16, "Edit Switch / Panel" },
-  { "ktab", "key_action", 20, 20, 130, 16, "Choose Texture" },
-  { "ktab", "key_mic", 20, 36, 130, 16, "Options" },
+  { "ktab", "key_mic", 20, 20, 130, 16, "Choose Texture" },
+  { "ktab", "key_action", 20, 36, 130, 16, "Options" },
   { "ktab", "key_map", 20, 52, 130, 16, "Teleport" } }
 HMenu.menus["key_panel_tag"] = {
   { "ktab_bg", nil, 150, 4 + menu_prefs.button_indent, 470, 64 - 2*menu_prefs.button_indent, nil },
@@ -924,8 +924,8 @@ HMenu.menus["key_panel_tag"] = {
   { "klabel", "key_mic_prev_weapon", 400, 38, 70, 12, "Prev Weapon" },
   { "klabel", "key_mic_next_weapon", 400, 50, 70, 12, "Next Weapon" },
   { "ktab", nil, 20, 4, 130, 16, "Edit Switch / Panel" },
-  { "ktab", "key_action", 20, 20, 130, 16, "Choose Texture" },
-  { "ktab", "key_mic", 20, 36, 130, 16, "Options" },
+  { "ktab", "key_mic", 20, 20, 130, 16, "Choose Texture" },
+  { "ktab", "key_action", 20, 36, 130, 16, "Options" },
   { "ktab", "key_map", 20, 52, 130, 16, "Teleport" } }
 
 HMenu.inited = {}
