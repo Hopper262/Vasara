@@ -56,6 +56,8 @@ When selecting lights, the clickable area is larger than you might think. You ca
 
 For VML veterans, the key combo Mic+Action acts as an Undo/Redo toggle just like in Visual Mode.lua.
 
+Once you're done texturing, you can take screenshots of your level in Vasara. Use teleport, jump and freeze to find a nice vantage point, then press F2 to hide the GUI. Press F9 to take a screenshot and F1 to bring the GUI back.
+
 The two Lua scripts have various preferences at the top. You can change the mouse cursor sensitivity, the color scheme, the collection names, and more. Poke around there if you're interested.
 
 ----------------------------------------------------------------
