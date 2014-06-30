@@ -715,6 +715,7 @@ function SMode.start_attribute(p)
   p._apply_saved.align = p._apply.align
   p._apply_saved.transparent = p._apply.transparent
   p._apply_saved.edit_panels = p._apply.edit_panels
+  p._apply_saved.advanced_mode = p._advanced_mode
   p._apply_saved.quantize = p._quantize
   p._apply_saved.transfer_mode = p._transfer_mode
   p._apply_saved.cur_light = p._light
@@ -725,6 +726,7 @@ function SMode.revert_attribute(p)
   p._apply.align = p._apply_saved.align
   p._apply.transparent = p._apply_saved.transparent
   p._apply.edit_panels = p._apply_saved.edit_panels
+  p._advanced_mode = p._apply_saved.advanced_mode
   p._quantize = p._apply_saved.quantize
   p._transfer_mode = p._apply_saved.transfer_mode
   p._light = p._apply_saved.cur_light
@@ -735,6 +737,7 @@ function SMode.default_attribute(p)
   p._apply.align = true
   p._apply.transparent = false
   p._apply.edit_panels = true
+  p._advanced_mode = false
   p._quantize = 0
   p._transfer_mode = 0
   p._light = 0
