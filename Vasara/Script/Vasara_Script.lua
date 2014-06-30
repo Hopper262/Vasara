@@ -171,6 +171,7 @@ function SMode.init()
     p._menu_item = 0
     p._cursor_x = 320
     p._cursor_y = 240
+    p._advanced_mode = false
     
     p._apply = {}
     p._apply.texture = true
@@ -318,6 +319,7 @@ function SMode.update()
       elseif p._mode == SMode.apply then
         p._cursor_x = 320
         p._cursor_y = 72 + 160
+        if p._advanced_mode then p._cursor_y = 196 end
         if SFreeze.in_mode(p, "drag") then
           local delta_yaw, delta_pitch
           delta_yaw, delta_pitch = SFreeze.coord(p)
@@ -327,6 +329,7 @@ function SMode.update()
       elseif p._mode == SMode.teleport then
         p._cursor_x = 320
         p._cursor_y = math.floor((3*72 + 480)/4)
+        if p._advanced_mode then p._cursor_y = 480/4 end
       end
     end
   end
@@ -773,6 +776,8 @@ function SMode.handle_attribute(p)
       p._apply.transparent = not p._apply.transparent
     elseif name == "apply_edit" then
       p._apply.edit_panels = not p._apply.edit_panels
+    elseif name == "advanced" then
+      p._advanced_mode = not p._advanced_mode
     elseif string.sub(name, 1, 5) == "snap_" then
       local mode = tonumber(string.sub(name, 6))
       p._quantize = mode
@@ -1498,6 +1503,7 @@ function SStatus.update()
       if SUndo.undo_active(p) then status = status + 2 end
       if SUndo.redo_active(p) then status = status + 4 end
       if (p._mode == SMode.apply or p._mode == SMode.teleport) and (not SFreeze.in_mode(p, "drag")) and p:find_action_key_target() then status = status + 8 end
+      if p._advanced_mode then status = status + 16 end
       p.texture_palette.slots[41].texture_index = status
       
       p.texture_palette.slots[43].texture_index = p._light
@@ -1536,6 +1542,7 @@ SMenu.menus[SMode.attribute] = {
   { "checkbox", "apply_align", 30, 145, 155, 20, "Align adjacent" },
   { "checkbox", "apply_edit", 30, 165, 155, 20, "Edit switches and panels" },
   { "checkbox", "apply_xparent", 30, 185, 155, 20, "Edit transparent sides" },
+  { "checkbox", "advanced", 30, 225, 155, 20, "Hide keyboard shortcuts" },
   { "label", "nil", 30+5, 250, 155, 20, "Snap to grid" },
   { "radio", "snap_0", 30, 270, 155, 20, snap_modes[1] },
   { "radio", "snap_1", 30, 290, 155, 20, snap_modes[2] },
