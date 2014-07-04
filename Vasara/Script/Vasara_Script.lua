@@ -13,7 +13,8 @@ suppress_monsters = true
 max_tags = 90     -- max: 90
 max_scripts = 90  -- max: 90
 
-show_visual_mode_header = false
+-- set to false to hide the Visual Mode header on startup
+show_visual_mode_header = true
 
 -- highlight selected destination in Teleport mode
 show_teleport_destination = true
