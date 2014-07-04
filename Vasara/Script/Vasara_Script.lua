@@ -13,6 +13,8 @@ suppress_monsters = true
 max_tags = 90     -- max: 90
 max_scripts = 90  -- max: 90
 
+show_visual_mode_header = false
+
 -- highlight selected destination in Teleport mode
 show_teleport_destination = true
 
@@ -171,7 +173,7 @@ function SMode.init()
     p._menu_item = 0
     p._cursor_x = 320
     p._cursor_y = 240
-    p._advanced_mode = false
+    p._advanced_mode = not show_visual_mode_header
     
     p._apply = {}
     p._apply.texture = true

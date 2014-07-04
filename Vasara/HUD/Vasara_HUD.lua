@@ -393,15 +393,7 @@ function layout()
     Screen.world_rect.y + Screen.world_rect.height/2 }
 
   HGlobals.coff = { imgs["cursor_menu"].width/2,
-                    imgs["cursor_menu"].height/2 }
---   if HStatus.down(HStatus.advanced_active) then
---     if HMode.is(HMode.apply) then
---       HGlobals.coff[2] = HGlobals.coff[2] + 36*HGlobals.scale
---     elseif HMode.is(HMode.teleport) then
---       HGlobals.coff[2] = HGlobals.coff[2] + 54*HGlobals.scale
---     end
---   end
-  
+                    imgs["cursor_menu"].height/2 }  
 end
 
 function hasbit(field, which)
@@ -573,7 +565,7 @@ function HStatus.down(k)
 end
 
 HMode = {}
-HMode.current = 0
+HMode.current = -1
 HMode.apply = 0
 HMode.choose = 1
 HMode.attribute = 2
@@ -603,7 +595,7 @@ HMenu.menus[HMode.attribute] = {
   { "checkbox", "apply_align", 30, 145, 155, 20, "Align adjacent" },
   { "checkbox", "apply_edit", 30, 165, 155, 20, "Edit switches and panels" },
   { "checkbox", "apply_xparent", 30, 185, 155, 20, "Edit transparent sides" },
-  { "checkbox", "advanced", 30, 225, 155, 20, "Hide keyboard shortcuts" },
+  { "checkbox", "advanced", 30, 225, 155, 20, "Visual Mode header" },
   { "label", "nil", 30+5, 250, 155, 20, "Snap to grid" },
   { "radio", "snap_0", 30, 270, 155, 20, snap_modes[1] },
   { "radio", "snap_1", 30, 290, 155, 20, snap_modes[2] },
@@ -1178,7 +1170,7 @@ function HMenu.button_state(name)
   elseif name == "apply_edit" then
     if HApply.down(HApply.edit_panels) then state = "active" end
   elseif name == "advanced" then
-    if HStatus.down(HStatus.advanced_active) then state = "active" end
+    if not HStatus.down(HStatus.advanced_active) then state = "active" end
   elseif name == "apply_snap" then
     if HApply.current_snap > 0 then state = "active" end
   elseif string.sub(name, 1, 5) == "snap_" then
