@@ -618,7 +618,7 @@ HMenu.menus[HMode.attribute] = {
   { "radio", "transfer_9", 335, 350, 120, 20, "Fast vertical slide" },
   { "radio", "transfer_11", 335, 370, 120, 20, "Fast wander" },
   { "label", nil, 485, 250, 120, 20, "Preview" },
-  { "applypreview", nil, 485, 270, 120, 120, nil } }
+  { "applypreview", nil, 485, 270, 120, 3, nil } }
 HMenu.menus["apply_options"] = {
   { "acheckbox", "apply_light", 110, 394, 155, 14, "Apply light" },
   { "acheckbox", "apply_tex", 110, 408, 155, 14, "Apply texture" },
@@ -626,7 +626,8 @@ HMenu.menus["apply_options"] = {
   { "acheckbox", "apply_edit", 110, 436, 155, 14, "Edit switches and panels" },
   { "acheckbox", "apply_xparent", 110, 450, 155, 14, "Edit transparent sides" },
   { "acheckbox", "apply_snap", 110, 464, 155, 14, "Snap to grid" },
-  { "applypreview", nil, 20, 394, 84, 84, nil } }
+  { "applypreview", nil, 20, 394, 84, 1, nil },
+  { "applypreview", nil, 86, 398, 20, 2, nil } }
 HMenu.menus["panel_off"] = {
   { "tab_bg", nil, 150, 80, 470, 320, nil },
   { "tab", "ptype_5", 20, 105, 130, 20, "Light switch" },
@@ -1082,7 +1083,7 @@ function HMenu.draw_menu(mode, transparent)
       local ht = h - 2*indent*u
       HCollections.draw(cc + 0, ct + 0, xt, yt, wt, ht)
     elseif item[1] == "applypreview" then
-      HCollections.preview_current(x, y, w)
+      HCollections.preview_current(x, y, w, item[6])
     elseif item[1] == "light" then
       local state = HMenu.button_state(item[2])
     
@@ -1592,7 +1593,10 @@ function HCollections.draw(coll, tex, x, y, w, h)
   local shp, xoff, yoff = HCollections.predraw(coll, tex, w, h)
   shp:draw(x + xoff, y + yoff)
 end
-function HCollections.preview_current(x, y, size)
+function HCollections.preview_current(x, y, size, mode)
+  if (mode == 1) and (not HApply.down(HApply.use_texture)) then return end
+  if (mode == 2) and      HApply.down(HApply.use_texture)  then return end
+
   local pref = menu_prefs.preview.apply
   if HMode.is(HMode.attribute) then pref = menu_prefs.preview.attribute end
   local u = HGlobals.scale
