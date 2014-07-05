@@ -621,8 +621,8 @@ HMenu.menus[HMode.attribute] = {
   { "radio", "transfer_7", 335, 330, 120, 20, "Fast horizontal slide" },
   { "radio", "transfer_9", 335, 350, 120, 20, "Fast vertical slide" },
   { "radio", "transfer_11", 335, 370, 120, 20, "Fast wander" },
-  { "label", nil, 485, 250, 120, 20, "Preview" },
-  { "applypreview", nil, 485, 270, 120, 3, nil } }
+  { "label", nil, 485, 250, 120, 20, "Texture preview" },
+  { "applypreview", nil, 485, 270, 120, 1, nil } }
 HMenu.menus["apply_options"] = {
   { "acheckbox", "apply_light", 110, 394, 155, 14, "Apply light" },
   { "acheckbox", "apply_tex", 110, 408, 155, 14, "Apply texture" },

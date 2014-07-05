@@ -1570,8 +1570,8 @@ SMenu.menus[SMode.attribute] = {
   { "radio", "transfer_7", 335, 330, 120, 20, "Fast horizontal slide" },
   { "radio", "transfer_9", 335, 350, 120, 20, "Fast vertical slide" },
   { "radio", "transfer_11", 335, 370, 120, 20, "Fast wander" },
-  { "label", nil, 485, 250, 120, 20, "Preview" },
-  { "applypreview", nil, 485, 270, 120, 120, nil } }
+  { "label", nil, 485, 250, 120, 20, "Texture preview" },
+  { "applypreview", nil, 485, 270, 120, 1, nil } }
 SMenu.menus["panel_off"] = {
   { "tab_bg", nil, 150, 80, 470, 320, nil },
   { "tab", "ptype_5", 20, 105, 130, 20, "Light switch" },
