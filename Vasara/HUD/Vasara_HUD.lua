@@ -530,22 +530,22 @@ function HStatus.update()
   local lbls3 = HMenu.menus["key_" .. HMode.attribute]
   
   if HStatus.down(HStatus.frozen) then
-    lbls[8][7] = "Unfreeze"
-    lbls[8][7] = "Unfreeze"
+    lbls[7][7] = "Unfreeze"
+    lbls2[7][7] = "Unfreeze"
   else
-    lbls[8][7] = "Freeze"
-    lbls2[8][7] = "Freeze"
+    lbls[7][7] = "Freeze"
+    lbls2[7][7] = "Freeze"
   end
   
   if HStatus.down(HStatus.undo_active) then
-    lbls[6][7] = "Undo"
+    lbls[5][7] = "Undo"
   else
-    lbls[6][7] = "(Can't Undo)"
+    lbls[5][7] = "(Can't Undo)"
   end
   if HStatus.down(HStatus.redo_active) then
-    lbls[7][7] = "Redo"
+    lbls[6][7] = "Redo"
   else
-    lbls[7][7] = "(Can't Redo)"
+    lbls[6][7] = "(Can't Redo)"
   end
   
   if HApply.down(HApply.align) then
@@ -732,15 +732,15 @@ HMenu.menus["key_" .. HMode.apply] = {
   { "kaction", "key_primary", 235, 10, 100, 12, "Apply Texture" },
   { "kaction", "key_secondary", 235, 22, 100, 12, "Sample Light + Texture" },
   { "kaction", "key_prev_weapon", 235, 38, 100, 12, "Change Light" },
-  { "kaction", "key_move", 235, 50, 100, 12, "Select Surface" },
+--   { "kaction", "key_move", 235, 50, 100, 12, "Select Surface" },
   { "kaction", "key_mic_primary", 475, 10, 100, 12, "Undo" },
   { "kaction", "key_mic_secondary", 475, 22, 100, 12, "Redo" },
   { "kaction", "key_mic_prev_weapon", 475, 38, 100, 12, "Freeze" },
   { "kaction", "key_mic_next_weapon", 475, 50, 100, 12, "Jump" },
   { "klabel", "key_primary", 180, 10, 50, 12, "Trigger 1" },
   { "klabel", "key_secondary", 180, 22, 50, 12, "Trigger 2" },
-  { "klabel", "key_weapon", 180, 38, 50, 12, "Prev, Next Weapon" },
-  { "klabel", "key_move", 180, 50, 50, 12, "Look, Move, Sidestep" },
+  { "klabel", "key_weapon", 180, 38, 50, 12, "Prev / Next Weapon" },
+--   { "klabel", "key_move", 180, 50, 50, 12, "Look / Move" },
   { "kmod", "key_mic_any", 380, 4, 44, 64, nil },
   { "klabel", "key_mic_any", 350, 30, 50, 12, "Mic +" },
   { "klabel", "key_mic_primary", 400, 10, 70, 12, "Trigger 1" },
@@ -756,15 +756,15 @@ HMenu.menus["key_" .. HMode.teleport] = {
   { "kaction", "key_primary", 235, 10, 100, 12, "Teleport" },
   { "kaction", "key_secondary", 235, 22, 100, 12, "Visual Mode" },
   { "kaction", "key_weapon", 235, 38, 100, 12, "Change Polygon" },
-  { "kaction", "key_move", 235, 50, 100, 12, "Select Polygon" },
+--   { "kaction", "key_move", 235, 50, 100, 12, "Select Polygon" },
   { "kaction", "key_mic_primary", 475, 10, 100, 12, "Fast Forward Polygon" },
   { "kaction", "key_mic_secondary", 475, 22, 100, 12, "Rewind Polygon" },
   { "kaction", "key_mic_prev_weapon", 475, 38, 100, 12, "Freeze" },
   { "kaction", "key_mic_next_weapon", 475, 50, 100, 12, "Jump" },
   { "klabel", "key_primary", 180, 10, 50, 12, "Trigger 1" },
   { "klabel", "key_secondary", 180, 22, 50, 12, "Trigger 2" },
-  { "klabel", "key_weapon", 180, 38, 50, 12, "Prev, Next Weapon" },
-  { "klabel", "key_move", 180, 50, 50, 12, "Look, Move, Sidestep" },
+  { "klabel", "key_weapon", 180, 38, 50, 12, "Prev / Next Weapon" },
+--   { "klabel", "key_move", 180, 50, 50, 12, "Look / Move" },
   { "kmod", "key_mic_any", 380, 4, 44, 64, nil },
   { "klabel", "key_mic_any", 350, 30, 50, 12, "Mic +" },
   { "klabel", "key_mic_primary", 400, 10, 70, 12, "Trigger 1" },
@@ -787,8 +787,8 @@ HMenu.menus["key_" .. HMode.choose] = {
 --   { "kaction", "key_mic_next_weapon", 475, 50, 100, 12, "Next Collection" },
   { "klabel", "key_primary", 180, 10, 50, 12, "Trigger 1" },
   { "klabel", "key_secondary", 180, 22, 50, 12, "Trigger 2" },
-  { "klabel", "key_weapon", 180, 38, 50, 12, "Prev, Next Weapon" },
-  { "klabel", "key_move", 180, 50, 50, 12, "Look, Move, Sidestep" },
+  { "klabel", "key_weapon", 180, 38, 50, 12, "Prev / Next Weapon" },
+  { "klabel", "key_move", 180, 50, 50, 12, "Look / Move" },
   { "kmod", "key_mic_any", 380, 4, 44, 64, nil },
   { "klabel", "key_mic_any", 350, 30, 50, 12, "Mic +" },
   { "klabel", "key_mic_primary", 400, 10, 70, 12, "Trigger 1" },
@@ -811,8 +811,8 @@ HMenu.menus["key_" .. HMode.attribute] = {
   { "kaction", "key_mic_next_weapon", 475, 50, 100, 12, "Edit Transparent Sides" },
   { "klabel", "key_primary", 180, 10, 50, 12, "Trigger 1" },
   { "klabel", "key_secondary", 180, 22, 50, 12, "Trigger 2" },
-  { "klabel", "key_weapon", 180, 38, 50, 12, "Prev, Next Weapon" },
-  { "klabel", "key_move", 180, 50, 50, 12, "Look, Move, Sidestep" },
+  { "klabel", "key_weapon", 180, 38, 50, 12, "Prev / Next Weapon" },
+  { "klabel", "key_move", 180, 50, 50, 12, "Look / Move" },
   { "kmod", "key_mic_any", 380, 4, 44, 64, nil },
   { "klabel", "key_mic_any", 350, 30, 50, 12, "Mic +" },
   { "klabel", "key_mic_primary", 400, 10, 70, 12, "Trigger 1" },
@@ -827,16 +827,16 @@ HMenu.menus["key_panel_off"] = {
   { "ktab_bg", nil, 150, 4 + menu_prefs.button_indent, 470, 64 - 2*menu_prefs.button_indent, nil },
   { "kaction", "key_primary", 235, 10, 100, 12, "Select Option" },
   { "kaction", "key_secondary", 235, 22, 100, 12, "Visual Mode" },
---   { "kaction", "key_prev_weapon", 235, 38, 100, 12, "Previous Type" },
---   { "kaction", "key_next_weapon", 235, 50, 100, 12, "Next Type" },
+--   { "kaction", "key_weapon", 235, 38, 100, 12, "Change Script" },
+  { "kaction", "key_move", 235, 50, 100, 12, "Move Cursor" },
 --   { "kaction", "key_mic_primary", 475, 10, 100, 12, "Cycle Textures" },
   { "kaction", "key_mic_secondary", 475, 22, 100, 12, "Revert Changes" },
   { "kaction", "key_mic_weapon", 475, 38, 100, 12, "Change Type" },
 --   { "kaction", "key_mic_next_weapon", 475, 50, 100, 12, "Next Type" },
   { "klabel", "key_primary", 180, 10, 50, 12, "Trigger 1" },
   { "klabel", "key_secondary", 180, 22, 50, 12, "Trigger 2" },
---   { "klabel", "key_prev_weapon", 180, 38, 50, 12, "Prev Weapon" },
---   { "klabel", "key_next_weapon", 180, 50, 50, 12, "Next Weapon" },
+--   { "klabel", "key_weapon", 180, 38, 50, 12, "Prev / Next Weapon" },
+  { "klabel", "key_move", 180, 50, 50, 12, "Look / Move" },
   { "kmod", "key_mic_any", 380, 4, 44, 64, nil },
   { "klabel", "key_mic_any", 350, 30, 50, 12, "Mic +" },
 --   { "klabel", "key_mic_primary", 400, 10, 70, 12, "Trigger 1" },
@@ -860,8 +860,8 @@ HMenu.menus["key_panel_terminal"] = {
 --   { "kaction", "key_mic_next_weapon", 475, 50, 100, 12, "Next Type" },
   { "klabel", "key_primary", 180, 10, 50, 12, "Trigger 1" },
   { "klabel", "key_secondary", 180, 22, 50, 12, "Trigger 2" },
-  { "klabel", "key_weapon", 180, 38, 50, 12, "Prev, Next Weapon" },
-  { "klabel", "key_move", 180, 50, 50, 12, "Look, Move, Sidestep" },
+  { "klabel", "key_weapon", 180, 38, 50, 12, "Prev / Next Weapon" },
+  { "klabel", "key_move", 180, 50, 50, 12, "Look / Move" },
   { "kmod", "key_mic_any", 380, 4, 44, 64, nil },
   { "klabel", "key_mic_any", 350, 30, 50, 12, "Mic +" },
 --   { "klabel", "key_mic_primary", 400, 10, 70, 12, "Trigger 1" },
@@ -884,8 +884,8 @@ HMenu.menus["key_panel_light"] = {
 --   { "kaction", "key_mic_next_weapon", 475, 50, 100, 12, "Next Type" },
   { "klabel", "key_primary", 180, 10, 50, 12, "Trigger 1" },
   { "klabel", "key_secondary", 180, 22, 50, 12, "Trigger 2" },
-  { "klabel", "key_weapon", 180, 38, 50, 12, "Prev, Next Weapon" },
-  { "klabel", "key_move", 180, 50, 50, 12, "Look, Move, Sidestep" },
+  { "klabel", "key_weapon", 180, 38, 50, 12, "Prev / Next Weapon" },
+  { "klabel", "key_move", 180, 50, 50, 12, "Look / Move" },
   { "kmod", "key_mic_any", 380, 4, 44, 64, nil },
   { "klabel", "key_mic_any", 350, 30, 50, 12, "Mic +" },
 --   { "klabel", "key_mic_primary", 400, 10, 70, 12, "Trigger 1" },
@@ -908,8 +908,8 @@ HMenu.menus["key_panel_platform"] = {
 --   { "kaction", "key_mic_next_weapon", 475, 50, 100, 12, "Next Type" },
   { "klabel", "key_primary", 180, 10, 50, 12, "Trigger 1" },
   { "klabel", "key_secondary", 180, 22, 50, 12, "Trigger 2" },
-  { "klabel", "key_weapon", 180, 38, 50, 12, "Prev, Next Weapon" },
-  { "klabel", "key_move", 180, 50, 50, 12, "Look, Move, Sidestep" },
+  { "klabel", "key_weapon", 180, 38, 50, 12, "Prev / Next Weapon" },
+  { "klabel", "key_move", 180, 50, 50, 12, "Look / Move" },
   { "kmod", "key_mic_any", 380, 4, 44, 64, nil },
   { "klabel", "key_mic_any", 350, 30, 50, 12, "Mic +" },
 --   { "klabel", "key_mic_primary", 400, 10, 70, 12, "Trigger 1" },
@@ -932,8 +932,8 @@ HMenu.menus["key_panel_tag"] = {
 --   { "kaction", "key_mic_next_weapon", 475, 50, 100, 12, "Next Type" },
   { "klabel", "key_primary", 180, 10, 50, 12, "Trigger 1" },
   { "klabel", "key_secondary", 180, 22, 50, 12, "Trigger 2" },
-  { "klabel", "key_weapon", 180, 38, 50, 12, "Prev, Next Weapon" },
-  { "klabel", "key_move", 180, 50, 50, 12, "Look, Move, Sidestep" },
+  { "klabel", "key_weapon", 180, 38, 50, 12, "Prev / Next Weapon" },
+  { "klabel", "key_move", 180, 50, 50, 12, "Look / Move" },
   { "kmod", "key_mic_any", 380, 4, 44, 64, nil },
   { "klabel", "key_mic_any", 350, 30, 50, 12, "Mic +" },
 --   { "klabel", "key_mic_primary", 400, 10, 70, 12, "Trigger 1" },
