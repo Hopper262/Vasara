@@ -288,10 +288,14 @@ function draw_cursor()
   if HKeys.down(HKeys.primary) and (not HKeys.down(HKeys.mic)) then
     cname = cname .. "_down"
   end
+  if HKeys.down(HKeys.secondary) and (not HKeys.down(HKeys.mic)) and HMode.is(HMode.apply) then
+    cname = cname .. "_down2"
+  end
 
   local x = (HStatus.cursor_x*HGlobals.scale) + HGlobals.xoff
   local y = (HStatus.cursor_y*HGlobals.scale) + HGlobals.yoff
-  imgs["cursor_" .. cname]:draw(x - HGlobals.coff[1], y - HGlobals.coff[2])
+  local im = imgs["cursor_" .. cname]
+  if im then im:draw(x - HGlobals.coff[1], y - HGlobals.coff[2]) end
 end
 
 imgs = {}
@@ -300,7 +304,7 @@ function Triggers.init()
   g_initMode = 0
   
   for _, nm in pairs({ "cursor_menu", "cursor_menu_down",
-                       "cursor_apply", "cursor_apply_down",
+                       "cursor_apply", "cursor_apply_down", "cursor_apply_down2",
                        "cursor_teleport", "cursor_teleport_down",
                        "bracket_on", "bracket_off", "bracket_dis",
                        "dcheck_on", "dcheck_off", "dcheck_dis",
