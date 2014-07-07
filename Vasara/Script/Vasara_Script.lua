@@ -1727,6 +1727,32 @@ function SMenu.find_next(p, direction)
       end
     end
   end
+  
+  if not closest then
+    distance = 999
+    for idx, item in ipairs(m) do
+      if SMenu.clickable(item[1]) then
+        if (direction == "down" and y < item[4]) or
+           (direction == "up"   and y > (item[4] + item[6])) then
+          local midx = item[3] + item[5]/2
+          local dist = math.abs(x - midx)
+          if distance > dist then
+            distance = dist
+            closest = item
+          end
+        elseif (direction == "right" and x < item[3]) or
+               (direction == "left" and x > (item[3] + item[5])) then
+          local midy = item[4] + item[6]/2
+          local dist = math.abs(y - midy)
+          if distance > dist then
+            distance = dist
+            closest = item
+          end
+        end
+      end
+    end
+  end
+  
   return closest
 end
 
