@@ -240,9 +240,9 @@ function Triggers.draw()
     
     -- lower left: current texture, attributes
     local lbls = HMenu.menus["apply_options"]
-    lbls[1][7] = "Apply Light: " .. HApply.current_light    
+    lbls[1][7] = "Apply light: " .. HApply.current_light    
 
-    local att = "Apply Texture"
+    local att = "Apply texture"
     local tmode = HApply.transfer_modes[HApply.current_transfer + 1]
     if HCollections.current_collection == 0 then
       if HApply.current_transfer == 5 then tmode = nil end
@@ -737,7 +737,7 @@ HMenu.menus["key_" .. HMode.apply] = {
   { "ktab_bg", nil, 150, 4 + menu_prefs.button_indent, 470, 64 - 2*menu_prefs.button_indent, nil },
   { "kaction", "key_primary", 235, 10, 100, 12, "Apply Texture" },
   { "kaction", "key_secondary", 235, 22, 100, 12, "Sample Light + Texture" },
-  { "kaction", "key_prev_weapon", 235, 38, 100, 12, "Change Light" },
+  { "kaction", "key_weapon", 235, 38, 100, 12, "Change Light" },
 --   { "kaction", "key_move", 235, 50, 100, 12, "Select Surface" },
   { "kaction", "key_mic_primary", 475, 10, 100, 12, "Undo" },
   { "kaction", "key_mic_secondary", 475, 22, 100, 12, "Redo" },
