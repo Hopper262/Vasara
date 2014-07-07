@@ -1755,7 +1755,12 @@ HLights.intensities = {}
 function HLights.update()
   if HCounts.num_lights < 1 then return end
   for i = 1,math.min(HCounts.num_lights, 56) do
-    HLights.intensities[i] = Player.texture_palette.slots[199 + i].texture_index / 128
+    local slot = Player.texture_palette.slots[199 + i]
+    if (slot ~= nil) and (slot.texture_index ~= nil) then
+      HLights.intensities[i] = slot.texture_index / 128
+    else
+      HLights.intensities[i] = 0
+    end
   end
   HLights.inited = true
 end

@@ -2149,7 +2149,10 @@ function SLights.update()
   for p in Players() do
     if p.local_ then
       for i = 1,math.min(#Lights, 56) do
-        p.texture_palette.slots[199 + i].texture_index = math.floor(Lights[i - 1].intensity * 128)
+        local slot = p.texture_palette.slots[199 + i]
+        if slot then
+          slot.texture_index = math.min(255, math.floor(Lights[i - 1].intensity * 128))
+        end
       end
     end
   end
