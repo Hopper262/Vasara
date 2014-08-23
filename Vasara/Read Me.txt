@@ -29,9 +29,9 @@ Vasara will feel most natural if you have "Use Mouse" turned on, and have the pr
 
 1. You start in Visual Mode, where you apply lights and textures to your level. Click to "paint", and hold the trigger down to drag textures into position.
 
-2. Press the Action key to switch to Choose Textures mode. Click a texture to select it for use in Visual Mode. Click on the buttons at the bottom to switch to a different collection. Or, use the key shortcuts to switch textures and collections.
+2. Press the Microphone key to switch to Choose Textures mode. Click a texture to select it for use in Visual Mode. Click on the buttons at the bottom to switch to a different collection. Or, use the key shortcuts to switch textures and collections.
 
-3. Press the Microphone key to switch to Options mode. You can toggle lesser-used settings here, like snap-to-grid or transfer modes.
+3. Press the Action key to switch to Options mode. You can toggle lesser-used settings here, like snap-to-grid or transfer modes.
 
 4. Press the Map key to switch to Teleport mode. Point at a polygon and click to teleport there. With the key shortcuts, you can cycle through polygons to reach faraway areas. The currently selected polygon is highlighted in first-person view and on the overhead map.
 
