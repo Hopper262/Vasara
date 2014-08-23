@@ -1,5 +1,5 @@
-Vasara 1.0
-----------
+Vasara 1.0.1
+------------
 by Hopper and Ares Ex Machina
 from work by Irons and Smith
 
@@ -62,6 +62,10 @@ The two Lua scripts have various preferences at the top. You can change the mous
 
 ----------------------------------------------------------------
 CHANGELOG:
+
+v1.0.1:
+* Fix crash when frames are missing for wall texture bitmaps
+* Fix crash when a level has no platforms
 
 v1.0:
 * First release

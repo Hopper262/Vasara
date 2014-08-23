@@ -1,4 +1,4 @@
-<plugin name="Vasara Script" version="1.0" description="Part 2 of 2 for visual texturing" solo_lua="Vasara_Script.lua">
+<plugin name="Vasara Script" version="1.0.1" description="Part 2 of 2 for visual texturing" solo_lua="Vasara_Script.lua">
   <mml file="Vasara.mml"/>
 </plugin>
 

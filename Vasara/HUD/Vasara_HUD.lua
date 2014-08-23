@@ -1,4 +1,4 @@
--- Vasara 1.0 (HUD script)
+-- Vasara 1.0.1 (HUD script)
 -- by Hopper and Ares Ex Machina
 
 -- PREFERENCES
@@ -1571,6 +1571,7 @@ end
 function HCollections.predraw(coll, tex, w, h)
   local xb, yb = 0, 0
   local shp = HCollections.shape(coll, tex) 
+  if not shp then return nil, 0, 0 end
   if HCollections.is_landscape(coll) then
     local sw = shp.unscaled_width
     local sh = shp.unscaled_height
@@ -1596,7 +1597,7 @@ function HCollections.predraw(coll, tex, w, h)
 end
 function HCollections.draw(coll, tex, x, y, w, h)
   local shp, xoff, yoff = HCollections.predraw(coll, tex, w, h)
-  shp:draw(x + xoff, y + yoff)
+  if shp then shp:draw(x + xoff, y + yoff) end
 end
 function HCollections.preview_current(x, y, size, mode)
   if (mode == 1) and (not HApply.down(HApply.use_texture)) then return end
@@ -1639,7 +1640,7 @@ function HCollections.preview_current(x, y, size, mode)
         if xv[1] then
           for _,yv in ipairs(extray) do
             if yv[1] then
-              shp:draw(xv[2], yv[2])
+              if shp then shp:draw(xv[2], yv[2]) end
             end
           end
         end

@@ -1,4 +1,4 @@
--- Vasara 1.0 (Script)
+-- Vasara 1.0.1 (Script)
 -- by Hopper and Ares Ex Machina
 -- from work by Irons and Smith, released under the JUICE LICENSE!
 
@@ -2172,7 +2172,10 @@ function SPlatforms.init()
 end
 function SPlatforms.update()
   local turn = Game.ticks % #Platforms
-  local val = SPlatforms.sorted_platforms[turn+1].polygon.index
+  local val = 0
+  if SPlatforms.sorted_platforms[turn+1] then
+    val = SPlatforms.sorted_platforms[turn+1].polygon.index
+  end
   
   for p in Players() do
     if p.local_ then
