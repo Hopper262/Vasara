@@ -68,6 +68,9 @@ Out of the box, Vasara only works with scenarios that use the same 5 texture set
 ----------------------------------------------------------------
 CHANGELOG:
 
+v1.0.2:
+* Fix problem where "Revert Changes" did nothing
+
 v1.0.1:
 * Fix crash when frames are missing for wall texture bitmaps
 * Fix crash when a level has no platforms

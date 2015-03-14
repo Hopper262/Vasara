@@ -806,10 +806,10 @@ function SMode.handle_panel(p)
     if p._keys.next_weapon.pressed then
       SPanel.cycle_permutation(p, 1)
     end
+  else
     if p._keys.secondary.released then
       SPanel.revert(p)
     end
-  else
     if p._keys.prev_weapon.pressed then
       SPanel.cycle_class(p, -1)
     end
