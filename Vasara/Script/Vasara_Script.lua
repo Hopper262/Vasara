@@ -1270,6 +1270,7 @@ function SPanel.update()
         p.texture_palette.slots[51].texture_index = option
         
         local perm = p._panel.permutation
+        if perm < 0 or perm > 32767 then perm = 0 end
         p.texture_palette.slots[52].texture_index = perm % 128
         p.texture_palette.slots[53].texture_index = math.floor(perm/128)
       else
