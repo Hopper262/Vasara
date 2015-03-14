@@ -1,4 +1,4 @@
--- Vasara 1.0.1 (HUD script)
+-- Vasara 1.0.2b1 (HUD script)
 -- by Hopper and Ares Ex Machina
 
 -- PREFERENCES

@@ -1,4 +1,4 @@
-Vasara 1.0.1
+Vasara 1.0.2b1
 ------------
 by Hopper and Ares Ex Machina
 from work by Irons and Smith
