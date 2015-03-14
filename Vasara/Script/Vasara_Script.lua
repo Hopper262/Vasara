@@ -1234,8 +1234,7 @@ function SPanel.init()
       end
       local cc = SPanel.device_collections[t.collection.index]
       
-      local ttype = t.class.index + 1
-      if t._type then ttype = t._type end
+      local ttype = SPanel.classnum_from_type(t)
       
       for _,v in ipairs({ t.active_texture_index, t.inactive_texture_index }) do
         if not cc[v] then cc[v] = {} end
@@ -1441,43 +1440,10 @@ function SPanel.stop_editing(p)
     else
       local class = p._panel.classnum
       local ctype = p._panel.dinfo[p._panel.classnum]
+      p._panel.device = ctype
       
       for sidx,_ in pairs(p._panel.sides) do
-        Sides[sidx].control_panel = true
-        local cp = Sides[sidx].control_panel
-        
-        cp.type = ctype
-        cp.light_dependent = p._panel.light_dependent
-        cp.permutation = p._panel.permutation
-        cp.can_be_destroyed = (class == SPanel.chip)
-        if class == SPanel.light_switch or 
-           class == SPanel.platform_switch or
-           class == SPanel.tag_switch or
-           class == SPanel.chip or
-           class == SPanel.wires then
-          cp.only_toggled_by_weapons = p._panel.only_toggled_by_weapons
-          cp.repair = p._panel.repair
-          
-          if class == SPanel.light_switch then
-            if Lights[p._panel.permutation] then
-              cp.status = Lights[p._panel.permutation].active
-            else
-              cp.status = false
-            end
-          elseif class == SPanel.platform_switch then
-            if Polygons[p._panel.permutation] and Polygons[p._panel.permutation].platform then
-              cp.status = Polygons[p._panel.permutation].platform.active
-            else
-              cp.status = false
-            end
-          else
-            cp.status = p._panel.status
-          end
-        else
-          cp.only_toggled_by_weapons = false
-          cp.repair = false
-          cp.status = false
-        end
+        VML.save_control_panel(Sides[sidx], p._panel)
       end
     end
     p._panel.editing = false
