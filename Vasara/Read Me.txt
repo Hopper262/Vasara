@@ -70,6 +70,7 @@ CHANGELOG:
 
 v1.0.2:
 * Fix problem where "Revert Changes" did nothing
+* Fix problem where control panel settings were reverted
 * Fix problem where chip insertion slots were marked as destroyable
 
 v1.0.1:
