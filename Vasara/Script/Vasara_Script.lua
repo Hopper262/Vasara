@@ -2677,8 +2677,8 @@ function VML.save_control_panel(side, device)
   if VML.is_switch(device.device) then
     side.control_panel.only_toggled_by_weapons = device.only_toggled_by_weapons
     side.control_panel.repair = device.repair
-    side.control_panel.can_be_destroyed = (device.device._type == "wires")
-    side.control_panel.uses_item = (device.device._type == "chip insertion")
+    side.control_panel.can_be_destroyed = (device.device._type == SPanel.wires)
+    side.control_panel.uses_item = (device.device._type == SPanel.chip)
     if device.device.class == "light switch" then
       side.control_panel.status = Lights[side.control_panel.permutation].active
     elseif device.device.class == "platform_switch" then
