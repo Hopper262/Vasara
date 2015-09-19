@@ -1,4 +1,4 @@
-Vasara 1.0.2b2
+Vasara 1.0.2
 ------------
 by Hopper and Ares Ex Machina
 from work by Irons and Smith
@@ -6,7 +6,7 @@ from work by Irons and Smith
 ----------------------------------------------------------------
 DESCRIPTION:
 
-Vasara is a Lua script and dedicated HUD for use in texturing Aleph One maps. The new HUD provides more explanation for new users, and features a new GUI-style interface for choosing textures and options.
+Vasara is a Lua script and dedicated HUD for use in texturing Aleph One maps. The HUD lists the keyboard shortcts for easy reference, and features a GUI-style interface for choosing textures and options.
 
 To get the most out of Vasara, be sure to turn on "Use Mouse" and "Overlay Map" in your preferences.
 
@@ -16,7 +16,7 @@ INSTALLATION:
 - Drag the downloaded .zip file, or the unzipped "Vasara" folder, into the "Plugins" folder inside your Marathon Infinity or custom scenario folder. (Create a "Plugins" folder if you don't already have one.)
 - Launch Aleph One, and go to "Preferences", then "Environment", then "Plugins" to enable or disable Vasara.
 
-IMPORTANT: other HUD or solo Lua plugins can interfere with Vasara. You should be all right as long as anything listed after Vasara in your plugins list is turned off.
+IMPORTANT: other plugins can interfere with Vasara. You should be all right as long as anything listed after Vasara in your plugins list is turned off. If you have problems, try turning off all plugins except Vasara.
 
 ----------------------------------------------------------------
 GETTING STARTED:
@@ -41,7 +41,7 @@ To save your work, press the "Chat/Console" key (default is backslash: \ ) and t
 
 The period at the start is important! You can replace "my-fabulous-level.sceA" with whatever filename you like. Your level will be saved in Aleph One's standard location for your platform; see:
 
-  http://sourceforge.net/p/marathon/wiki/File%20Locations/
+  https://github.com/Aleph-One-Marathon/alephone/wiki/File-Locations
 
 ----------------------------------------------------------------
 TIPS AND TRICKS:
