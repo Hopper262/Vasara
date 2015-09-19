@@ -1,4 +1,4 @@
-Vasara 1.0.2b1
+Vasara 1.0.2b2
 ------------
 by Hopper and Ares Ex Machina
 from work by Irons and Smith
@@ -16,9 +16,7 @@ INSTALLATION:
 - Drag the downloaded .zip file, or the unzipped "Vasara" folder, into the "Plugins" folder inside your Marathon Infinity or custom scenario folder. (Create a "Plugins" folder if you don't already have one.)
 - Launch Aleph One, and go to "Preferences", then "Environment", then "Plugins" to enable or disable Vasara.
 
-IMPORTANT 1: other HUD or solo Lua plugins can interfere with Vasara. You should be all right as long as anything listed after Vasara in your plugins list is turned off.
-
-IMPORTANT 2: both "Vasara HUD" and "Vasara Script" must be enabled at the same time. If you turn on only one, you WILL have serious problems.
+IMPORTANT: other HUD or solo Lua plugins can interfere with Vasara. You should be all right as long as anything listed after Vasara in your plugins list is turned off.
 
 ----------------------------------------------------------------
 GETTING STARTED:
@@ -72,6 +70,8 @@ v1.0.2:
 * Fix problem where "Revert Changes" did nothing
 * Fix problem where control panel settings were reverted
 * Fix problem where chip insertion slots were marked as destroyable
+* Require Aleph One 1.2, which fixes a bug involving Lua and wires
+* Ships as one plugin instead of two
 
 v1.0.1:
 * Fix crash when frames are missing for wall texture bitmaps
@@ -85,6 +85,7 @@ SPECIAL THANKS:
 
 TychoVII, Kurinn - For pushing the boundaries of the Lua HUD
 Bitstream, Tavmjong Bah - For fonts used in the HUD
+dustu - For beta testing
 Treellama, Irons - For Visual Mode.lua
 
 ----------------------------------------------------------------
