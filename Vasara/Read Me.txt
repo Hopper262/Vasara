@@ -1,4 +1,4 @@
-Vasara 1.0.2
+Vasara 1.0.3
 ------------
 by Hopper and Ares Ex Machina
 from work by Irons and Smith
@@ -61,10 +61,15 @@ The two Lua scripts have various preferences at the top. You can change the mous
 ----------------------------------------------------------------
 SCENARIO COMPATIBILITY:
 
-Out of the box, Vasara only works with scenarios that use the same 5 texture sets as Marathon Infinity, since the plugin needs to know the proper shapes collections to use. If you want to use it with Marathon 2 (which is missing the Jjaro set), or your custom TC uses different collections, edit the "walls" and "landscapes" settings at the top of Vasara_Script.lua.
+Out of the box, Vasara only works with scenarios that use the same 5 texture sets and same 4 landscapes as Marathon Infinity, since the plugin needs to know the proper shapes collections to use. It mostly works with Marathon 2 (which is missing the Jjaro set), but there are glitches with the fourth "landscape" since M2 uses that collection for something else.
+
+To use Vasara with additional or moved collections (or to limit M2 to the 3 working landscapes), edit the "walls" and "landscapes" settings at the top of Vasara_Script.lua.
 
 ----------------------------------------------------------------
 CHANGELOG:
+
+v1.0.3:
+* Improved compatibility with Marathon 2
 
 v1.0.2:
 * Fix problem where "Revert Changes" did nothing

@@ -1,4 +1,4 @@
-<plugin name="Vasara" version="1.0.2" description="Texturing tool for maps" minimum_version="20150619" solo_lua="Vasara_Script.lua" hud_lua="Vasara_HUD.lua">
+<plugin name="Vasara" version="1.0.3" description="Texturing tool for maps" minimum_version="20150619" solo_lua="Vasara_Script.lua" hud_lua="Vasara_HUD.lua">
   <mml file="Vasara.mml"/>
 </plugin>
 
