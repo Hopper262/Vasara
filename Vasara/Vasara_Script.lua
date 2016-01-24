@@ -1814,7 +1814,7 @@ SCollections.collection_map = {}
 function SCollections.init()
 
   for _, collection in pairs(walls) do
-    if not SCollections.collection_map[collection] then
+    if Collections[collection] ~= nil and Collections[collection].bitmap_count and (not SCollections.collection_map[collection]) then
       table.insert(SCollections.wall_collections, collection)
       SCollections.collection_map[collection] = {type = "wall", count = Collections[collection].bitmap_count}
     end
@@ -1824,7 +1824,7 @@ function SCollections.init()
   local landscape_textures = {}
   local off = 0
   for _, collection in pairs(landscapes) do
-    if not SCollections.collection_map[collection] then
+    if Collections[collection] ~= nil and Collections[collection].bitmap_count and (not SCollections.collection_map[collection]) then
       table.insert(SCollections.landscape_collections, collection)
       SCollections.collection_map[collection] = {type = "landscape", offset = off, count = Collections[collection].bitmap_count}
       off = off + Collections[collection].bitmap_count
