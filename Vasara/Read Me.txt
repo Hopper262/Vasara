@@ -1,5 +1,5 @@
-Vasara 1.0.3
-------------
+Vasara 1.1
+----------
 by Hopper and Ares Ex Machina
 from work by Irons and Smith
 
@@ -61,12 +61,18 @@ The two Lua scripts have various preferences at the top. You can change the mous
 ----------------------------------------------------------------
 SCENARIO COMPATIBILITY:
 
-Out of the box, Vasara only works with scenarios that use the same 5 texture sets and same 4 landscapes as Marathon Infinity, since the plugin needs to know the proper shapes collections to use. It mostly works with Marathon 2 (which is missing the Jjaro set), but there are glitches with the fourth "landscape" since M2 uses that collection for something else.
+Out of the box, Vasara only works with scenarios that use the same 5 texture sets and same 4 landscapes as Marathon Infinity, since the plugin needs to know the proper shapes collections to use. It mostly works with Marathon 2 (which is missing the Jjaro set).
 
-To use Vasara with additional or moved collections (or to limit M2 to the 3 working landscapes), edit the "walls" and "landscapes" settings at the top of Vasara_Script.lua.
+To use Vasara with additional or moved collections, edit the "walls" and "landscapes" settings at the top of Vasara_Script.lua.
 
 ----------------------------------------------------------------
 CHANGELOG:
+
+v1.1:
+* Added texture transfer modes added in Aleph One 1.7
+* Requires Aleph One 1.7 or later
+* Cleaned up and simplified code by using Level.stash
+* Fixed various minor bugs
 
 v1.0.3:
 * Improved compatibility with Marathon 2
@@ -96,5 +102,6 @@ Treellama, Irons - For Visual Mode.lua
 ----------------------------------------------------------------
 CONTACT:
 
-If you have any questions, comments, or bugs to report, you can email Hopper:
-- hopper@whpress.com
+If you have any questions, comments, or bugs to report, use GitHub Issues:
+
+https://github.com/Hopper262/Vasara/issues
