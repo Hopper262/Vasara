@@ -1,5 +1,5 @@
-Vasara 1.1
-----------
+Vasara 1.1.1
+------------
 by Hopper and Ares Ex Machina
 from work by Irons and Smith
 
@@ -67,6 +67,9 @@ To use Vasara with additional or moved collections, edit the "walls" and "landsc
 
 ----------------------------------------------------------------
 CHANGELOG:
+
+v1.1.1:
+* Removed debugging statement that caused errors on small maps
 
 v1.1:
 * Added texture transfer modes added in Aleph One 1.7
