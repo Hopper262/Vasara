@@ -83,7 +83,6 @@ end
 
 Triggers = {}
 function Triggers.init()
-  Polygons[330].type = "must be explored"
   for p in Players() do
     p._v = {}
     p._w = {}
