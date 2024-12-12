@@ -513,13 +513,13 @@ function SMode.handle_apply(p)
             if line.counterclockwise_side then
               dsurface = line.counterclockwise_side.transparent
             elseif line.counterclockwise_polygon then
-              dsurface = Sides.new(line.counterclockwise_polygon, line).transparent
+              dsurface = VML.new_side(line.counterclockwise_polygon, line).transparent
             end
           else
             if line.clockwise_side then
               dsurface = line.clockwise_side.transparent
             elseif line.clockwise_polygon then
-              dsurface = Sides.new(line.clockwise_polygon, line).transparent
+              dsurface = VML.new_side(line.clockwise_polygon, line).transparent
             end
           end
 
@@ -2630,7 +2630,7 @@ function SCollections.find_surface(p, copy_mode)
     surface = o.floor
   elseif is_line(o) then
     -- we need to make a new side
-    surface = VML.side_surface(Sides.new(polygon, o), z)
+    surface = VML.side_surface(VML.new_side(polygon, o), z)
   end
   return surface, polygon
 end
@@ -3338,4 +3338,11 @@ function VML.save_control_panel(side, device)
     side.control_panel.status = false
   end
   side.control_panel.type = ddevice
+end
+
+function VML.new_side(polygon, line)
+   local side = Sides.new(polygon, line)
+   table.insert(VML.cw_endpoint_sides[VML.get_clockwise_side_endpoint(side)], side)
+   table.insert(VML.ccw_endpoint_sides[VML.get_counterclockwise_side_endpoint(side)], side)
+   return side
 end
