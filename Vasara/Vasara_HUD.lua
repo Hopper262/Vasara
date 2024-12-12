@@ -480,7 +480,7 @@ function HMenu.draw_menu(mode)
     elseif item[1] == "bg" then
       Screen.fill_rect(x, y, w, h, colors.tab.background)
     elseif item[1] == "tab" then
-      local state = HMenu.button_state(item[2])
+--      local state = HMenu.button_state(item[2])
 
       local li = menu_prefs.tab_indent.left
       local ri = menu_prefs.tab_indent.right

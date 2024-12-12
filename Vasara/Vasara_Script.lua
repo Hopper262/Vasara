@@ -2316,16 +2316,16 @@ function SMenu.button_state(name, p)
     if mode == p._v.panel.classnum then state = "active" end
   elseif name == "panel_light" then
     if p._v.panel.light_dependent then state = "active" end
-    if not SPanel.valid_option(SPanel.light_dependent) then state = "disabled" end
+    if not SPanel.valid_option(SPanel.light_dependent, p) then state = "disabled" end
   elseif name == "panel_weapon" then
     if p._v.panel.only_toggled_by_weapons then state = "active" end
-    if not SPanel.valid_option(SPanel.only_toggled_by_weapons) then state = "disabled" end
+    if not SPanel.valid_option(SPanel.only_toggled_by_weapons, p) then state = "disabled" end
   elseif name == "panel_repair" then
     if p._v.panel.repair then state = "active" end
-    if not SPanel.valid_option(SPanel.repair) then state = "disabled" end
+    if not SPanel.valid_option(SPanel.repair, p) then state = "disabled" end
   elseif name == "panel_active" then
     if p._v.panel.status then state = "active" end
-    if not SPanel.valid_option(SPanel.status) then state = "disabled" end
+    if not SPanel.valid_option(SPanel.status, p) then state = "disabled" end
   elseif string.sub(name, 1, 8) == "key_mic_" then
     state = SKeys.button_state(string.sub(name, 9), true, p)
   elseif string.sub(name, 1, 4) == "key_" then
