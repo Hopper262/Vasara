@@ -1,4 +1,4 @@
--- Vasara 1.1.1 (Script)
+-- Vasara 1.1.2 (Script)
 -- by Hopper and Ares Ex Machina
 -- from work by Irons and Smith, released under the JUICE LICENSE!
 

@@ -1,4 +1,4 @@
-Vasara 1.1.1
+Vasara 1.1.2
 ------------
 by Hopper and Ares Ex Machina
 from work by Irons and Smith
@@ -67,6 +67,10 @@ To use Vasara with additional or moved collections, edit the "walls" and "landsc
 
 ----------------------------------------------------------------
 CHANGELOG:
+
+v1.1.2:
+* Fixed bug where some textures would not get aligned (thanks Treellama)
+* Removed old code which broke control panel editing (thanks Treellama)
 
 v1.1.1:
 * Removed debugging statement that caused errors on small maps
