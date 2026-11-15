@@ -164,6 +164,11 @@ function Triggers.player_damaged(p, ap, am, dt, da, pr)
   p.life = 450
   p.oxygen = 10800
 end
+function Triggers.cleanup()
+    for p in Players() do
+        UTeleport.remove_highlight(p)
+    end
+end
 
 function PIN(v, min, max)
   if v < min then return min end
